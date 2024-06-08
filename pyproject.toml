@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "remember"
+version = "0.0.1"
+dependencies = []
+requires-python = ">=3.10"
+authors = [
+  {name = "Aditya Singh", email = "adityasingh8532@gmail.com"},
+]
+readme = "README.md"
+license = {file = "LICENSE"}
+
+[project.optional-dependencies]
+notebook = ["ipykernel"]
+
+[project.urls]
+Homepage = "http://localhost:8000"
+Documentation = "https://github.com/blurrycontour/remember"
+Repository = "https://github.com/blurrycontour/remember.git"
+
+[project.scripts]
+main = "remember:main"
+random = "remember:random"
+
+[project.gui-scripts]
+remember-gui = "remember:main_gui"
