@@ -1,0 +1,70 @@
+services:
+  backend:
+    restart: always
+    container_name: backend
+    image: remember/backend:latest
+    build:
+      context: '.'
+      dockerfile: backend/Dockerfile
+      network: host
+    ports:
+      - 5000:5000
+    networks:
+      - remember-network
+    volumes:
+      - ./data:/data
+    env_file:
+      - ./backend/.env
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+  frontend:
+    restart: always
+    container_name: frontend
+    image: remember/frontend:latest
+    build:
+      context: './frontend'
+      dockerfile: Dockerfile
+      network: host
+    ports:
+      - 3000:3000
+    networks:
+      - remember-network
+    env_file:
+      - ./frontend/.env
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+
+  nginx:
+    restart: always
+    image: nginx:alpine
+    container_name: nginx
+    volumes:
+      - ./nginx/default.conf:/tmp/nginx/nginx.conf
+      - ./.logs/access.log:/var/log/nginx/file.access.log
+      - ./.logs/error.log:/var/log/nginx/file.error.log
+    command:
+      - sh
+      - -c
+      - |
+        envsubst '$${OLLAMA_IP} $${OLLAMA_PORT} $${NGROK_DOCKER_IP}' < /tmp/nginx/nginx.conf > /etc/nginx/nginx.conf
+        cat /etc/nginx/nginx.conf
+        nginx -g 'daemon off;'
+    ports:
+      - ${NGINX_PORT}:80
+      - 80:80
+    env_file:
+      - ./.env
+    networks:
+      - remember-network
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+
+networks:
+  remember-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.0.0.0/16
+          gateway: 10.0.0.1

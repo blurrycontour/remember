@@ -5,7 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "remember"
 version = "0.0.1"
-dependencies = []
+dependencies = [
+  "fastapi[all]",
+]
 requires-python = ">=3.10"
 authors = [
   {name = "Aditya Singh", email = "adityasingh8532@gmail.com"},
@@ -14,6 +16,7 @@ readme = "README.md"
 license = {file = "LICENSE"}
 
 [project.optional-dependencies]
+all = ["remember[notebook]"]
 notebook = ["ipykernel"]
 
 [project.urls]

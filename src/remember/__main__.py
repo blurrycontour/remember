@@ -1,10 +1,10 @@
 import argparse
 
 from .card import FlashCard
-from .app import Brainy
+from .app import Remember
 
 def main():
-    card = FlashCard("Front", "Back")
+    card = FlashCard("Test", "Front", "Back")
     print(card)
 
 def random():
@@ -12,5 +12,5 @@ def random():
     parser.add_argument("--category", "-c", default=None, help="Category name")
     args = parser.parse_args()
 
-    app = Brainy('data/cards.pkl')
+    app = Remember('data/cards.pkl')
     app.random(args.category, decorator=False)
