@@ -42,8 +42,8 @@ services:
     container_name: nginx
     volumes:
       - ./nginx/default.conf:/tmp/nginx/nginx.conf
-      - ./.logs/access.log:/var/log/nginx/file.access.log
-      - ./.logs/error.log:/var/log/nginx/file.error.log
+      # - ./.logs/access.log:/var/log/nginx/file.access.log
+      # - ./.logs/error.log:/var/log/nginx/file.error.log
     command:
       - sh
       - -c
