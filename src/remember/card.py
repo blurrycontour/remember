@@ -47,13 +47,16 @@ class Category:
         self.id = Category.name_to_id(self.name)
         self.cards = {}
 
+
     def __str__(self):
         return f"{self.name} : {len(self.cards)} cards"
+
 
     @staticmethod
     def name_to_id(name:str):
         """ Convert category name to id """
         return hashlib.md5(f"{name}".encode()).hexdigest()
+
 
     def add_card(self, card:FlashCard):
         """ Add a card to this category """
@@ -74,9 +77,7 @@ class Category:
             return [str(card) for card in self.cards.values()]
 
 
-    def random(self, decorator:bool=True) -> FlashCard:
+    def random(self) -> FlashCard:
         """ Show a random card from the category """
         card = random.choice(list(self.cards.values()))
-        if decorator:
-            print("[Random Card]\n-------------")
-        print(card)
+        return card

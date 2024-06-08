@@ -13,13 +13,13 @@ print('> Loading category router')
 
 
 @router.get('/')
-async def home():
+async def get_categories():
     app = Remember('/data/master.pkl')
     return app.get_categories(verbose=True)
 
 
-@router.get('/show/{category_id}')
-async def show(category_id:str):
+@router.get('/{category_id}')
+async def get_category(category_id:str):
     app = Remember('/data/master.pkl')
     return app.get_category(category_id, verbose=True)
 

@@ -105,14 +105,20 @@ class Remember:
         return _data
 
 
-    def random(self, category_name:str=None, decorator:bool=True):
+    def random(self, category_id:str=None, category_name:str=None, verbose:bool=False):
         """ Show a random card from the category or all categories """
+        assert not (category_id and category_name), "Only one of Category ID or Name required!"
+        if category_name:
+            category_id = Category.name_to_id(category_name)
+
         if self.data == {}:
             print("No data to show!")
             return
-        if not category_name:
+
+        if not category_id:
             category_id = random.choice(list(self.data.keys()))
-        self.data[category_name].random(decorator=decorator)
+        card = self.data[category_id].random()
+        return card.info() if verbose else str(card)
 
 
     def get_categories(self, verbose:bool=False):
