@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import './Category.css';
+import './Common.css';
 
 
 function Category() {
@@ -40,9 +40,9 @@ function Category() {
                     <div key={category.ID} className="card">
                         <h2>{category.Name}</h2>
                         <h3>Number of Cards: {category["#Cards"]}</h3>
-                        <button onClick={() => window.location.href = `/${category.ID}`}>View</button>
+                        <button onClick={() => window.location.href = `/category/${category.ID}`}>View</button>
                         <div className="delete-icon">
-                        <FontAwesomeIcon icon={faTrashAlt} size="2x" onClick={() => {
+                        <FontAwesomeIcon icon={faTrashAlt} size="1x" onClick={() => {
                             if (window.confirm('Are you sure you want to delete this category?')) {
                                 removeCategory(category.ID);
                             }

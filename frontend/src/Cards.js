@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import './Category.css';
+import './Common.css';
 
 
 function Cards() {
@@ -50,13 +50,14 @@ function Cards() {
                 {cards.map(card => (
                     <div key={card.ID} className="card">
                         <div className="delete-icon">
-                        <FontAwesomeIcon icon={faTrashAlt} size="2x" onClick={() => {
+                        <FontAwesomeIcon icon={faTrashAlt} size="1x" onClick={() => {
                             if (window.confirm('Are you sure you want to delete this card?')) {
                                 removeCard(card.ID);
                             }
                         }} />
                         </div>
                         <h2>{card.Front}</h2>
+                        <hr/>
                         <h3>{card.Back}</h3>
                     </div>
                 ))}
