@@ -13,7 +13,7 @@ function Cards() {
     const [newCardFront, setNewCardFront] = useState('');
     const [newCardBack, setNewCardBack] = useState('');
 
-    const API_URL = 'http://localhost:5000';
+    const API_URL = '/api';
 
 
     const fetchCards = async () => {
@@ -22,7 +22,7 @@ function Cards() {
     };
 
     const addCard = async () => {
-        await axios.post(`${API_URL}/card`, { category: categoryName, front: newCardFront, back: newCardBack});
+        await axios.post(`${API_URL}/card/`, { category: categoryName, front: newCardFront, back: newCardBack});
         setNewCardFront('');
         setNewCardBack('');
         fetchCards();

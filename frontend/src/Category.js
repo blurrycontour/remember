@@ -9,16 +9,16 @@ function Category() {
     const [categories, setCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState('');
 
-    const API_URL = 'http://localhost:5000';
+    const API_URL = '/api';
 
 
     const fetchCategories = async () => {
-        const response = await axios.get(`${API_URL}/category`);
+        const response = await axios.get(`${API_URL}/category/`);
         setCategories(response.data);
     };
 
     const addCategory = async () => {
-        await axios.post(`${API_URL}/category`, { name: newCategoryName });
+        await axios.post(`${API_URL}/category/`, { name: newCategoryName });
         setNewCategoryName('');
         fetchCategories();
     };

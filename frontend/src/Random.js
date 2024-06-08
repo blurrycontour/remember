@@ -7,14 +7,14 @@ import './Common.css';
 
 function Random() {
     const [categories, setCategories] = useState([]);
-    const [categoryId, setCategoryId] = useState('');
+    const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState({});
 
-    const API_URL = 'http://localhost:5000';
+    const API_URL = '/api';
 
 
     const fetchCategories = async () => {
-        const response = await axios.get(`${API_URL}/category`);
+        const response = await axios.get(`${API_URL}/category/`);
         setCategories(response.data);
     };
 
@@ -43,7 +43,7 @@ function Random() {
             <h1>Random Card</h1>
             <div className="card1">
                 <select onChange={(e) => setCategoryId(e.target.value)}>
-                    <option key={"all"} value={"all"}>Any</option>
+                    <option key={"all"} value={"all"} selected >Any</option>
                     {categories.map(category => (
                         <option key={category.ID} value={category.ID}>{category.Name} -- {category["#Cards"]}</option>
                         ))}

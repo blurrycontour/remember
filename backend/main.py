@@ -48,8 +48,6 @@ async def root():
 
 if __name__ == '__main__':
     parser = ap.ArgumentParser()
-    parser.add_argument('-m', '--model',action='store_true',
-                        help='Use model apis too!')
     args = parser.parse_args()
 
     uvicorn.run(
