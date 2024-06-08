@@ -38,8 +38,8 @@ jobs:
                 git reset --hard $GITHUB_SHA
             "
       - name: Stop existing containers
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
+        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker-compose down"
       - name: Pull latest image
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose pull"
+        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker-compose pull"
       - name: Start containers again
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose up -d"
+        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker-compose up -d"
