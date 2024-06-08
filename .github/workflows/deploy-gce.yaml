@@ -38,6 +38,8 @@ jobs:
                 git fetch
                 git reset --hard $GITHUB_SHA
             "
+      - name: Check docker compose
+        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "docker-compose version"
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker-compose down"
       - name: Pull latest image
