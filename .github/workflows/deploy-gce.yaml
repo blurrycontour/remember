@@ -34,6 +34,7 @@ jobs:
         run: |
             ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
                 if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
+                git fetch
                 cd remember
                 git reset --hard $GITHUB_SHA
             "
