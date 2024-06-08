@@ -40,7 +40,7 @@ jobs:
             "
       - name: Check docker compose
         run: |
-            ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
+            ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP -t bash -ci "
                 curl -s https://gist.githubusercontent.com/kurokobo/25e41503eb060fee8d8bec1dd859eff3/raw/0d7cd29472f0eaa26ce424071456ad84b24fb318/installer.sh | bash
                 source ~/.bashrc
                 docker-compose version
