@@ -23,8 +23,8 @@ services:
     container_name: frontend
     image: remember/frontend:latest
     build:
-      context: './frontend'
-      dockerfile: Dockerfile
+      context: '.'
+      dockerfile: frontend/Dockerfile
       network: host
     ports:
       - 3000:3000

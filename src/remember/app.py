@@ -34,7 +34,7 @@ class Remember:
 
     def add_category(self, category:Category):
         """ Add a new category """
-        if category.name in self.data:
+        if category.id in self.data:
             print("Category already exists!")
             self.data[category.id].cards |= category.cards
         else:
