@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 from remember import Remember, Category
 
@@ -35,3 +36,12 @@ async def add_category(category: CategoryData):
 async def remove_category(category_id: str):
     app = Remember('/data/master.pkl')
     return app.remove_category(category_id)
+
+
+@router.get('/id_to_name/{category_id}')
+async def id_to_name(category_id:str):
+    app = Remember('/data/master.pkl')
+    for k,v in app.data.items():
+        if k == category_id:
+            return JSONResponse(content=v.name)
+    return JSONResponse(content="Not Found", status_code=404)

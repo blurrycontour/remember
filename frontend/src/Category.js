@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import './Category.css';
 
 
 function Category() {
     const [categories, setCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState('');
+
     const API_URL = 'http://localhost:5000';
 
 
@@ -36,23 +39,28 @@ function Category() {
                 {categories.map(category => (
                     <div key={category.ID} className="card">
                         <h2>{category.Name}</h2>
-                        <p>Number of Cards: {category["#Cards"]}</p>
-                        <p>ID: {category.ID}</p>
-                        <p>Created: {category.Created}</p>
-                        <p>Last updated: {category.Updated}</p>
+                        <h3>Number of Cards: {category["#Cards"]}</h3>
                         <button onClick={() => window.location.href = `/${category.ID}`}>View</button>
-                        <button onClick={() => removeCategory(category.ID)} style={{backgroundColor: '#FF2222'}}>Remove</button>
+                        <div className="delete-icon">
+                        <FontAwesomeIcon icon={faTrashAlt} size="2x" onClick={() => {
+                            if (window.confirm('Are you sure you want to delete this category?')) {
+                                removeCategory(category.ID);
+                            }
+                        }} />
+                        </div>
                     </div>
                 ))}
             </div>
             <br/>
             <br/>
             <div className="card1">
+                <h3>Add a new category</h3>
+                <p>Category Name
                 <input
                     type='text'
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
-                />
+                /></p>
                 <button onClick={addCategory}>Add Category</button>
             </div>
         </div>
