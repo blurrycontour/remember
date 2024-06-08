@@ -1,0 +1,31 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+    # paths:
+    #   - pb2/**
+    #   - protos/**
+    #   - server.py
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get current repo name
+        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - name: Build docker image
+        run: |
+            echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME/" >> .env
+            docker compose build
+      - name: Docker login
+        run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
+      - name: Push docker image to hub
+        run: docker compose push
