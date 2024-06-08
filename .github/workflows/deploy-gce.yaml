@@ -33,7 +33,7 @@ jobs:
       - name: Get the docker-compose file
         run: |
             ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
-                git clone https://github.com/blurrycontour/remember.git
+                if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
                 cd remember
                 git reset --hard $GITHUB_SHA
             "
