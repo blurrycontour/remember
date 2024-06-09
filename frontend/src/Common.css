@@ -16,7 +16,8 @@ h1 {
     margin: 10px auto; /* This will center the card horizontally */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.3s ease-in-out;
-    width: 40%; /* This will make the card take up half the width of its container */
+    width: 90%; /* This will make the card take up half the width of its container */
+    max-width: 500px;
     position: relative;
 }
 
@@ -35,7 +36,8 @@ h1 {
     margin: 10px auto; /* This will center the card horizontally */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.3s ease-in-out;
-    width: 40%;
+    width: 90%;
+    max-width: 500px;
 }
 
 .card:hover {
