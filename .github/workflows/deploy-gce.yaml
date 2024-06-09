@@ -50,7 +50,7 @@ jobs:
             cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl
           "
       - name: Add ngrok authtoken to .env
-        run: echo "NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN" >> .env
+        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
       - name: Pull latest image
