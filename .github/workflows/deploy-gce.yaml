@@ -11,6 +11,7 @@ env:
   SSH_USER: ${{secrets.SSH_USER}}
   SSH_KEY: ${{secrets.SSH_KEY}}
   SSH_IP: ${{secrets.SSH_IP}}
+  NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
 
 jobs:
   deploy:
@@ -48,6 +49,8 @@ jobs:
           ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
             cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl
           "
+      - name: Add ngrok authtoken to .env
+        run: echo "NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN" >> .env
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
       - name: Pull latest image

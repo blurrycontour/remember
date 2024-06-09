@@ -42,8 +42,6 @@ services:
     container_name: nginx
     volumes:
       - ./nginx/default.conf:/tmp/nginx/nginx.conf
-      # - ./.logs/access.log:/var/log/nginx/file.access.log
-      # - ./.logs/error.log:/var/log/nginx/file.error.log
     command:
       - sh
       - -c
@@ -59,6 +57,25 @@ services:
       - remember-network
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+
+  ngrok:
+    restart: always
+    image: ngrok/ngrok
+    container_name: ngrok
+    ports:
+      - 4040:4040
+    command:
+      - "start"
+      - "nginx"
+      - "--config"
+      - "/etc/ngrok.yml"
+    volumes:
+      - ./ngrok/ngrok.yaml:/etc/ngrok.yml
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    networks:
+      remember-network:
+        ipv4_address: ${NGROK_DOCKER_IP}
 
 networks:
   remember-network:

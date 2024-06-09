@@ -1,0 +1,11 @@
+version: "2"
+web_addr: 4040
+web_allow_hosts:
+  - 172.0.0.0/8
+  - backend
+  - host.docker.internal
+tunnels:
+  nginx:
+    hostname: collie-skilled-pup.ngrok-free.app
+    addr: http://nginx:80
+    proto: http
