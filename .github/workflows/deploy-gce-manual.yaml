@@ -1,4 +1,4 @@
-name: Deploy to GCE
+name: Deploy to GCE - Manual
 
 on:
   workflow_dispatch:
@@ -30,6 +30,11 @@ jobs:
           ssh-add - <<< "$SSH_KEY"
           echo "$SSH_KEY" > ~/.ssh/id_gcp
           chmod 0600 ~/.ssh/id_gcp
+      - name: Make a backup of master.pkl
+        run: |
+            ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
+              cp $REPO_NAME/data/master.pkl $REPO_NAME/data/master.pkl.bkp
+            "
       - name: Get the docker-compose file
         run: |
             ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
@@ -38,6 +43,11 @@ jobs:
                 git fetch
                 git reset --hard $GITHUB_SHA
             "
+      - name: Restore the backup of master.pkl
+        run: |
+          ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
+            cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl
+          "
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
       - name: Pull latest image
