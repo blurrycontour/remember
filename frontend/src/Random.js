@@ -43,19 +43,6 @@ function Random() {
     return (
         <div>
             <h1>Random Card</h1>
-            <div className="card1">
-                <select onChange={(e) => setCategoryId(e.target.value)}>
-                    <option key={"all"} value={"all"} selected >Any</option>
-                    {categories.map(category => (
-                        <option key={category.ID} value={category.ID}>{category.Name} -- {category["#Cards"]}</option>
-                    ))}
-                </select>
-                <span> </span>
-                <br />
-                <button onClick={fetchRandomCard}>Random Card</button>
-                <span> </span>
-                <button onClick={() => window.location.href = `/category`} style={{ backgroundColor: '#007BFF' }}>All Categories</button>
-            </div>
             <div className='cards-container'>
                 <div key={randomCard.ID} className="card">
                     <div className="delete-icon">
@@ -73,6 +60,19 @@ function Random() {
                     {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                     <p>Category: {randomCard.Category}</p>
                 </div>
+            </div>
+            <div className="card1">
+                <select onChange={(e) => setCategoryId(e.target.value)}>
+                    <option key={"all"} value={"all"} selected >Any</option>
+                    {categories.map(category => (
+                        <option key={category.ID} value={category.ID}>{category.Name} -- {category["#Cards"]}</option>
+                    ))}
+                </select>
+                <span> </span>
+                <br />
+                <button onClick={fetchRandomCard}>Random Card</button>
+                <span> </span>
+                <button onClick={() => window.location.href = `/category`} style={{ backgroundColor: '#007BFF' }}>All Categories</button>
             </div>
         </div>
     );
