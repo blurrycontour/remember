@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faHome } from '@fortawesome/free-solid-svg-icons';
 import './Common.css';
 
 
@@ -45,12 +45,21 @@ function Cards() {
 
     return (
         <div>
-            <h1>{categoryName}</h1>
+            <div className='card2'>
+                <div className='header'>
+                    <div className='back-button'>
+                        <Link to="/">
+                            <FontAwesomeIcon icon={faHome} size="2x" />
+                        </Link>
+                    </div>
+                    <h1>{categoryName}</h1>
+                </div>
+            </div>
             <div className='cards-container'>
                 {cards.map(card => (
                     <div key={card.ID} className="card">
                         <div className="delete-icon">
-                        <FontAwesomeIcon icon={faTrashAlt} size="1x" onClick={() => {
+                        <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={() => {
                             if (window.confirm('Are you sure you want to delete this card?')) {
                                 removeCard(card.ID);
                             }
@@ -58,7 +67,7 @@ function Cards() {
                         </div>
                         <h2>{card.Front}</h2>
                         <hr/>
-                        <h3>{card.Back}</h3>
+                        <h3>{card.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>
                     </div>
                 ))}
             </div>
@@ -67,7 +76,7 @@ function Cards() {
             <div className="card1">
                 <h3>Add a new card</h3>
                 <p>Front <input type='text' value={newCardFront} onChange={(e) => setNewCardFront(e.target.value)}/></p>
-                <p>Back <input type='text' value={newCardBack} onChange={(e) => setNewCardBack(e.target.value)}/></p>
+                <p>Back <textarea value={newCardBack} onChange={(e) => setNewCardBack(e.target.value)}/></p>
                 <button onClick={addCard}>Add Card</button>
             </div>
         </div>

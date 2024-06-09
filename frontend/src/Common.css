@@ -1,6 +1,5 @@
 h1 {
     text-align: center;
-    margin-top: 50px;
 }
 
 .cards-container {
@@ -29,15 +28,34 @@ h1 {
     cursor: pointer;
 }
 
+.show-icon {
+    color: #007BFF;
+    cursor: pointer;
+}
+
 .card1 {
     border: 1px solid #ccc;
     border-radius: 5px;
+    background-color: #eee;
     padding: 15px;
     margin: 10px auto; /* This will center the card horizontally */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.3s ease-in-out;
     width: 90%;
     max-width: 500px;
+}
+.header {
+    display: flex;
+    align-items: center;
+}
+.card2 {
+    padding: 15px;
+    margin: 10px auto; /* This will center the card horizontally */
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    justify-content: center;
 }
 
 .card:hover {
@@ -69,12 +87,15 @@ h1 {
     border: 2px solid #007BFF;
 }
 
-.card1 input {
+.card1 input, .card1 textarea {
     width: 100%;
     padding: 10px 20px;
     margin: 10px 0;
     box-sizing: border-box;
     font-size: 16px;
+}
+.card1 textarea {
+    resize: vertical;
 }
 
 .card1 select {
@@ -109,4 +130,9 @@ h1 {
 hr {
     border-color: gray;
     opacity: 0.2;
+}
+
+.back-button {
+    position: absolute;
+    left: 5px;
 }
