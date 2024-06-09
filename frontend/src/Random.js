@@ -58,7 +58,7 @@ function Random() {
                         <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                     </div>
                     {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
-                    <p>Category: {randomCard.Category}</p>
+                    <p>Category → {randomCard.Category}</p>
                 </div>
             </div>
             <div className="card1">
@@ -70,9 +70,9 @@ function Random() {
                 </select>
                 <span> </span>
                 <br />
-                <button onClick={fetchRandomCard}>Random Card</button>
-                <span> </span>
                 <button onClick={() => window.location.href = `/category`} style={{ backgroundColor: '#007BFF' }}>All Categories</button>
+                <span> </span>
+                <button onClick={fetchRandomCard} style={{ float: 'inline-end' }}>Random Card</button>
             </div>
         </div>
     );
