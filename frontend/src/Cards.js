@@ -65,7 +65,7 @@ function Cards() {
                             }
                         }} />
                         </div>
-                        <h2>{card.Front}</h2>
+                        <h2>{card.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
                         <hr/>
                         <h3>{card.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>
                     </div>

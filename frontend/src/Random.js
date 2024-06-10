@@ -65,7 +65,7 @@ function Random() {
                             }
                         }} />
                     </div>
-                    <h2>{randomCard.Front}</h2>
+                    <h2>{randomCard.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
                     <hr />
                     {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                     <div className="show-icon">
