@@ -47,7 +47,7 @@ jobs:
       - name: Restore the backup of master.pkl
         run: |
           ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
-            cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl
+            if [ -d $REPO_NAME ]; then cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl; fi
           "
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
