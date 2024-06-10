@@ -4,7 +4,7 @@ import hashlib
 
 from remember import Remember, FlashCard
 
-from ..dependencies import CardData
+from ..dependencies import CardData, Code
 
 
 router = APIRouter(
@@ -34,7 +34,7 @@ async def remove_card(card_id: str):
 
 
 @router.post('/check_code')
-async def check_code(code: str):
-    hashed_code = hashlib.md5(f"{code}:salt@123456789".encode()).hexdigest()
+async def check_code(code: Code):
+    hashed_code = hashlib.md5(f"{code.code}:salt@123456789".encode()).hexdigest()
     result = hashed_code == "747cdc2fb2e26e2c02b4f1f648e69f7b"
     return result

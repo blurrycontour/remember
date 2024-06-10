@@ -3,6 +3,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import './Common.css';
+import { deleteCardPrompt } from './Common';
 
 
 function Random() {
@@ -26,18 +27,6 @@ function Random() {
         } else {
             const response = await axios.get(`${API_URL}/main/random/${categoryId}`);
             setRandomCard(response.data);
-        }
-    }
-
-    const deleteCardPrompt = async () => {
-        const confirmation_code = window.prompt('Enter confirmation code to delete the card');
-
-        const response = await axios.post(`${API_URL}/card/check_code`, { code: confirmation_code });
-        console.log(response.data);
-        if (response.data){
-            removeCard(randomCard.ID);
-        } else {
-            window.alert('Invalid code enetered!')
         }
     }
 
@@ -69,20 +58,20 @@ function Random() {
                 <button onClick={fetchRandomCard} style={{ float: 'inline-end' }}>Random Card</button>
             </div>
             {!!randomCard &&
-            <div className='cards-container'>
-                <div key={randomCard.ID} className="card">
-                    <div className="delete-icon">
-                        <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt} />
+                <div className='cards-container'>
+                    <div key={randomCard.ID} className="card">
+                        <div className="delete-icon">
+                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.ID)} />
+                        </div>
+                        <h2>{randomCard.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
+                        <hr />
+                        {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
+                        <div className="show-icon">
+                            <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
+                        </div>
+                        <p>Category → {randomCard.Category}</p>
                     </div>
-                    <h2>{randomCard.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
-                    <hr />
-                    {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
-                    <div className="show-icon">
-                        <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
-                    </div>
-                    <p>Category → {randomCard.Category}</p>
-                </div>
-            </div>}
+                </div>}
         </div>
     );
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome } from '@fortawesome/free-solid-svg-icons';
+import { deleteCardPrompt } from './Common';
 import './Common.css';
 
 
@@ -52,11 +53,7 @@ function Category() {
                         <h3>Number of Cards: {category["#Cards"]}</h3>
                         <button onClick={() => window.location.href = `/category/${category.ID}`}>View</button>
                         <div className="delete-icon">
-                            <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={() => {
-                                if (window.confirm('Are you sure you want to delete this category?')) {
-                                    removeCategory(category.ID);
-                                }
-                            }} />
+                            <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category.ID)} />
                         </div>
                     </div>
                 ))}

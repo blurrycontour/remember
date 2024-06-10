@@ -9,3 +9,6 @@ class CardData(BaseModel):
 class CategoryData(BaseModel):
     name: str
     description: str = ""
+
+class Code(BaseModel):
+    code: str

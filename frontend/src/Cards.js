@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome } from '@fortawesome/free-solid-svg-icons';
+import { deleteCardPrompt } from './Common';
 import './Common.css';
 
 
@@ -59,11 +60,7 @@ function Cards() {
                 {cards.map(card => (
                     <div key={card.ID} className="card">
                         <div className="delete-icon">
-                        <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={() => {
-                            if (window.confirm('Are you sure you want to delete this card?')) {
-                                removeCard(card.ID);
-                            }
-                        }} />
+                        <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card.ID)} />
                         </div>
                         <h2>{card.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
                         <hr/>
