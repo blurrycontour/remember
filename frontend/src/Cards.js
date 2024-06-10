@@ -74,9 +74,9 @@ function Cards() {
             <br/>
             <br/>
             <div className="card1">
-                <h3>Add a new card</h3>
-                <p>Front <input type='text' value={newCardFront} onChange={(e) => setNewCardFront(e.target.value)}/></p>
-                <p>Back <textarea value={newCardBack} onChange={(e) => setNewCardBack(e.target.value)}/></p>
+                <h3>Add a new card 🧾</h3>
+                <p>Front <textarea value={newCardFront} onChange={(e) => setNewCardFront(e.target.value)}/></p>
+                <p>Back <textarea value={newCardBack} onChange={(e) => setNewCardBack(e.target.value)} style={{height: ''}}/></p>
                 <button onClick={addCard}>Add Card</button>
             </div>
         </div>
