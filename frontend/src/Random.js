@@ -8,7 +8,7 @@ import './Common.css';
 function Random() {
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('all');
-    const [randomCard, setRandomCard] = useState({});
+    const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
 
     const API_URL = '/api';
@@ -31,7 +31,7 @@ function Random() {
 
     const removeCard = async (cardId) => {
         await axios.delete(`${API_URL}/card/${cardId}`);
-        setRandomCard({});
+        setRandomCard(null);
     };
 
     useEffect(() => {
@@ -56,7 +56,7 @@ function Random() {
                 <span> </span>
                 <button onClick={fetchRandomCard} style={{ float: 'inline-end' }}>Random Card</button>
             </div>
-            {randomCard == {} &&
+            {!!randomCard &&
             <div className='cards-container'>
                 <div key={randomCard.ID} className="card">
                     <div className="delete-icon">
