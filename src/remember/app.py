@@ -116,7 +116,8 @@ class Remember:
             return
 
         if not category_id:
-            category_id = random.choice(list(self.data.keys()))
+            weights = [len(category.cards) for category in self.data.values()]
+            category_id = random.choices(list(self.data.keys()), weights=weights)[0]
         card = self.data[category_id].random()
         return card.info() if verbose else str(card)
 
