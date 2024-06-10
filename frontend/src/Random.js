@@ -56,6 +56,7 @@ function Random() {
                 <span> </span>
                 <button onClick={fetchRandomCard} style={{ float: 'inline-end' }}>Random Card</button>
             </div>
+            {randomCard &&
             <div className='cards-container'>
                 <div key={randomCard.ID} className="card">
                     <div className="delete-icon">
@@ -73,7 +74,7 @@ function Random() {
                     </div>
                     <p>Category → {randomCard.Category}</p>
                 </div>
-            </div>
+            </div>}
         </div>
     );
 }
