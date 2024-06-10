@@ -1,0 +1,44 @@
+name: Setup Docker
+
+on:
+  workflow_dispatch:
+    # inputs:
+    #   external_ip:
+    #     description: "Server IP Address"
+    #     default: "0.0.0.0"
+
+env:
+  SSH_USER: ${{secrets.SSH_USER}}
+  SSH_KEY: ${{secrets.SSH_KEY}}
+  SSH_IP: ${{secrets.SSH_IP}}
+  # SSH_IP: ${{ github.event.inputs.external_ip }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get current repo name
+        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - name: Add IP to known_host
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
+      - name: Add ssh private key
+        run: |
+          eval $(ssh-agent)
+          ssh-add - <<< "$SSH_KEY"
+          echo "$SSH_KEY" > ~/.ssh/id_cloud
+          chmod 0600 ~/.ssh/id_cloud
+      - name: Install docker and compose
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            wget https://gist.githubusercontent.com/blurrycontour/cb8f62bd265e8cf335d3938745e985f3/raw/1eaee626b6a67047d3cbc2c39bdc33b039f61962/install_docker.sh
+            sudo chmod +x install_docker.sh
+            sudo ./install_docker.sh
+            sudo gpasswd -a $USER docker
+          "
+      - name: Check docker version
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker --version"
+      - name: Check docker compose version
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker compose version"

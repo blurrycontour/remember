@@ -1,4 +1,4 @@
-name: Deploy to GCE
+name: Deploy to Cloud
 
 on:
   workflow_run:
@@ -29,16 +29,16 @@ jobs:
         run: |
           eval $(ssh-agent)
           ssh-add - <<< "$SSH_KEY"
-          echo "$SSH_KEY" > ~/.ssh/id_gcp
-          chmod 0600 ~/.ssh/id_gcp
+          echo "$SSH_KEY" > ~/.ssh/id_cloud
+          chmod 0600 ~/.ssh/id_cloud
       - name: Make a backup of master.pkl
         run: |
-            ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
+            ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
               if [ -d $REPO_NAME ]; then cp $REPO_NAME/data/master.pkl $REPO_NAME/data/master.pkl.bkp; fi
             "
       - name: Get the docker-compose file
         run: |
-            ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
+            ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
                 if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
                 cd remember
                 git fetch
@@ -46,14 +46,14 @@ jobs:
             "
       - name: Restore the backup of master.pkl
         run: |
-          ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
             if [ -f $REPO_NAME/data/master.pkl.bkp ]; then cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl; fi
           "
       - name: Add ngrok authtoken to .env
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Stop existing containers
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
       - name: Pull latest image
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose pull"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose pull"
       - name: Start containers again
-        run: ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose up -d"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose up -d"
