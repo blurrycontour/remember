@@ -3,6 +3,7 @@ import random
 from typing import Dict
 
 from .card import Category, FlashCard
+from .backup import backup_to_s3
 
 
 class Remember:
@@ -24,6 +25,7 @@ class Remember:
 
     def save(self):
         """ Save the data """
+        backup_to_s3(self.data_path)
         with open(self.data_path, 'wb') as f:
             pickle.dump(self.data, f)
 
@@ -155,7 +157,3 @@ class Remember:
         if category_id in self.data:
             return self.data[category_id].get_cards(verbose=verbose)
         return f"Category ID '{category_id}' not found!"
-
-
-    def __del__(self):
-        self.save()
