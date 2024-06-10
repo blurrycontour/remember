@@ -10,8 +10,8 @@ def backup_to_s3(file_path:str):
     bucket_name = "remember-app-bucket"
 
     object_name = os.path.basename(file_path)
-    object_name = f"{datetime.now().strftime('%Y-%m-%d')}--{object_name}"
-
+    object_name = f"{datetime.now().strftime('%Y-%m-%d--%H-00-00')}--{object_name}"
+    datetime.now().strftime('%Y-%m-%d--%H-%M-%S')
     s3_client = boto3.client(service_name='s3')
 
     try:
