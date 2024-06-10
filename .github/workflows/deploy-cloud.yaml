@@ -12,6 +12,7 @@ env:
   SSH_KEY: ${{secrets.SSH_KEY}}
   SSH_IP: ${{secrets.SSH_IP}}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
+  AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
 
 jobs:
   deploy:
@@ -48,6 +49,13 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
             if [ -f $REPO_NAME/data/master.pkl.bkp ]; then cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl; fi
+          "
+      - name: Create aws credentials file
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            mkdir -p ~/.aws
+            echo "$AWS_CREDENTIALS" > ~/.aws/credentials
+            chmod 0600 ~/.aws/credentials
           "
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
