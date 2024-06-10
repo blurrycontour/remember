@@ -34,7 +34,7 @@ jobs:
       - name: Make a backup of master.pkl
         run: |
             ssh -i ~/.ssh/id_gcp $SSH_USER@$SSH_IP "
-              cp $REPO_NAME/data/master.pkl $REPO_NAME/data/master.pkl.bkp
+              if [ -d $REPO_NAME ]; then cp $REPO_NAME/data/master.pkl $REPO_NAME/data/master.pkl.bkp; fi
             "
       - name: Get the docker-compose file
         run: |
