@@ -32,6 +32,7 @@ h1 {
 .show-icon {
     position: absolute;
     right: 10px;
+    bottom: 12px;
     color: #007BFF;
     cursor: pointer;
 }
@@ -140,4 +141,8 @@ hr {
 .back-button {
     position: absolute;
     left: 5px;
+}
+
+.card p {
+    margin-bottom: 0px;
 }

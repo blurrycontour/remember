@@ -67,10 +67,10 @@ function Random() {
                     </div>
                     <h2>{randomCard.Front}</h2>
                     <hr />
+                    {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                     <div className="show-icon">
                         <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                     </div>
-                    {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                     <p>Category → {randomCard.Category}</p>
                 </div>
             </div>
