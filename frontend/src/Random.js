@@ -29,6 +29,18 @@ function Random() {
         }
     }
 
+    const deleteCardPrompt = async () => {
+        const confirmation_code = window.prompt('Enter confirmation code to delete the card');
+
+        const response = await axios.post(`${API_URL}/card/check_code`, { code: confirmation_code });
+        console.log(response.data);
+        if (response.data){
+            removeCard(randomCard.ID);
+        } else {
+            window.alert('Invalid code enetered!')
+        }
+    }
+
     const removeCard = async (cardId) => {
         await axios.delete(`${API_URL}/card/${cardId}`);
         setRandomCard(null);
@@ -60,11 +72,7 @@ function Random() {
             <div className='cards-container'>
                 <div key={randomCard.ID} className="card">
                     <div className="delete-icon">
-                        <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={() => {
-                            if (window.confirm('Are you sure you want to delete this card?')) {
-                                removeCard(randomCard.ID);
-                            }
-                        }} />
+                        <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt} />
                     </div>
                     <h2>{randomCard.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
                     <hr />

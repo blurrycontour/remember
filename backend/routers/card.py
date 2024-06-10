@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+import hashlib
 
 from remember import Remember, FlashCard
 
@@ -30,3 +31,10 @@ async def add_card(card: CardData):
 async def remove_card(card_id: str):
     app = Remember('/data/master.pkl')
     return app.remove_card(card_id)
+
+
+@router.post('/check_code')
+async def check_code(code: str):
+    hashed_code = hashlib.md5(f"{code}:salt@123456789".encode()).hexdigest()
+    result = hashed_code == "747cdc2fb2e26e2c02b4f1f648e69f7b"
+    return result
