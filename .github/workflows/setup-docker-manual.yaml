@@ -36,7 +36,7 @@ jobs:
             wget https://gist.githubusercontent.com/blurrycontour/cb8f62bd265e8cf335d3938745e985f3/raw/1eaee626b6a67047d3cbc2c39bdc33b039f61962/install_docker.sh
             sudo chmod +x install_docker.sh
             sudo ./install_docker.sh
-            sudo gpasswd -a $USER docker
+            sudo gpasswd -a $SSH_USER docker
           "
       - name: Check docker version
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker --version"
