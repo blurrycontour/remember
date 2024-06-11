@@ -14,6 +14,7 @@ services:
     volumes:
       - ./data:/data
       - ../.aws/credentials:/root/.aws/credentials
+      - ../.gcp/credentials.json:/root/.gcp/credentials.json
     env_file:
       - ./backend/.env
     extra_hosts:

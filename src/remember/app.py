@@ -3,7 +3,7 @@ import random
 from typing import Dict
 
 from .card import Category, FlashCard
-from .backup import backup_to_s3
+from .backup import backup_to_s3, backup_to_gcs
 
 
 class Remember:
@@ -26,6 +26,7 @@ class Remember:
     def save(self):
         """ Save the data """
         backup_to_s3(self.data_path)
+        backup_to_gcs(self.data_path)
         with open(self.data_path, 'wb') as f:
             pickle.dump(self.data, f)
 

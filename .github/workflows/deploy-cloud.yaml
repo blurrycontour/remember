@@ -12,8 +12,8 @@ env:
   SSH_KEY: ${{secrets.SSH_KEY}}
   SSH_IP: ${{secrets.SSH_IP}}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
-  AWS_ACCESS_KEY: ${{secrets.AWS_ACCESS_KEY}}
-  AWS_SECRET_KEY: ${{secrets.AWS_SECRET_KEY}}
+  AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
+  GCP_CREDENTIALS: ${{secrets.GCP_CREDENTIALS}}
 
 jobs:
   deploy:
@@ -55,10 +55,15 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
             mkdir -p ~/.aws
-            echo "[default]" > ~/.aws/credentials
-            echo "aws_access_key_id = $AWS_ACCESS_KEY" >> ~/.aws/credentials
-            echo "aws_secret_access_key = $AWS_SECRET_KEY" >> ~/.aws/credentials
+            echo $AWS_CREDENTIALS | base64 --decode > ~/.aws/credentials
             chmod 644 ~/.aws/credentials
+          "
+      - name: Create gcp credentials file
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            mkdir -p ~/.gcp
+            echo $GCP_CREDENTIALS | base64 --decode > ~/.gcp/credentials.json
+            chmod 644 ~/.gcp/credentials.json
           "
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
