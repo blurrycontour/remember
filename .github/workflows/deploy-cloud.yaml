@@ -33,11 +33,6 @@ jobs:
           ssh-add - <<< "$SSH_KEY"
           echo "$SSH_KEY" > ~/.ssh/id_cloud
           chmod 0600 ~/.ssh/id_cloud
-      - name: Make a backup of master.pkl
-        run: |
-            ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
-              if [ -d $REPO_NAME ]; then cp $REPO_NAME/data/master.pkl $REPO_NAME/data/master.pkl.bkp; fi
-            "
       - name: Get the docker-compose file
         run: |
             ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
@@ -46,11 +41,6 @@ jobs:
                 git fetch
                 git reset --hard $GITHUB_SHA
             "
-      - name: Restore the backup of master.pkl
-        run: |
-          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
-            if [ -f $REPO_NAME/data/master.pkl.bkp ]; then cp $REPO_NAME/data/master.pkl.bkp $REPO_NAME/data/master.pkl; fi
-          "
       - name: Create aws credentials file
         run: |
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "

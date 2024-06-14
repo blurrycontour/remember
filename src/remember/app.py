@@ -3,10 +3,10 @@ import random
 from typing import Dict
 
 from .card import Category, FlashCard
-from .backup import backup_to_s3, backup_to_gcs
+from .backup import backup_to_s3, backup_to_gcs, download_from_gcs
+from .singleton import SingletonMeta
 
-
-class Remember:
+class Remember(metaclass=SingletonMeta):
     def __init__(self, data_path:str):
         self.data:Dict[str, Category] = {}
         self.data_path = data_path
@@ -16,6 +16,7 @@ class Remember:
     def load(self):
         """ Load the data """
         try:
+            download_from_gcs(self.data_path)
             with open(self.data_path, 'rb') as f:
                 self.data = pickle.load(f)
         except FileNotFoundError:
