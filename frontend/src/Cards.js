@@ -23,7 +23,12 @@ function Cards() {
     };
 
     const addCard = async () => {
-        await axios.post(`${API_URL}/card/`, { category: categoryName, front: newCardFront, back: newCardBack});
+        // TODO: check if newCardFront exists in categoryName
+        const response = await axios.post(`${API_URL}/card/`, { category: categoryName, front: newCardFront, back: newCardBack});
+        if (response.data === null) {
+            alert("Card already exists in this category!");
+            return;
+        }
         setNewCardFront('');
         setNewCardBack('');
         fetchCards();

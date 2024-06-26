@@ -1,6 +1,7 @@
 import random
 from datetime import datetime
 import hashlib
+from typing import Union
 
 
 class FlashCard:
@@ -58,15 +59,18 @@ class Category:
         return hashlib.md5(f"{name}".encode()).hexdigest()
 
 
-    def add_card(self, card:FlashCard):
+    def add_card(self, card:FlashCard) -> Union[None, str]:
         """ Add a card to this category """
         assert card.category == self.name
         if card.id in self.cards:
             print(f"Updating card in category '{self.name}'")
-            self.cards[card.id].update(card.back)
+            # TODO: Update the card conditionally (auth)
+            # self.cards[card.id].update(card.back)
+            return None
         else:
             print(f"Adding card to category '{self.name}'")
             self.cards[card.id] = card
+            return card.id
 
 
     def get_cards(self, verbose:bool=False):

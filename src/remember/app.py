@@ -26,10 +26,10 @@ class Remember(metaclass=SingletonMeta):
 
     def save(self):
         """ Save the data """
-        backup_to_s3(self.data_path)
-        backup_to_gcs(self.data_path)
         with open(self.data_path, 'wb') as f:
             pickle.dump(self.data, f)
+        backup_to_s3(self.data_path)
+        backup_to_gcs(self.data_path)
 
 
     def __str__(self) -> str:
@@ -67,9 +67,11 @@ class Remember(metaclass=SingletonMeta):
             if not create_if_not_exist:
                 return False
             self.add_category(Category(card.category))
-        self.data[category_id].add_card(card)
-        self.save()
-        return card.id
+
+        added_id = self.data[category_id].add_card(card)
+        if added_id:
+            self.save()
+        return added_id
 
 
     def get_card(self, card_id:str, verbose:bool=False):
@@ -103,7 +105,6 @@ class Remember(metaclass=SingletonMeta):
     def get_all(self, verbose:bool=False):
         """ Show all cards in all categories """
         _data = self.get_categories(verbose=verbose)
-        print(_data)
         for category in _data:
             category["Cards"] = self.get_category(category_name=category["Name"], verbose=verbose)
         return _data

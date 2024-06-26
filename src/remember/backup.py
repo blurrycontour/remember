@@ -8,6 +8,9 @@ from google.cloud import storage
 
 def backup_to_s3(file_path:str):
     """ Backup the data to S3 """
+    if file_path is None:
+        return
+
     bucket_name = "remember-app-bucket"
 
     object_name = os.path.basename(file_path)
@@ -25,6 +28,9 @@ def backup_to_s3(file_path:str):
 
 def backup_to_gcs(file_path:str):
     """ Backup the data to GCS """
+    if file_path is None:
+        return
+
     bucket_name = "remember-app-bucket"
 
     object_name = os.path.basename(file_path)
@@ -45,6 +51,9 @@ def backup_to_gcs(file_path:str):
 
 def download_from_gcs(file_path:str):
     """ Download the data from GCS """
+    if file_path is None:
+        return
+
     bucket_name = "remember-app-bucket"
 
     object_name = os.path.basename(file_path)
