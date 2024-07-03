@@ -1,10 +1,12 @@
 import pickle
 import random
 from typing import Dict
+import os
 
 from .card import Category, FlashCard
 from .backup import backup_to_s3, backup_to_gcs, download_from_gcs
 from .singleton import SingletonMeta
+
 
 class Remember(metaclass=SingletonMeta):
     def __init__(self, data_path:str):
@@ -15,21 +17,33 @@ class Remember(metaclass=SingletonMeta):
 
     def load(self):
         """ Load the data """
-        try:
-            download_from_gcs(self.data_path)
+        # Load data from local storage
+        if os.path.exists(self.data_path):
             with open(self.data_path, 'rb') as f:
                 self.data = pickle.load(f)
-        except FileNotFoundError:
-            print("No data file found, starting fresh.")
-            self.data = {}
+        else:
+            # Load data from cloud storage
+            try:
+                download_from_gcs(self.data_path)
+            except Exception as e:
+                print(f"Error: {e}")
+                self.data = {}
 
 
     def save(self):
         """ Save the data """
         with open(self.data_path, 'wb') as f:
             pickle.dump(self.data, f)
-        backup_to_s3(self.data_path)
-        backup_to_gcs(self.data_path)
+
+        try:
+            backup_to_s3(self.data_path)
+        except:
+            print("Backup to S3 failed!")
+
+        try:
+            backup_to_gcs(self.data_path)
+        except:
+            print("Backup to GCS failed!")
 
 
     def __str__(self) -> str:

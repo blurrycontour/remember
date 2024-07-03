@@ -1,7 +1,7 @@
 services:
   backend:
     restart: always
-    container_name: backend
+    # container_name: backend
     image: ${DOCKER_IMAGE_PREFIX}:backend-latest
     build:
       context: '.'
@@ -22,7 +22,7 @@ services:
 
   frontend:
     restart: always
-    container_name: frontend
+    # container_name: frontend
     image: ${DOCKER_IMAGE_PREFIX}:frontend-latest
     build:
       context: '.'
@@ -41,7 +41,7 @@ services:
   nginx:
     restart: always
     image: nginx:alpine
-    container_name: nginx
+    # container_name: nginx
     volumes:
       - ./nginx/default.conf:/tmp/nginx/nginx.conf
     command:
@@ -63,7 +63,7 @@ services:
   ngrok:
     restart: always
     image: ngrok/ngrok
-    container_name: ngrok
+    # container_name: ngrok
     ports:
       - 4040:4040
     command:
@@ -84,5 +84,5 @@ networks:
     driver: bridge
     ipam:
       config:
-        - subnet: 10.0.0.0/16
-          gateway: 10.0.0.1
+        - subnet: 10.1.0.0/16
+          gateway: 10.1.0.1
