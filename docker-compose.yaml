@@ -79,6 +79,24 @@ services:
       remember-network:
         ipv4_address: ${NGROK_DOCKER_IP}
 
+  mongodb:
+    restart: always
+    image: mongo:latest
+    # container_name: mongodb
+    ports:
+      - ${MONGODB_PORT}:27017
+    command:
+      - --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - ./data/mongo/db:/data/db
+      - ./data/mongo/backup:/data/backup
+    networks:
+      - remember-network
+
+
 networks:
   remember-network:
     driver: bridge
