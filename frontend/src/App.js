@@ -1,17 +1,25 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Category from './Category';
-import Cards from './Cards';
-import Random from './Random';
+import { Random } from './Random';
+import { Cards } from './Cards';
+import { Category } from './Category';
+import { Login } from './auth/Login';
+import { Account } from './auth/Account';
+import { ProtectedRoute } from './auth/ProtectedRoute';
+import { AuthProvider } from './auth/AuthProvider';
 
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path='/' element={ <Random/> }/>
-        <Route path='/category' element={ <Category/> }/>
-        <Route path='/category/:id' element={ <Cards/> }/>
-      </Routes>
+      <AuthProvider>
+        <Routes>
+          <Route path='/' element={<ProtectedRoute><Random /></ProtectedRoute>} />
+          <Route path='/category' element={<ProtectedRoute><Category /></ProtectedRoute>} />
+          <Route path='/category/:id' element={<ProtectedRoute><Cards /></ProtectedRoute>} />
+          <Route path='/login' element={<Login />} />
+          <Route path='/account' element={<ProtectedRoute><Account /></ProtectedRoute>} />
+        </Routes>
+      </AuthProvider>
     </Router>
   );
 }

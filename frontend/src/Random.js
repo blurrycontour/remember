@@ -1,30 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
 import './Common.css';
 import { deleteCardPrompt } from './Common';
 
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { auth, googleProvider } from './config/firebase.config';
 
-
-function Random() {
+export function Random() {
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
-    const [loggedIn, setLoggedIn] = useState(false);
 
     const API_URL = '/api';
-
-    onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setLoggedIn(true);
-        } else {
-            setLoggedIn(false);
-        }
-      });
 
     const fetchCategories = async () => {
         const response = await axios.get(`${API_URL}/category/`);
@@ -49,32 +38,20 @@ function Random() {
     useEffect(() => {
         fetchCategories();
         fetchRandomCard();
-        setLoggedIn(auth.currentUser ? true : false);
     }, []);
 
-    const handleSignIn = async () => {
-        const result = await signInWithPopup(auth, googleProvider).then((result) => {
-        }).catch((error) => {
-            console.log(error);
-        });
-    }
-
-    const handleLogout = () => {
-        auth.signOut();
-    }
 
     return (
         <div>
-            <h1>Random Card</h1>
-            <div className='card1'>
-            {loggedIn ? (
-                <>
-                <h2>Hello, {auth.currentUser.displayName}!</h2>
-                <button onClick={handleLogout}>Log out</button>
-                </>
-            ):(
-                <button onClick={handleSignIn}>Sign In With Google</button>
-            )}
+            <div className='card2'>
+                <div className='header'>
+                    <h1>Random Card</h1>
+                    <div className='account-button'>
+                        <Link to="/account">
+                            <FontAwesomeIcon icon={faUser} size="2x" />
+                        </Link>
+                    </div>
+                </div>
             </div>
 
             <div className="card1">
@@ -108,5 +85,3 @@ function Random() {
         </div>
     );
 }
-
-export default Random;
