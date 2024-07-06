@@ -55,6 +55,8 @@ jobs:
             echo $GCP_CREDENTIALS | base64 --decode > ~/.gcp/credentials.json
             chmod 644 ~/.gcp/credentials.json
           "
+      - name: Create .env from .env.template file
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Stop existing containers
