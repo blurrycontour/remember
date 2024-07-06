@@ -74,5 +74,7 @@ jobs:
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
       - name: Pull latest image
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml pull"
+      - name: Clean local data files
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; rm -rf data/mongo/db/*"
       - name: Start containers again
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml --env-file .env up -d"
