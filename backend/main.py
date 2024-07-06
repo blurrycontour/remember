@@ -8,15 +8,19 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse, HTMLResponse
 
-from .utils.text_html import to_html
+import firebase_admin
+from firebase_admin import credentials
 
-from .routers import default, category, card
+from .utils.text_html import to_html
+from .routers import account, default, category, card
+
 
 app = FastAPI(root_path="/api")
 
 app.include_router(default.router)
 app.include_router(category.router)
 app.include_router(card.router)
+app.include_router(account.router)
 
 
 origins = ["*"]
@@ -27,6 +31,11 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+credentials_file = os.path.expanduser("~/.gcp/firebase-credentials.json")
+creds = credentials.Certificate(credentials_file)
+firebase_admin.initialize_app(creds)
+
 
 @app.exception_handler(RequestValidationError)
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
