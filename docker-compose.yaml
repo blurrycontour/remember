@@ -13,8 +13,8 @@ services:
       - remember-network
     volumes:
       - ./data:/data
-      - ../.aws/credentials:/root/.aws/credentials
-      - ../.gcp/credentials.json:/root/.gcp/credentials.json
+      - ~/.aws:/root/.aws
+      - ~/.gcp:/root/.gcp
     env_file:
       - ./backend/.env
     extra_hosts:

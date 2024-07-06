@@ -13,7 +13,8 @@ env:
   SSH_IP: ${{secrets.SSH_IP}}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
-  GCP_CREDENTIALS: ${{secrets.GCP_CREDENTIALS}}
+  GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}
+  FIREBASE_CREDENTIALS: ${{secrets.FIREBASE_CREDENTIALS}}
 
 jobs:
   deploy:
@@ -52,8 +53,10 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
             mkdir -p ~/.gcp
-            echo $GCP_CREDENTIALS | base64 --decode > ~/.gcp/credentials.json
-            chmod 644 ~/.gcp/credentials.json
+            echo $GCS_CREDENTIALS | base64 --decode > ~/.gcp/gcs-credentials.json
+            chmod 644 ~/.gcp/gcs-credentials.json
+            echo $FIREBASE_CREDENTIALS | base64 --decode > ~/.gcp/firebase-credentials.json
+            chmod 644 ~/.gcp/firebase-credentials.json
           "
       - name: Create .env from .env.template file
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"

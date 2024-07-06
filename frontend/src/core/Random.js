@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
-import './Common.css';
-import { deleteCardPrompt } from './Common';
+import { deleteCardPrompt, setAxiosDefaults } from './Utils';
+import '../Common.css';
 
 
 export function Random() {
@@ -14,6 +14,7 @@ export function Random() {
     const [showBack, setShowBack] = useState(false);
 
     const API_URL = '/api';
+    setAxiosDefaults();
 
     const fetchCategories = async () => {
         const response = await axios.get(`${API_URL}/category/`);

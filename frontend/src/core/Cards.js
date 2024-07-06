@@ -3,8 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt } from './Common';
-import './Common.css';
+import { deleteCardPrompt, setAxiosDefaults } from './Utils';
+import '../Common.css';
 
 
 export function Cards() {
@@ -15,7 +15,7 @@ export function Cards() {
     const [newCardBack, setNewCardBack] = useState('');
 
     const API_URL = '/api';
-
+    setAxiosDefaults();
 
     const fetchCards = async () => {
         const response = await axios.get(`${API_URL}/category/${id}`);
