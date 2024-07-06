@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt } from './Common';
 import './Common.css';
 
 
-function Category() {
+export function Category() {
     const [categories, setCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState('');
 
@@ -44,6 +44,11 @@ function Category() {
                         </Link>
                     </div>
                     <h1>Categories</h1>
+                    <div className='account-button'>
+                        <Link to="/account">
+                            <FontAwesomeIcon icon={faUser} size="2x" />
+                        </Link>
+                    </div>
                 </div>
             </div>
             <div className='cards-container'>
@@ -73,5 +78,3 @@ function Category() {
         </div>
     );
 }
-
-export default Category;

@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faHome } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt } from './Common';
 import './Common.css';
 
 
-function Cards() {
+export function Cards() {
     let { id } = useParams();
     const [cards, setCards] = useState([]);
     const [categoryName, setCategoryName] = useState('');
@@ -59,6 +59,11 @@ function Cards() {
                         </Link>
                     </div>
                     <h1>{categoryName}</h1>
+                    <div className='account-button'>
+                        <Link to="/account">
+                            <FontAwesomeIcon icon={faUser} size="2x" />
+                        </Link>
+                    </div>
                 </div>
             </div>
             <div className='cards-container'>
@@ -84,5 +89,3 @@ function Cards() {
         </div>
     );
 }
-
-export default Cards;

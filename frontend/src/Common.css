@@ -135,6 +135,41 @@ h1 {
     border: 2px solid #007BFF;
 }
 
+.card3 {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #eee;
+    padding: 15px;
+    margin: 10px auto; /* This will center the card horizontally */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease-in-out;
+    width: 90%;
+    max-width: 500px;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card3 button.login-button {
+    background-color: #4285F4; /* Google's brand color */
+    color: white;
+    width: 50%;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.card3 button.login-google:hover {
+    background-color: #357ae8; /* A slightly darker shade for hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
 hr {
     border-color: gray;
     opacity: 0.2;
@@ -143,6 +178,11 @@ hr {
 .back-button {
     position: absolute;
     left: 5px;
+}
+
+.account-button {
+    position: absolute;
+    right: 5px;
 }
 
 .card p {

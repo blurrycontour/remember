@@ -1,19 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
 import './Common.css';
 import { deleteCardPrompt } from './Common';
 
 
-function Random() {
+export function Random() {
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
 
     const API_URL = '/api';
-
 
     const fetchCategories = async () => {
         const response = await axios.get(`${API_URL}/category/`);
@@ -38,15 +38,25 @@ function Random() {
     useEffect(() => {
         fetchCategories();
         fetchRandomCard();
-        console.log('useEffect');
     }, []);
+
 
     return (
         <div>
-            <h1>Random Card</h1>
+            <div className='card2'>
+                <div className='header'>
+                    <h1>Random Card</h1>
+                    <div className='account-button'>
+                        <Link to="/account">
+                            <FontAwesomeIcon icon={faUser} size="2x" />
+                        </Link>
+                    </div>
+                </div>
+            </div>
+
             <div className="card1">
-                <select onChange={(e) => setCategoryId(e.target.value)}>
-                    <option key={"all"} value={"all"} selected >Any</option>
+                <select onChange={(e) => setCategoryId(e.target.value)} defaultValue={"all"}>
+                    <option key={"all"} value={"all"}>Any</option>
                     {categories.map(category => (
                         <option key={category.ID} value={category.ID}>{category.Name} -- {category["#Cards"]}</option>
                     ))}
@@ -75,5 +85,3 @@ function Random() {
         </div>
     );
 }
-
-export default Random;
