@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt } from './Common';
-import './Common.css';
+import '../Common.css';
 
 
 export function Cards() {
