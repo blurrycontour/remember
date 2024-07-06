@@ -37,7 +37,7 @@ def backup_to_gcs(file_path:str):
     object_name_base = object_name
     object_name = f"{datetime.now().strftime('%Y-%m-%d--%H-00-00')}--{object_name}"
 
-    credentials_file = os.path.expanduser("~/.gcp/credentials.json")
+    credentials_file = os.path.expanduser("~/.gcp/gcs-credentials.json")
     storage_client = storage.Client.from_service_account_json(credentials_file)
 
     bucket = storage_client.bucket(bucket_name)
@@ -58,7 +58,7 @@ def download_from_gcs(file_path:str):
 
     object_name = os.path.basename(file_path)
 
-    credentials_file = os.path.expanduser("~/.gcp/credentials.json")
+    credentials_file = os.path.expanduser("~/.gcp/gcs-credentials.json")
     storage_client = storage.Client.from_service_account_json(credentials_file)
 
     bucket = storage_client.bucket(bucket_name)

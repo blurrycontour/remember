@@ -14,7 +14,7 @@ env:
   SSH_IP: ${{ github.event.inputs.external_ip }}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
-  GCP_CREDENTIALS: ${{secrets.GCP_CREDENTIALS}}
+  GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}
   MONGO_ROOT_USERNAME: ${{secrets.MONGO_ROOT_USERNAME}}
   MONGO_ROOT_PASSWORD: ${{secrets.MONGO_ROOT_PASSWORD}}
 
@@ -54,8 +54,8 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
             mkdir -p ~/.gcp
-            echo $GCP_CREDENTIALS | base64 --decode > ~/.gcp/credentials.json
-            chmod 644 ~/.gcp/credentials.json
+            echo $GCS_CREDENTIALS | base64 --decode > ~/.gcp/gcs-credentials.json
+            chmod 644 ~/.gcp/gcs-credentials.json
           "
       - name: Create .env from .env.template file
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
