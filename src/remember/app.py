@@ -26,7 +26,7 @@ class Remember(metaclass=SingletonMeta):
             try:
                 download_from_gcs(self.data_path)
             except Exception as e:
-                print(f"Error: {e}")
+                print(f"Failed to download: {e}")
                 self.data = {}
 
 
