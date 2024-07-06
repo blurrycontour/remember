@@ -17,13 +17,14 @@ class Remember(metaclass=SingletonMeta):
 
     def load(self):
         """ Load the data """
-        # Load data from local storage
+        print("Loading data...")
         if os.path.exists(self.data_path):
+            print("Loading from local storage...")
             with open(self.data_path, 'rb') as f:
                 self.data = pickle.load(f)
         else:
-            # Load data from cloud storage
             try:
+                print("Loading from GCS...")
                 download_from_gcs(self.data_path)
             except Exception as e:
                 print(f"Failed to download: {e}")
@@ -37,13 +38,13 @@ class Remember(metaclass=SingletonMeta):
 
         try:
             backup_to_s3(self.data_path)
-        except:
-            print("Backup to S3 failed!")
+        except Exception as e:
+            print(f"Backup to S3 failed: {e}")
 
         try:
             backup_to_gcs(self.data_path)
-        except:
-            print("Backup to GCS failed!")
+        except Exception as e:
+            print(f"Backup to GCS failed: {e}")
 
 
     def __str__(self) -> str:
