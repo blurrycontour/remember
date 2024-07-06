@@ -60,7 +60,7 @@ jobs:
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Add mongodb root credentials to .env
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME'; echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env; echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env"
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml down"
       - name: Prune dangling images
