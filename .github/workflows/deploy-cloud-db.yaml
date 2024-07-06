@@ -15,6 +15,8 @@ env:
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
   GCP_CREDENTIALS: ${{secrets.GCP_CREDENTIALS}}
+  MONGO_ROOT_USERNAME: ${{secrets.MONGO_ROOT_USERNAME}}
+  MONGO_ROOT_PASSWORD: ${{secrets.MONGO_ROOT_PASSWORD}}
 
 jobs:
   deploy:
@@ -60,7 +62,12 @@ jobs:
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Add mongodb root credentials to .env
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env; echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env"
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            cd $REPO_NAME
+            echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env
+            echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env
+          "
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml down"
       - name: Prune dangling images
@@ -68,4 +75,4 @@ jobs:
       - name: Pull latest image
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml pull"
       - name: Start containers again
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml up -d"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml --env-file .env up -d"
