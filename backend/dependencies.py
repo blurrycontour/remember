@@ -16,18 +16,18 @@ class Code(BaseModel):
     code: str
 
 
+
 def get_current_user(request: Request):
     """Get the user details from Firebase, based on TokenID in the request
 
     :param request: The HTTP request
     """
-    token = request.headers.get('Authorization')
-    if not token:
+    authorization = request.headers.get('Authorization')
+    if not authorization:
         raise HTTPException(status_code=401, detail='Authorization header must be provided')
 
-    print("Token:", token)
-
     try:
+        token = authorization.split(' ')[1]
         user = auth.verify_id_token(token)
         return user
     except Exception as e:

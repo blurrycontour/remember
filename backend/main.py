@@ -32,9 +32,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-credentials_file = os.path.expanduser("~/.gcp/firebase-credentials.json")
-creds = credentials.Certificate(credentials_file)
-firebase_admin.initialize_app(creds)
+print("Initializing Firebase")
+try:
+    firebase_admin.get_app()
+except ValueError:
+    credentials_file = os.path.expanduser("~/.gcp/firebase-credentials.json")
+    creds = credentials.Certificate(credentials_file)
+    firebase_admin.initialize_app(creds)
 
 
 @app.exception_handler(RequestValidationError)
