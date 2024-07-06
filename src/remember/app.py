@@ -26,7 +26,8 @@ class Remember(metaclass=SingletonMeta):
             try:
                 print("Loading from GCS...")
                 download_from_gcs(self.data_path)
-                self.data = pickle.load(f)
+                with open(self.data_path, 'rb') as f:
+                    self.data = pickle.load(f)
             except Exception as e:
                 print(f"Failed to download: {e}")
                 self.data = {}
