@@ -1,14 +1,15 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
 from remember import Remember, Category
 
-from ..dependencies import CategoryData
+from ..dependencies import CategoryData, get_current_user
 
 
 router = APIRouter(
     prefix="/category",
     tags=["category"],
+    dependencies=[Depends(get_current_user)]
 )
 print('> Loading category router')
 

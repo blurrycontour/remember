@@ -1,15 +1,16 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 import hashlib
 
 from remember import Remember, FlashCard
 
-from ..dependencies import CardData, Code
+from ..dependencies import CardData, Code, get_current_user
 
 
 router = APIRouter(
     prefix="/card",
     tags=["card"],
+    dependencies=[Depends(get_current_user)]
 )
 print('> Loading card router')
 

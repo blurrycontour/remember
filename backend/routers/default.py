@@ -1,20 +1,22 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pathlib import Path
 
 from remember import Remember
+
+from ..dependencies import get_current_user
 
 
 router = APIRouter(
     prefix="/main",
     tags=["main"],
+    dependencies=[Depends(get_current_user)]
 )
 print('> Loading default router')
 
 
 @router.get('/')
 async def home():
-    app = Remember('/data/master.pkl')
-    return app.random(verbose=True)
+    return "OK"
 
 
 @router.post('/reload')
