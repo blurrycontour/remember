@@ -2,16 +2,16 @@ name: Setup Docker
 
 on:
   workflow_dispatch:
-    # inputs:
-    #   external_ip:
-    #     description: "Server IP Address"
-    #     default: "0.0.0.0"
+    inputs:
+      external_ip:
+        description: "Server IP Address"
+        default: ""
 
 env:
   SSH_USER: ${{secrets.SSH_USER}}
   SSH_KEY: ${{secrets.SSH_KEY}}
-  SSH_IP: ${{secrets.SSH_IP}}
-  # SSH_IP: ${{ github.event.inputs.external_ip }}
+  # SSH_IP: ${{secrets.SSH_IP}}
+  SSH_IP: ${{ github.event.inputs.external_ip }}
 
 jobs:
   deploy:

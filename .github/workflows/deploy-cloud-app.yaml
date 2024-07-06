@@ -1,0 +1,71 @@
+name: Deploy Application to Cloud
+
+on:
+  workflow_run:
+    workflows: [Docker Image CI]
+    types: [completed]
+    branches: [main]
+
+env:
+  DOCKER_USER: ${{secrets.DOCKER_USER}}
+  SSH_USER: ${{secrets.SSH_USER}}
+  SSH_KEY: ${{secrets.SSH_KEY}}
+  SSH_IP: ${{secrets.SSH_IP}}
+  NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
+  AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
+  GCP_CREDENTIALS: ${{secrets.GCP_CREDENTIALS}}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Get current repo name
+        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - name: Add IP to known_host
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
+      - name: Add ssh private key
+        run: |
+          eval $(ssh-agent)
+          ssh-add - <<< "$SSH_KEY"
+          echo "$SSH_KEY" > ~/.ssh/id_cloud
+          chmod 0600 ~/.ssh/id_cloud
+      - name: Get the docker-compose file
+        run: |
+            ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+                if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
+                cd remember
+                git fetch
+                git reset --hard $GITHUB_SHA
+            "
+      - name: Create aws credentials file
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            mkdir -p ~/.aws
+            echo $AWS_CREDENTIALS | base64 --decode > ~/.aws/credentials
+            chmod 644 ~/.aws/credentials
+          "
+      - name: Create gcp credentials file
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            mkdir -p ~/.gcp
+            echo $GCP_CREDENTIALS | base64 --decode > ~/.gcp/credentials.json
+            chmod 644 ~/.gcp/credentials.json
+          "
+      - name: Create .env from .env.template file
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
+      - name: Add ngrok authtoken to .env
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
+      - name: Stop existing containers
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
+      - name: Prune dangling images
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
+      - name: Pull latest image
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose pull"
+      - name: Clean local data files
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; rm -rf data/*.pkl"
+      - name: Start containers again
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose up -d"

@@ -9,3 +9,8 @@ tunnels:
     hostname: collie-skilled-pup.ngrok-free.app
     addr: http://nginx:80
     proto: http
+
+  mongodb:
+    # remote_addr: capable-slowly-fowl.ngrok-free.app
+    addr: mongodb:27017
+    proto: tcp
