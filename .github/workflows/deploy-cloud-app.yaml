@@ -15,6 +15,8 @@ env:
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
   GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}
   FIREBASE_CREDENTIALS: ${{secrets.FIREBASE_CREDENTIALS}}
+  MONGODB_STRING : ${{secrets.MONGODB_STRING}}
+  ENV: ${{secrets.ENV}}
 
 jobs:
   deploy:
@@ -62,6 +64,13 @@ jobs:
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
+      - name: Add mongodb credentials to .env
+        run: |
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            cd $REPO_NAME
+            echo 'MONGODB_STRING=$MONGODB_STRING' >> .env
+            echo 'ENV=$ENV' >> .env
+          "
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
       - name: Prune dangling images
