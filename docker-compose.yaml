@@ -17,6 +17,9 @@ services:
       - ~/.gcp:/root/.gcp
     env_file:
       - ./backend/.env
+    environment:
+      - MONGODB_STRING=${MONGODB_STRING}
+      - ENV=${ENV}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 

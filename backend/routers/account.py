@@ -1,6 +1,8 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+import pymongo
+import os
 
 from ..dependencies import get_current_user
 
@@ -27,9 +29,20 @@ async def firebase_user(user: Annotated[dict, Depends(get_current_user)]):
     return user
 
 
-@router.get('/test/{text}')
-async def test_auth(text:str):
+@router.get('/login')
+async def user_login(user: Annotated[dict, Depends(get_current_user)]):
     """
-    Test endpoint that depends on authenticated firebase
+    Add user if not exists
     """
-    return text
+    try:
+        db_name = os.getenv('ENV').lower()
+        mongodb_string = os.getenv('MONGODB_STRING')
+        client = pymongo.MongoClient(mongodb_string)
+        db = client[db_name]
+        collection = db["users"]
+        collection.insert_one(user)
+        user.pop('_id')
+    except Exception as e:
+        return f"Error adding user: {e}"
+
+    return user

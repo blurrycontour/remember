@@ -35,6 +35,9 @@ sudo gpasswd -a $USER docker
 ```
 
 ## Misc
+Firebase setup
+
+## Misc
 cat ~/.aws/credentials | base64 -w0
 cat ~/.gcp/gcp-credentials.json | base64 -w0
 cat ~/.gcp/firebase-credentials.json | base64 -w0
