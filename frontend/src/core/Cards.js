@@ -19,7 +19,8 @@ export function Cards() {
 
     const fetchCards = async () => {
         const response = await axios.get(`${API_URL}/category/${id}`);
-        setCards(response.data);
+        setCards(response.data.cards);
+        setCategoryName(response.data.name);
     };
 
     const addCard = async () => {
@@ -39,14 +40,8 @@ export function Cards() {
         fetchCards();
     };
 
-    const categoryIdToName = async (categoryId) => {
-        const response = await axios.get(`${API_URL}/category/id_to_name/${categoryId}`);
-        setCategoryName(response.data);
-    };
-
     useEffect(() => {
         fetchCards();
-        categoryIdToName(id);
     }, []);
 
     return (

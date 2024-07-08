@@ -89,32 +89,34 @@ class Remember(metaclass=SingletonMeta):
         return [item["category"] for item in items]
 
 
-    def get_category(self, user_id:str, category_id:str=None, category_name:str=None, verbose:bool=False):
-        """ Get a category """
+    def get_category(self, user_id:str, category_id:str=None, category_name:str=None):
+        """ Get a category i.e. return list of cards in the category """
         assert category_id or category_name, "Category ID or Name required!"
         assert not (category_id and category_name), "Only one of Category ID or Name required!"
         if category_name:
             category_id = Category.name_to_id(category_name)
 
         # new
+        _category = self.categories.find_one({"user_id": user_id, "category_id": category_id})
+        if not _category:
+            return f"Category ID '{category_id}' not found!"
 
-        # old
-        if category_id in self.data:
-            return self.data[category_id].get_cards(verbose=verbose)
-        return f"Category ID '{category_id}' not found!"
-
+        items = self.cards.find({"user_id": user_id, "category_id": category_id})
+        return {
+            "name": _category["category"]["Name"],
+            "cards": [item["card"] for item in items]
+        }
 
 
     def remove_category(self, category_id:str, user_id:str):
         """ Remove a category """
-        if self.categories.find_one({"user_id": user_id, "category_id": category.id}):
-            self.categories.delete_one({"user_id": user_id, "category_id": category_id})
-        if category_id in self.data:
-            del self.data[category_id]
-            self.save()
-            return category_id
-        print(f"Category ID '{category_id}' not found!")
-        return False
+        if not self.categories.find_one({"user_id": user_id, "category_id": category.id}):
+            print(f"Category ID '{category_id}' not found!")
+            return False
+
+        self.categories.delete_one({"user_id": user_id, "category_id": category_id})
+        self.cards.delete_many({"user_id": user_id, "category_id": category_id})
+        return category_id
 
 
     # =============== Card methods ===============
@@ -150,37 +152,45 @@ class Remember(metaclass=SingletonMeta):
         return f"Card ID '{card_id}' not found!"
 
 
-    def remove_card(self, card_id:int):
+    def remove_card(self, card_id:int, user_id:str):
         """ Remove a card from the category """
-        for category in self.data.values():
-            if card_id in category.cards:
-                del category.cards[card_id]
-                self.save()
-                return card_id
-        print(f"Card with ID '{card_id}' not found!")
-        return False
+        _card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
+        if not _card:
+            print(f"Card with ID '{card_id}' not found!")
+            return False
+
+        self.cards.delete_one({
+            "user_id": user_id,
+            "card_id": card_id,
+        })
+        self.categories.update_one(
+            {"user_id": user_id, "category_id": _card.category_id},
+            {"$inc": {"category.#Cards": -1}}
+        )
+        return card_id
 
 
-    def get_all(self, verbose:bool=False):
+    def get_all(self, user_id:str):
         """ Show all cards in all categories """
-        _data = self.get_categories(verbose=verbose)
+        _data = self.get_categories(user_id)
         for category in _data:
-            category["Cards"] = self.get_category(category_name=category["Name"], verbose=verbose)
+            category["Cards"] = self.get_category(category_id=category["ID"], user_id=user_id)["cards"]
         return _data
 
 
-    def random(self, category_id:str=None, category_name:str=None, verbose:bool=False):
+    def random(self, user_id:str, category_id:str=None, category_name:str=None):
         """ Show a random card from the category or all categories """
         assert not (category_id and category_name), "Only one of Category ID or Name required!"
         if category_name:
             category_id = Category.name_to_id(category_name)
 
-        if self.data == {}:
+        if category_id:
+            all_cards = self.get_category(category_id=category_id, user_id=user_id)["cards"]
+        else:
+            all_cards = list(self.cards.find({"user_id": user_id}))
+
+        if not all_cards:
             print("No data to show!")
             return
-
-        if not category_id:
-            weights = [len(category.cards) for category in self.data.values()]
-            category_id = random.choices(list(self.data.keys()), weights=weights)[0]
-        card = self.data[category_id].random()
-        return card.info() if verbose else str(card)
+        card = random.choices(all_cards, k=1)[0]
+        return card
