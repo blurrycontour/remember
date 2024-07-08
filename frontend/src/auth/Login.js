@@ -1,20 +1,27 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
-
-import { signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { auth, googleProvider } from '../config/firebase.config';
+import axios from 'axios';
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
 
 import '../Common.css';
 
 
 export function Login() {
-    const { user, setUser } = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     let location = useLocation();
     let from = location.state?.from?.pathname || "/account";
 
-    const handleLogin = async () => {
-        await signInWithPopup(auth, googleProvider).then((result) => {
+    const API_URL = '/api';
+
+    const informUserLogin = async (token) => {
+        await axios.post(`${API_URL}/account/user`, {}, { headers: { "Authorization": `Bearer ${token}` } });
+    };
+
+    const handleLogin = async (provider) => {
+        await signInWithPopup(auth, provider).then((result) => {
+            informUserLogin(result.user.accessToken);
             <Navigate to={from} replace />;
         }).catch((error) => {
             console.error("Login failed:", error);
@@ -30,9 +37,9 @@ export function Login() {
         <div>
             <h1>Login to see your cards!</h1>
             <div className='card3'>
-                <button onClick={handleLogin} className="login-button">Login with Google</button>
+                <button onClick={() => handleLogin(googleProvider)} className="login-button">Login with Google</button>
                 <br />
-                <button className="login-button">Login with Github</button>
+                <button onClick={() => handleLogin(githubProvider)} className="login-button">Login with Github</button>
             </div>
         </div>
     );

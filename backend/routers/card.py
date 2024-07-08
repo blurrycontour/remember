@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 import hashlib
@@ -16,22 +18,22 @@ print('> Loading card router')
 
 
 @router.get('/{card_id}')
-async def get_card(card_id: int):
-    app = Remember('/data/master.pkl')
-    return app.get_card(card_id, verbose=True)
+async def get_card(card_id: int, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.get_card(card_id=card_id, user_id=user["user_id"])
 
 
 @router.post('/')
-async def add_card(card: CardData):
-    app = Remember('/data/master.pkl')
+async def add_card(card: CardData, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
     card = FlashCard(card.category, card.front, card.back)
-    return app.add_card(card)
+    return app.add_card(card=card, user_id=user["user_id"])
 
 
 @router.delete('/{card_id}')
-async def remove_card(card_id: str):
-    app = Remember('/data/master.pkl')
-    return app.remove_card(card_id)
+async def remove_card(card_id: str, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.remove_card(card_id=card_id, user_id=user["user_id"])
 
 
 @router.post('/check_code')

@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from pathlib import Path
 
@@ -26,18 +28,18 @@ async def reload_backend():
 
 
 @router.get('/show')
-async def show():
-    app = Remember('/data/master.pkl')
-    return app.get_all(verbose=True)
+async def show(user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.get_all(user_id=user["user_id"])
 
 
 @router.get('/random')
-async def random():
-    app = Remember('/data/master.pkl')
-    return app.random(verbose=True)
+async def random(user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.random(user_id=user["user_id"])
 
 
 @router.get('/random/{category_id}')
-async def random_from_category(category_id:str):
-    app = Remember('/data/master.pkl')
-    return app.random(category_id=category_id, verbose=True)
+async def random_from_category(category_id:str, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.random(category_id=category_id, user_id=user["user_id"])

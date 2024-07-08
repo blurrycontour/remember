@@ -1,3 +1,9 @@
+a {
+    color: #007BFF;
+}
+a:hover {
+    color: red;
+}
 h1 {
     text-align: center;
 }
@@ -72,27 +78,6 @@ h1 {
     margin-top: 0;
 }
 
-.card button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition-duration: 0.4s;
-}
-
-.card button:hover {
-    background-color: white;
-    color: black;
-    border: 2px solid #007BFF;
-}
-
 .card1 input, .card1 textarea {
     width: 100%;
     padding: 10px 20px;
@@ -114,27 +99,6 @@ h1 {
     font-size: 16px;
 }
 
-.card1 button {
-    background-color: hwb(123 0% 34%);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition-duration: 0.4s;
-}
-
-.card1 button:hover {
-    background-color: white;
-    color: black;
-    border: 2px solid #007BFF;
-}
-
 .card3 {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -152,22 +116,27 @@ h1 {
     flex-direction: column;
 }
 
-.card3 button.login-button {
-    background-color: #4285F4; /* Google's brand color */
+.login-button {
+    background-color: #007BFF;
     color: white;
-    width: 50%;
-    border: none;
-    padding: 12px 24px;
+    border: 2px solid #007BFF;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
     font-size: 16px;
+    margin: 4px 2px;
     cursor: pointer;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s, box-shadow 0.3s;
+    transition-duration: 0.1s;
+    width: 100%;
+    max-width: 250px;
 }
 
-.card3 button.login-google:hover {
-    background-color: #357ae8; /* A slightly darker shade for hover */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+.login-button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #007BFF;
 }
 
 hr {
@@ -187,4 +156,46 @@ hr {
 
 .card p {
     margin-bottom: 0px;
+}
+
+.green-button {
+    background-color: hwb(123 0% 34%);
+    color: white;
+    border: 2px solid hwb(123 0% 34%);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.1s;
+}
+
+.green-button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid hwb(123 0% 34%);
+}
+
+.blue-button {
+    background-color: #007BFF;
+    color: white;
+    border: 2px solid #007BFF;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition-duration: 0.1s;
+}
+
+.blue-button:hover {
+    background-color: white;
+    color: black;
+    border: 2px solid #007BFF;
 }

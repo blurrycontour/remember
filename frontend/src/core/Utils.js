@@ -21,7 +21,7 @@ export function deleteCardPrompt(removeFunction, removeID) {
     }
 }
 
-export function setAxiosDefaults() {
+export function SetAxiosDefaults() {
     const { user } = useContext(AuthContext);
     axios.defaults.headers.common['Authorization'] = `Bearer ${user?.accessToken}`;
 }

@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
@@ -15,34 +17,25 @@ print('> Loading category router')
 
 
 @router.get('/')
-async def get_categories():
-    app = Remember('/data/master.pkl')
-    return app.get_categories(verbose=True)
+async def get_categories(user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.get_categories(user_id=user["user_id"])
 
 
 @router.get('/{category_id}')
-async def get_category(category_id:str):
-    app = Remember('/data/master.pkl')
-    return app.get_category(category_id, verbose=True)
+async def get_category(category_id:str, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.get_category(category_id=category_id, user_id=user["user_id"])
 
 
 @router.post('/')
-async def add_category(category: CategoryData):
-    app = Remember('/data/master.pkl')
-    _category = Category(category.name)
-    return app.add_category(_category)
+async def add_category(category: CategoryData, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    _category = Category(category.name, category.description)
+    return app.add_category(category=_category, user_id=user["user_id"])
 
 
 @router.delete('/{category_id}')
-async def remove_category(category_id: str):
-    app = Remember('/data/master.pkl')
-    return app.remove_category(category_id)
-
-
-@router.get('/id_to_name/{category_id}')
-async def id_to_name(category_id:str):
-    app = Remember('/data/master.pkl')
-    for k,v in app.data.items():
-        if k == category_id:
-            return JSONResponse(content=v.name)
-    return JSONResponse(content="Not Found", status_code=404)
+async def remove_category(category_id: str, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.remove_category(category_id=category_id, user_id=user["user_id"])

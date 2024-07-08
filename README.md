@@ -35,6 +35,14 @@ sudo gpasswd -a $USER docker
 ```
 
 ## Misc
+Firebase setup
+
+## Misc
 cat ~/.aws/credentials | base64 -w0
 cat ~/.gcp/gcp-credentials.json | base64 -w0
 cat ~/.gcp/firebase-credentials.json | base64 -w0
+cp .env.template .env
+
+docker-compose config
+sudo rm -rf data/mongo/db/*
+docker-compose -f database/docker-compose.yaml --env-file ./.env config
