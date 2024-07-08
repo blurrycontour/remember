@@ -5,7 +5,7 @@ import os
 import pymongo
 
 from .card import Category, FlashCard
-from .backup import backup_to_s3, backup_to_gcs, download_from_gcs
+from .backup import backup_to_s3, backup_to_gcs
 from .singleton import SingletonMeta
 
 
@@ -18,7 +18,7 @@ class Remember(metaclass=SingletonMeta):
 
     def connect(self):
         """ Connect to database """
-        db_name = os.getenv('ENV').lower()
+        db_name = os.getenv('ENVIRONMENT').lower()
         mongodb_string = os.getenv('MONGODB_STRING')
         client = pymongo.MongoClient(mongodb_string)
         self.db = client[db_name]

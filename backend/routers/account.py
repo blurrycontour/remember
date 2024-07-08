@@ -28,7 +28,7 @@ async def set_user(user: Annotated[dict, Depends(get_current_user)]):
     Add user if not exists already.
     """
     try:
-        db_name = os.getenv('ENV').lower()
+        db_name = os.getenv('ENVIRONMENT').lower()
         mongodb_string = os.getenv('MONGODB_STRING')
         client = pymongo.MongoClient(mongodb_string)
         db = client[db_name]

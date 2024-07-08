@@ -129,7 +129,7 @@ h1 {
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-.card3 button.login-google:hover {
+.card3 button.login-button:hover {
     background-color: #357ae8; /* A slightly darker shade for hover */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
