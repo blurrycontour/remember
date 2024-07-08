@@ -6,6 +6,8 @@ on:
     types: [completed]
     branches: [main]
 
+  workflow_dispatch:
+
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   SSH_USER: ${{secrets.SSH_USER}}
@@ -16,7 +18,7 @@ env:
   GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}
   FIREBASE_CREDENTIALS: ${{secrets.FIREBASE_CREDENTIALS}}
   MONGODB_STRING : ${{secrets.MONGODB_STRING}}
-  ENV: ${{secrets.ENV}}
+  ENVIRONMENT: ${{secrets.ENVIRONMENT}}
 
 jobs:
   deploy:
@@ -69,7 +71,7 @@ jobs:
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
             cd $REPO_NAME
             echo 'MONGODB_STRING=$MONGODB_STRING' >> .env
-            echo 'ENV=$ENV' >> .env
+            echo 'ENVIRONMENT=$ENVIRONMENT' >> .env
           "
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
