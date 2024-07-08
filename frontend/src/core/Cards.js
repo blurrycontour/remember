@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+
 import '../Common.css';
 
 
@@ -62,7 +63,7 @@ export function Cards() {
                 </div>
             </div>
             <div className='cards-container'>
-                {cards.length != 0 ? cards.map(card => (
+                {cards.length !== 0 ? cards.map(card => (
                     <div key={card.ID} className="card">
                         <div className="delete-icon">
                         <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card.ID)} />

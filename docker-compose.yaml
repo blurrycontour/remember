@@ -19,7 +19,7 @@ services:
       - ./backend/.env
     environment:
       - MONGODB_STRING=${MONGODB_STRING}
-      - ENV=${ENV}
+      - ENVIRONMENT=${ENVIRONMENT}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 

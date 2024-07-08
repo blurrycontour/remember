@@ -22,7 +22,7 @@ async def home():
     return "OK"
 
 
-@router.get('/user')
+@router.post('/user')
 async def set_user(user: Annotated[dict, Depends(get_current_user)]):
     """
     Add user if not exists already.

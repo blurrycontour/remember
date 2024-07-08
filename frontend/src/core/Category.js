@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+
 import '../Common.css';
 
 
@@ -55,7 +56,7 @@ export function Category() {
                 </div>
             </div>
             <div className='cards-container'>
-                {categories.length != 0 ? categories.map(category => (
+                {categories.length !== 0 ? categories.map(category => (
                     <div key={category.ID} className="card">
                         <h2>{category.Name}</h2>
                         {!!category.Description && <h3>{category["Description"]}<br/></h3>}
