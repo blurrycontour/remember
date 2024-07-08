@@ -1,6 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
+from fastapi.responses import JSONResponse
 import pymongo
 import os
 
@@ -22,17 +23,9 @@ async def home():
 
 
 @router.get('/user')
-async def firebase_user(user: Annotated[dict, Depends(get_current_user)]):
+async def set_user(user: Annotated[dict, Depends(get_current_user)]):
     """
-    Get firebase user details
-    """
-    return user
-
-
-@router.get('/login')
-async def user_login(user: Annotated[dict, Depends(get_current_user)]):
-    """
-    Add user if not exists
+    Add user if not exists already.
     """
     try:
         db_name = os.getenv('ENV').lower()
@@ -40,9 +33,23 @@ async def user_login(user: Annotated[dict, Depends(get_current_user)]):
         client = pymongo.MongoClient(mongodb_string)
         db = client[db_name]
         collection = db["users"]
-        collection.insert_one(user)
-        user.pop('_id')
-    except Exception as e:
-        return f"Error adding user: {e}"
+        db_user = user.copy()
+        db_user["_id"] = db_user["uid"]
+        # check of db_user exists
+        if collection.find_one({"_id": db_user["_id"]}):
+            return JSONResponse(content={
+                "message": "User already exists!",
+                "user": user,
+            }, status_code=200)
+        else:
+            collection.insert_one(db_user)
+            return JSONResponse(content={
+                "message": "User added!",
+                "user": user,
+            }, status_code=200)
 
-    return user
+    except Exception as e:
+        return JSONResponse(content={
+                "message": f"Error adding user: {e}",
+                "user": user,
+            }, status_code=500)
