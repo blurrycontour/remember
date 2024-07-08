@@ -10,61 +10,32 @@ from .singleton import SingletonMeta
 
 
 class Remember(metaclass=SingletonMeta):
-    def __init__(self, data_path:str):
-        self.data:Dict[str, Category] = {}
-        self.data_path = data_path
-        self.load()
-        # Connect to MongoDB
+    """
+    Class serving as the main interface to the application.
+    """
+    def __init__(self):
+        self.connect()
+
+    def connect(self):
+        """ Connect to database """
         db_name = os.getenv('ENV').lower()
         mongodb_string = os.getenv('MONGODB_STRING')
         client = pymongo.MongoClient(mongodb_string)
         self.db = client[db_name]
         self.categories = self.db["categories"]
         self.cards = self.db["cards"]
-
-
-    def load(self):
-        """ Load the data """
-        print("Loading data...")
-        if os.path.exists(self.data_path):
-            print("Loading from local storage...")
-            with open(self.data_path, 'rb') as f:
-                self.data = pickle.load(f)
-        else:
-            try:
-                print("Loading from GCS...")
-                download_from_gcs(self.data_path)
-                with open(self.data_path, 'rb') as f:
-                    self.data = pickle.load(f)
-            except Exception as e:
-                print(f"Failed to download: {e}")
-                self.data = {}
-
-
-    def save(self):
-        """ Save the data """
-        with open(self.data_path, 'wb') as f:
-            pickle.dump(self.data, f)
-
         try:
-            backup_to_s3(self.data_path)
-        except Exception as e:
-            print(f"Backup to S3 failed: {e}")
-
-        try:
-            backup_to_gcs(self.data_path)
-        except Exception as e:
-            print(f"Backup to GCS failed: {e}")
-
-
-    def delete(self):
-        """ Delete all data """
-        self.data = {}
-        self.save()
+            client.server_info()
+            print("Connected to MongoDB")
+        except pymongo.errors.ServerSelectionTimeoutError:
+            print("Failed to connect to MongoDB")
 
 
     def __str__(self) -> str:
-        return f"Brainy: {len(self.data)} categories"
+        return f"""Brainy:
+        {self.categories.count_documents({})} categories,
+        {self.cards.count_documents({})} cards
+        """
 
 
     # =============== Category methods ===============
@@ -110,7 +81,7 @@ class Remember(metaclass=SingletonMeta):
 
     def remove_category(self, category_id:str, user_id:str):
         """ Remove a category """
-        if not self.categories.find_one({"user_id": user_id, "category_id": category.id}):
+        if not self.categories.find_one({"user_id": user_id, "category_id": category_id}):
             print(f"Category ID '{category_id}' not found!")
             return False
 
@@ -141,21 +112,18 @@ class Remember(metaclass=SingletonMeta):
         return card.id
 
 
-    def get_card(self, card_id:str, verbose:bool=False):
+    def get_card(self, card_id:str, user_id:str):
         """ Get a card by ID """
-        for category in self.data.values():
-            if card_id in category.cards:
-                if verbose:
-                    return category.cards[card_id].info()
-                else:
-                    return str(category.cards[card_id])
+        card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
+        if card:
+            return card["card"]
         return f"Card ID '{card_id}' not found!"
 
 
     def remove_card(self, card_id:int, user_id:str):
         """ Remove a card from the category """
-        _card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
-        if not _card:
+        card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
+        if not card:
             print(f"Card with ID '{card_id}' not found!")
             return False
 
@@ -164,7 +132,7 @@ class Remember(metaclass=SingletonMeta):
             "card_id": card_id,
         })
         self.categories.update_one(
-            {"user_id": user_id, "category_id": _card.category_id},
+            {"user_id": user_id, "category_id": card["category_id"]},
             {"$inc": {"category.#Cards": -1}}
         )
         return card_id
@@ -187,7 +155,7 @@ class Remember(metaclass=SingletonMeta):
         if category_id:
             all_cards = self.get_category(category_id=category_id, user_id=user_id)["cards"]
         else:
-            all_cards = list(self.cards.find({"user_id": user_id}))
+            all_cards = [item["card"] for item in self.cards.find({"user_id": user_id})]
 
         if not all_cards:
             print("No data to show!")

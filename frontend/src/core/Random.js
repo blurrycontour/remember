@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, setAxiosDefaults } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 import '../Common.css';
 
 
@@ -14,7 +14,7 @@ export function Random() {
     const [showBack, setShowBack] = useState(false);
 
     const API_URL = '/api';
-    setAxiosDefaults();
+    SetAxiosDefaults();
 
     const fetchCategories = async () => {
         const response = await axios.get(`${API_URL}/category/`);
@@ -34,6 +34,7 @@ export function Random() {
     const removeCard = async (cardId) => {
         await axios.delete(`${API_URL}/card/${cardId}`);
         setRandomCard(null);
+        fetchRandomCard();
     };
 
     useEffect(() => {
@@ -64,11 +65,12 @@ export function Random() {
                 </select>
                 <span> </span>
                 <br />
-                <button onClick={() => window.location.href = `/category`} style={{ backgroundColor: '#007BFF' }}>All Categories</button>
+                <button onClick={() => window.location.href = `/category`} className='blue-button'>All Categories</button>
                 <span> </span>
-                <button onClick={fetchRandomCard} style={{ float: 'inline-end' }}>Random Card</button>
+                <button onClick={fetchRandomCard} style={{ float: 'inline-end' }} className='green-button'>Random Card</button>
             </div>
-            {!!randomCard &&
+
+            {!!randomCard ?
                 <div className='cards-container'>
                     <div key={randomCard.ID} className="card">
                         <div className="delete-icon">
@@ -82,7 +84,7 @@ export function Random() {
                         </div>
                         <p>Category → {randomCard.Category}</p>
                     </div>
-                </div>}
+                </div> : <h3 style={{ textAlign: 'center' }}>No cards found!</h3>}
         </div>
     );
 }
