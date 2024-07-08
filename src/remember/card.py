@@ -21,6 +21,10 @@ class FlashCard:
 
     def info(self) -> str:
         """ Return complete card information """
+        return self.to_dict()
+
+    def to_dict(self) -> str:
+        """ Return card information in dictionary format """
         return {
             "ID": self.id,
             "Category": self.category,
@@ -85,3 +89,20 @@ class Category:
         """ Show a random card from the category """
         card = random.choice(list(self.cards.values()))
         return card
+
+    def to_dict(self, verbose:bool=True) -> dict:
+        """ Return category information in dictionary format """
+        if verbose:
+            return {
+                "ID": self.id,
+                "Name": self.name,
+                "Description": self.description,
+                "Created": self.created_at,
+                "Updated": self.updated_at,
+                "#Cards": len(self.cards),
+            }
+        else:
+            return {
+                "Name": self.name,
+                "#Cards": len(self.cards),
+            }

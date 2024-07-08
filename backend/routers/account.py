@@ -34,7 +34,7 @@ async def set_user(user: Annotated[dict, Depends(get_current_user)]):
         db = client[db_name]
         collection = db["users"]
         db_user = user.copy()
-        db_user["_id"] = db_user["uid"]
+        db_user["_id"] = db_user["user_id"]
         # check of db_user exists
         if collection.find_one({"_id": db_user["_id"]}):
             return JSONResponse(content={
