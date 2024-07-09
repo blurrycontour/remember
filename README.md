@@ -46,3 +46,7 @@ cp .env.template .env
 docker-compose config
 sudo rm -rf data/mongo/db/*
 docker-compose -f database/docker-compose.yaml --env-file ./.env config
+
+For local run:
+    - All env vars in .env file
+    - All credentials in ~/.gcp and ~/.aws

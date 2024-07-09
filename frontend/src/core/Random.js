@@ -5,7 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 
-import '../Common.css';
+import '../css/Common.css';
+import '../css/Button.css';
 
 
 export function Random() {
@@ -57,7 +58,7 @@ export function Random() {
                 </div>
             </div>
 
-            <div className="card1">
+            <div className="card" style={{backgroundColor: '#eee'}}>
                 <select onChange={(e) => setCategoryId(e.target.value)} defaultValue={"all"}>
                     <option key={"all"} value={"all"}>Any</option>
                     {categories.map(category => (
@@ -73,17 +74,17 @@ export function Random() {
 
             {!!randomCard ?
                 <div className='cards-container'>
-                    <div key={randomCard.ID} className="card">
+                    <div key={randomCard.card.ID} className="card">
                         <div className="delete-icon">
-                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.ID)} />
+                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.card.ID)} />
                         </div>
-                        <h2>{randomCard.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
+                        <h2>{randomCard.card.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
                         <hr />
-                        {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
+                        {showBack && <h3>{randomCard.card.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                         <div className="show-icon">
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
-                        <p>Category → {randomCard.Category}</p>
+                        <p><a href={`/category/${randomCard.category_id}`} className='text-link'>Category → {randomCard.card.Category}</a></p>
                     </div>
                 </div> : <h3 style={{ textAlign: 'center' }}>No cards found!</h3>}
         </div>

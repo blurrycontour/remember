@@ -1,0 +1,144 @@
+a {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    text-decoration: none;
+}
+
+a.text-link {
+    color: #007BFF;
+    text-decoration: none;
+}
+
+h1 {
+    text-align: center;
+}
+
+.cards-container {
+    display: block;
+    justify-content: center;
+    /* flex-wrap: wrap; */
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px auto;
+    /* This will center the card horizontally */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease-in-out;
+    width: 90%;
+    /* This will make the card take up half the width of its container */
+    max-width: 500px;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.overlay {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #eee;
+    padding: 15px;
+    margin: 10px auto;
+    /* This will center the card horizontally */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease-in-out;
+    width: 90%;
+    max-width: 500px;
+    word-wrap: break-word;
+    position: fixed;
+    z-index: 1000;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.header {
+    display: flex;
+    align-items: center;
+}
+
+.card2 {
+    padding: 15px;
+    margin: 10px auto;
+    /* This will center the card horizontally */
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    word-wrap: break-word;
+}
+
+.card:hover {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.card h2,
+.card h3 {
+    margin-top: 0;
+}
+
+.overlay input,
+.overlay textarea {
+    width: 100%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.overlay textarea {
+    resize: vertical;
+    min-height: 80px;
+    max-height: 500px;
+}
+
+.card select {
+    width: 100%;
+    padding: 10px 20px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.card3 {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #eee;
+    padding: 15px;
+    margin: 10px auto;
+    /* This will center the card horizontally */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease-in-out;
+    width: 90%;
+    max-width: 500px;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+hr {
+    border-color: gray;
+    opacity: 0.2;
+}
+
+.card p {
+    margin-bottom: 0px;
+}
+
+.blur-background {
+    filter: blur(8px);
+    pointer-events: none; /* Makes everything unclickable */
+    user-select: none; /* Prevents text selection */
+}
+
+.dark-background {
+    background-color: rgba(0, 0, 0, 0.5);
+}

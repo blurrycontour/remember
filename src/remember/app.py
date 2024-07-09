@@ -75,6 +75,7 @@ class Remember(metaclass=SingletonMeta):
         items = self.cards.find({"user_id": user_id, "category_id": category_id})
         return {
             "name": _category["category"]["Name"],
+            "id": _category["category"]["ID"],
             "cards": [item["card"] for item in items]
         }
 
@@ -153,12 +154,21 @@ class Remember(metaclass=SingletonMeta):
             category_id = Category.name_to_id(category_name)
 
         if category_id:
-            all_cards = self.get_category(category_id=category_id, user_id=user_id)["cards"]
+            _all_cards = self.get_category(category_id=category_id, user_id=user_id)
+            all_cards = [{
+                    "category_id": _all_cards["id"],
+                    "card": item["card"]
+                } for item in _all_cards["cards"]
+            ]
         else:
-            all_cards = [item["card"] for item in self.cards.find({"user_id": user_id})]
+            all_cards = [{
+                    "category_id": item["category_id"],
+                    "card": item["card"]
+                } for item in self.cards.find({"user_id": user_id})
+            ]
 
         if not all_cards:
             print("No data to show!")
-            return
-        card = random.choices(all_cards, k=1)[0]
-        return card
+            return None
+
+        return random.choices(all_cards, k=1)[0]
