@@ -35,6 +35,12 @@ async def add_category(category: CategoryData, user: Annotated[dict, Depends(get
     return app.add_category(category=_category, user_id=user["user_id"])
 
 
+@router.put('/{category_id}')
+async def update_category(category_id: str, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    return app.update_category(category_id=category_id, user_id=user["user_id"])
+
+
 @router.delete('/{category_id}')
 async def remove_category(category_id: str, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()

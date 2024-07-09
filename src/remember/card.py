@@ -14,14 +14,18 @@ class FlashCard:
         self.category = category
         self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.id = hashlib.md5(f"{self.front}{self.category}".encode()).hexdigest()
+        self.id = self.create_id()
+
+
+    def create_id(self) -> str:
+        """ Create a unique ID for the category """
+        raw = f"card@{self.created_at}+{random.random()}"
+        return hashlib.md5(raw.encode()).hexdigest()
+
 
     def __str__(self):
         return f"{self.front} : {self.back}"
 
-    def info(self) -> str:
-        """ Return complete card information """
-        return self.to_dict()
 
     def to_dict(self) -> str:
         """ Return card information in dictionary format """
@@ -49,7 +53,7 @@ class Category:
         self.description = description
         self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.id = Category.name_to_id(self.name)
+        self.id = self.create_id()
         self.cards = {}
 
 
@@ -57,38 +61,11 @@ class Category:
         return f"{self.name} : {len(self.cards)} cards"
 
 
-    @staticmethod
-    def name_to_id(name:str):
-        """ Convert category name to id """
-        return hashlib.md5(f"{name}".encode()).hexdigest()
+    def create_id(self) -> str:
+        """ Create a unique ID for the category """
+        raw = f"category@{self.created_at}+{random.random()}"
+        return hashlib.md5(raw.encode()).hexdigest()
 
-
-    def add_card(self, card:FlashCard) -> Union[None, str]:
-        """ Add a card to this category """
-        assert card.category == self.name
-        if card.id in self.cards:
-            print(f"Updating card in category '{self.name}'")
-            # TODO: Update the card conditionally (auth)
-            # self.cards[card.id].update(card.back)
-            return None
-        else:
-            print(f"Adding card to category '{self.name}'")
-            self.cards[card.id] = card
-            return card.id
-
-
-    def get_cards(self, verbose:bool=False):
-        """ Show all cards in the category """
-        if verbose:
-            return [card.info() for card in self.cards.values()]
-        else:
-            return [str(card) for card in self.cards.values()]
-
-
-    def random(self) -> FlashCard:
-        """ Show a random card from the category """
-        card = random.choice(list(self.cards.values()))
-        return card
 
     def to_dict(self, verbose:bool=True) -> dict:
         """ Return category information in dictionary format """

@@ -41,16 +41,16 @@ class Remember(metaclass=SingletonMeta):
     # =============== Category methods ===============
     def add_category(self, category:Category, user_id:str):
         """ Add a new category """
-        if self.categories.find_one({"user_id": user_id, "category_id": category.id}):
+        if self.categories.find_one({"user_id": user_id, "category.Name": category.name}):
             print(f"Category '{category.name}' already exists!")
+            return None
         else:
-            print(f"adding category '{category.name}'")
+            print(f"Adding category '{category.name}'")
             self.categories.insert_one({
                 "user_id": user_id,
                 "category_id": category.id,
                 "category": category.to_dict()
             })
-
         return category.id
 
 

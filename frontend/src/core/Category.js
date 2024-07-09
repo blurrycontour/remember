@@ -16,6 +16,7 @@ export function Category()
     const [newCategoryDesc, setNewCategoryDesc] = useState('');
     const [isOverlayOpen, setIsOverlayOpen] = useState(0);
     const [currentCategory, setCurrentCategory] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const API_URL = '/api';
     SetAxiosDefaults();
@@ -29,7 +30,11 @@ export function Category()
 
     const addCategory = async () =>
     {
-        await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
+        const response = await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
+        if (response.data === null){
+            setErrorMessage('Category already exists!');
+            return;
+        }
         closeOverlay();
         fetchCategories();
     };
@@ -61,6 +66,7 @@ export function Category()
         setCurrentCategory(null);
         setNewCategoryName('');
         setNewCategoryDesc('');
+        setErrorMessage('');
         setIsOverlayOpen(0);
         document.querySelector('.content').classList.remove('blur-background');
         document.body.classList.remove('dark-background');
@@ -119,8 +125,8 @@ export function Category()
                         <input
                             type='text'
                             value={currentCategory.Name}
-                            onChange={(e) => setCurrentCategory({ ...currentCategory, Name: e.target.value })}
-                        /></p>
+                            onChange={(e) => setCurrentCategory({ ...currentCategory, Name: e.target.value })} />
+                    </p>
                     <p>Category Description
                         <textarea value={currentCategory.Description} onChange={(e) => setCurrentCategory({ ...currentCategory, Description: e.target.value })} />
                     </p>
@@ -137,11 +143,12 @@ export function Category()
                         <input
                             type='text'
                             value={newCategoryName}
-                            onChange={(e) => setNewCategoryName(e.target.value)}
-                        /></p>
+                            onChange={(e) => setNewCategoryName(e.target.value)} />
+                    </p>
                     <p>Category Description
                         <textarea value={newCategoryDesc} onChange={(e) => setNewCategoryDesc(e.target.value)} />
                     </p>
+                    {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCategory} className='green-button'>Add Category</button>
                     <button onClick={closeOverlay} className='blue-button'>Cancel</button>
                 </div>
