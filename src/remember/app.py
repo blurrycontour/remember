@@ -1,11 +1,11 @@
-import pickle
-import random
-from typing import Dict
 import os
+import random
+from datetime import datetime
+
 import pymongo
 
-from .card import Category, FlashCard
-from .backup import backup_to_s3, backup_to_gcs
+from .card import FlashCard
+from .category import Category
 from .singleton import SingletonMeta
 
 
@@ -41,134 +41,138 @@ class Remember(metaclass=SingletonMeta):
     # =============== Category methods ===============
     def add_category(self, category:Category, user_id:str):
         """ Add a new category """
-        if self.categories.find_one({"user_id": user_id, "category.Name": category.name}):
-            print(f"Category '{category.name}' already exists!")
-            return None
+        if self.categories.find_one({"user_id": user_id, "category.name": category.name}):
+            return f"Category '{category.name}' already exists!", False
         else:
-            print(f"Adding category '{category.name}'")
             self.categories.insert_one({
                 "user_id": user_id,
-                "category_id": category.id,
                 "category": category.to_dict()
             })
-        return category.id
+        return f"Added category '{category.name}'", True
+
+
+    def update_category(self, category_id:str, user_id:str, name:str, description:str):
+        """ Update a category """
+        _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
+        if not _category:
+            return f"Category ID '{category_id}' not found!", False
+
+        self.categories.update_one(
+            {"user_id": user_id, "category.id": category_id},
+            {"$set": {"category.name": name, "category.description": description, "category.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
+        )
+        return f"Category ID '{category_id}' updated!", True
 
 
     def get_categories(self, user_id:str):
         """ Get all categories """
         items = self.categories.find({"user_id": user_id})
-        return [item["category"] for item in items]
+        return [item["category"] for item in items], True
 
 
-    def get_category(self, user_id:str, category_id:str=None, category_name:str=None):
+    def get_category(self, user_id:str, category_id:str=None, only_category:bool=False):
         """ Get a category i.e. return list of cards in the category """
-        assert category_id or category_name, "Category ID or Name required!"
-        assert not (category_id and category_name), "Only one of Category ID or Name required!"
-        if category_name:
-            category_id = Category.name_to_id(category_name)
+        _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
 
-        # new
-        _category = self.categories.find_one({"user_id": user_id, "category_id": category_id})
         if not _category:
-            return f"Category ID '{category_id}' not found!"
+            return f"Category ID '{category_id}' not found!", False
 
-        items = self.cards.find({"user_id": user_id, "category_id": category_id})
+        if only_category:
+            return _category["category"], True
+
+        _cards = self.cards.find({"user_id": user_id, "card.category_id": category_id})
         return {
-            "name": _category["category"]["Name"],
-            "id": _category["category"]["ID"],
-            "cards": [item["card"] for item in items]
-        }
+            "category": _category["category"],
+            "cards": [_card["card"] for _card in _cards]
+        }, True
 
 
     def remove_category(self, category_id:str, user_id:str):
         """ Remove a category """
-        if not self.categories.find_one({"user_id": user_id, "category_id": category_id}):
-            print(f"Category ID '{category_id}' not found!")
-            return False
+        if not self.categories.find_one({"user_id": user_id, "category.id": category_id}):
+            return f"Category ID '{category_id}' not found!", False
 
-        self.categories.delete_one({"user_id": user_id, "category_id": category_id})
-        self.cards.delete_many({"user_id": user_id, "category_id": category_id})
-        return category_id
+        self.categories.delete_one({"user_id": user_id, "category.id": category_id})
+        self.cards.delete_many({"user_id": user_id, "card.category_id": category_id})
+        return f"Category ID '{category_id}' removed!", True
 
 
     # =============== Card methods ===============
     def add_card(self, card:FlashCard, user_id:str):
         """ Add a card to the category """
-        category_id = Category.name_to_id(card.category)
-
-        if not self.categories.find_one({"user_id": user_id, "category_id": category_id}):
-            print(f"Category '{card.category}' not found!")
-            return False
+        if not self.categories.find_one({"user_id": user_id, "category.id": card.category_id}):
+            return f"Category ID '{card.category_id}' not found!", False
 
         self.cards.insert_one({
             "user_id": user_id,
-            "category_id": category_id,
-            "card_id": card.id,
             "card": card.to_dict()
         })
         self.categories.update_one(
-            {"user_id": user_id, "category_id": category_id},
-            {"$inc": {"category.#Cards": 1}}
+            {"user_id": user_id, "category.id": card.category_id},
+            {"$inc": {"category.#cards": 1}}
         )
-        return card.id
+        return f"Card ID '{card.id}' added to category ID '{card.category_id}'", True
+
+
+    def update_card(self, card_id:str, user_id:str, front:str, back:str):
+        """ Update a card """
+        if not self.cards.find_one({"user_id": user_id, "card.id": card_id}):
+            return f"Card ID '{card_id}' not found!", False
+
+        self.cards.update_one(
+            {"user_id": user_id, "card.id": card_id},
+            {"$set": {"card.front": front, "card.back": back, "card.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
+        )
+        return f"Card ID '{card_id}' updated!", True
 
 
     def get_card(self, card_id:str, user_id:str):
         """ Get a card by ID """
-        card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
-        if card:
-            return card["card"]
-        return f"Card ID '{card_id}' not found!"
+        _card = self.cards.find_one({"user_id": user_id, "card.id": card_id})
+        if not _card:
+            return f"Card ID '{card_id}' not found!", False
+        return _card["card"], True
 
 
     def remove_card(self, card_id:int, user_id:str):
         """ Remove a card from the category """
-        card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
-        if not card:
-            print(f"Card with ID '{card_id}' not found!")
-            return False
+        _card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
+        if not _card:
+            return f"Card with ID '{card_id}' not found!", False
 
-        self.cards.delete_one({
-            "user_id": user_id,
-            "card_id": card_id,
-        })
+        self.cards.delete_one({"user_id": user_id,"card.id": card_id})
         self.categories.update_one(
-            {"user_id": user_id, "category_id": card["category_id"]},
-            {"$inc": {"category.#Cards": -1}}
+            {"user_id": user_id, "category.id": _card["card"]["category_id"]},
+            {"$inc": {"category.#cards": -1}}
         )
-        return card_id
+        return f"Card ID '{card_id}' removed!", True
 
 
     def get_all(self, user_id:str):
         """ Show all cards in all categories """
-        _data = self.get_categories(user_id)
+        _data, _ = self.get_categories(user_id)
         for category in _data:
-            category["Cards"] = self.get_category(category_id=category["ID"], user_id=user_id)["cards"]
-        return _data
+            category["cards"] = self.get_category(category_id=category["id"], user_id=user_id)[0]["cards"]
+        return _data, True
 
 
-    def random(self, user_id:str, category_id:str=None, category_name:str=None):
+    def random(self, user_id:str, category_id:str=None):
         """ Show a random card from the category or all categories """
-        assert not (category_id and category_name), "Only one of Category ID or Name required!"
-        if category_name:
-            category_id = Category.name_to_id(category_name)
-
         if category_id:
-            _all_cards = self.get_category(category_id=category_id, user_id=user_id)
+            _all_cards, _ = self.get_category(category_id=category_id, user_id=user_id)
             all_cards = [{
-                    "category_id": _all_cards["id"],
-                    "card": item["card"]
-                } for item in _all_cards["cards"]
+                    "category": _all_cards["category"],
+                    "card": card
+                } for card in _all_cards["cards"]
             ]
         else:
             all_cards = [{
-                    "category_id": item["category_id"],
-                    "card": item["card"]
-                } for item in self.cards.find({"user_id": user_id})
+                    "category": self.get_category(category_id=_card["card"]["category_id"], user_id=user_id, only_category=True)[0],
+                    "card": _card["card"]
+                } for _card in self.cards.find({"user_id": user_id})
             ]
 
         if not all_cards:
-            print("No data to show!")
-            return None
+            return "No data to show!", False
 
-        return random.choices(all_cards, k=1)[0]
+        return random.choices(all_cards, k=1)[0], True

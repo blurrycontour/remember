@@ -4,7 +4,7 @@ from fastapi import Request, HTTPException
 
 
 class CardData(BaseModel):
-    category: str
+    category_id: str
     front: str
     back: str
 
@@ -32,4 +32,4 @@ def get_current_user(request: Request):
         return user
     except Exception as e:
         print(f"Error verifying token: {e}")
-        raise HTTPException(status_code=401, detail='Invalid authentication token')
+        raise HTTPException(status_code=401, detail='Invalid authentication token') from e

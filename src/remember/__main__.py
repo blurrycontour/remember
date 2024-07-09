@@ -1,6 +1,7 @@
 import argparse
 
 from .card import FlashCard
+from .category import Category
 from .app import Remember
 
 def main():
