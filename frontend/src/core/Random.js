@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
@@ -16,7 +16,7 @@ export function Random()
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-
+    const navigate = useNavigate();
     const API_URL = '/api';
     SetAxiosDefaults();
 
@@ -90,7 +90,7 @@ export function Random()
                 </select>
                 <span> </span>
                 <br />
-                <button onClick={() => window.location.href = `/category`} className='blue-button'>All Categories</button>
+                <button onClick={() => navigate('/category')} className='blue-button'>All Categories</button>
                 <span> </span>
                 <button onClick={fetchRandomCard} style={{ float: 'inline-end' }} className='green-button'>Random Card</button>
             </div>
@@ -107,7 +107,7 @@ export function Random()
                         <div className="show-icon">
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
-                        <p><a href={`/category/${randomCard.category.id}`} className='text-link'>Category → {randomCard.category.name}</a></p>
+                        <Link to={`/category/${randomCard.category.id}`} className='text-link'>Category → {randomCard.category.name}</Link>
                     </div>
                 </div>}
 

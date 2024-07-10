@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faUser, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +17,7 @@ export function Category()
     const [isOverlayOpen, setIsOverlayOpen] = useState(0);
     const [currentCategory, setCurrentCategory] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
-
+    const navigate = useNavigate();
     const API_URL = '/api';
     SetAxiosDefaults();
 
@@ -126,7 +126,7 @@ export function Category()
                             <h2>{category.name}</h2>
                             {!!category.description && <h3>{category.description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                             <h3 style={{ color: 'gray' }}>Number of Cards → {category["#cards"]}</h3>
-                            <button onClick={() => window.location.href = `/category/${category.id}`} className='blue-button'>View</button>
+                            <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
                             <div className="delete-icon">
                                 <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category.id)} />
                             </div>
