@@ -3,42 +3,70 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
 
-import '../Common.css';
+import '../css/Common.css';
+import '../css/Button.css';
 
 
-export function Random() {
+export function Random()
+{
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const API_URL = '/api';
     SetAxiosDefaults();
 
-    const fetchCategories = async () => {
-        const response = await axios.get(`${API_URL}/category/`);
-        setCategories(response.data);
-    };
 
-    const fetchRandomCard = async () => {
-        if (categoryId === 'all') {
-            const response = await axios.get(`${API_URL}/main/random`);
-            setRandomCard(response.data);
-        } else {
-            const response = await axios.get(`${API_URL}/main/random/${categoryId}`);
-            setRandomCard(response.data);
+    const fetchCategories = async () =>
+    {
+        try
+        {
+            const response = await axios.get(`${API_URL}/category/`);
+            setCategories(response.data);
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
         }
-    }
-
-    const removeCard = async (cardId) => {
-        await axios.delete(`${API_URL}/card/${cardId}`);
-        setRandomCard(null);
-        fetchRandomCard();
     };
 
-    useEffect(() => {
+    const fetchRandomCard = async () =>
+    {
+        setRandomCard(null);
+        setErrorMessage('');
+        try
+        {
+            const response = categoryId === 'all' ?
+                await axios.get(`${API_URL}/main/random`) :
+                await axios.get(`${API_URL}/main/random/${categoryId}`);
+            setRandomCard(response.data);
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
+        }
+    };
+
+    const removeCard = async (cardId) =>
+    {
+        try
+        {
+            await axios.delete(`${API_URL}/card/${cardId}`);
+            setRandomCard(null);
+            fetchRandomCard();
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
+        }
+    };
+
+    useEffect(() =>
+    {
         fetchCategories();
         fetchRandomCard();
     }, []);
@@ -49,19 +77,15 @@ export function Random() {
             <div className='card2'>
                 <div className='header'>
                     <h1>Random Card</h1>
-                    <div className='account-button'>
-                        <Link to="/account">
-                            <FontAwesomeIcon icon={faUser} size="2x" />
-                        </Link>
-                    </div>
+                    <GetUserButton />
                 </div>
             </div>
 
-            <div className="card1">
+            <div className="card" style={{ backgroundColor: '#eee' }}>
                 <select onChange={(e) => setCategoryId(e.target.value)} defaultValue={"all"}>
                     <option key={"all"} value={"all"}>Any</option>
                     {categories.map(category => (
-                        <option key={category.ID} value={category.ID}>{category.Name} -- {category["#Cards"]}</option>
+                        <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
                     ))}
                 </select>
                 <span> </span>
@@ -71,21 +95,23 @@ export function Random() {
                 <button onClick={fetchRandomCard} style={{ float: 'inline-end' }} className='green-button'>Random Card</button>
             </div>
 
-            {!!randomCard ?
+            {!!randomCard &&
                 <div className='cards-container'>
-                    <div key={randomCard.ID} className="card">
+                    <div key={randomCard.card.id} className="card">
                         <div className="delete-icon">
-                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.ID)} />
+                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.card.id)} />
                         </div>
-                        <h2>{randomCard.Front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
+                        <h2>{randomCard.card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
                         <hr />
-                        {showBack && <h3>{randomCard.Back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
+                        {showBack && <h3>{randomCard.card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                         <div className="show-icon">
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
-                        <p>Category → {randomCard.Category}</p>
+                        <p><a href={`/category/${randomCard.category.id}`} className='text-link'>Category → {randomCard.category.name}</a></p>
                     </div>
-                </div> : <h3 style={{ textAlign: 'center' }}>No cards found!</h3>}
+                </div>}
+
+            {!!errorMessage && <h3 style={{ textAlign: 'center' }}>{errorMessage}</h3>}
         </div>
     );
 }

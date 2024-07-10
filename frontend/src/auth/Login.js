@@ -5,7 +5,8 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
 
-import '../Common.css';
+import '../css/Common.css';
+import '../css/Button.css';
 
 
 export function Login() {
