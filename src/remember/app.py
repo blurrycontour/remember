@@ -86,6 +86,7 @@ class Remember(metaclass=SingletonMeta):
             return _category["category"], True
 
         _cards = self.cards.find({"user_id": user_id, "card.category_id": category_id})
+
         return {
             "category": _category["category"],
             "cards": [_card["card"] for _card in _cards]

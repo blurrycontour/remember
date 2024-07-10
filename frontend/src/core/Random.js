@@ -37,13 +37,13 @@ export function Random()
     const fetchRandomCard = async () =>
     {
         setRandomCard(null);
-        setErrorMessage('');
         try
         {
             const response = categoryId === 'all' ?
-                await axios.get(`${API_URL}/main/random`) :
-                await axios.get(`${API_URL}/main/random/${categoryId}`);
+            await axios.get(`${API_URL}/main/random`) :
+            await axios.get(`${API_URL}/main/random/${categoryId}`);
             setRandomCard(response.data);
+            setErrorMessage('');
         } catch (error)
         {
             console.error(error);

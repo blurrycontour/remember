@@ -9,8 +9,7 @@ import '../css/Common.css';
 import '../css/Button.css';
 
 
-export function Cards()
-{
+export function Cards() {
     let { id } = useParams();
     const [cards, setCards] = useState([]);
     const [category, setCategory] = useState(null);
@@ -18,70 +17,60 @@ export function Cards()
     const [newCardBack, setNewCardBack] = useState('');
     const [isOverlayOpen, setIsOverlayOpen] = useState(0);
     const [currentCard, setCurrentCard] = useState(null);
+    const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
 
     const API_URL = '/api';
     SetAxiosDefaults();
 
     // =========== Card functions ===========
-    const fetchCards = async () =>
-    {
-        try
-        {
+    const fetchCards = async () => {
+        try {
             const response = await axios.get(`${API_URL}/category/${id}`);
             setCards(response.data.cards);
             setCategory(response.data.category);
-        } catch (error)
-        {
+            if (response.data.cards.length === 0) setStatusMessage('No cards found!');
+            else setStatusMessage('');
+        } catch (error) {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            setStatusMessage(error.response?.data);
         }
     };
 
-    const addCard = async () =>
-    {
-        try
-        {
+    const addCard = async () => {
+        try {
             await axios.post(`${API_URL}/card/`, { category_id: category.id, front: newCardFront, back: newCardBack });
             closeOverlay();
             fetchCards();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const updateCard = async () =>
-    {
-        try
-        {
+    const updateCard = async () => {
+        try {
             await axios.put(`${API_URL}/card/${currentCard.id}`, { category_id: currentCard.id, front: currentCard.front, back: currentCard.back });
             closeOverlay();
             fetchCards();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const removeCard = async (cardId) =>
-    {
-        try
-        {
+    const removeCard = async (cardId) => {
+        try {
             await axios.delete(`${API_URL}/card/${cardId}`);
             fetchCards();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            setStatusMessage(error.response?.data);
         }
     };
 
     // =========== Overlay functions ===========
-    const openOverlay = (type, card) =>
-    {
+    const openOverlay = (type, card) => {
         setCurrentCard(card);
         setIsOverlayOpen(type);
         setErrorMessage('');
@@ -89,8 +78,7 @@ export function Cards()
         document.body.classList.add('dark-background');
     };
 
-    const closeOverlay = () =>
-    {
+    const closeOverlay = () => {
         setCurrentCard(null);
         setNewCardFront('');
         setNewCardBack('');
@@ -100,8 +88,7 @@ export function Cards()
         document.body.classList.remove('dark-background');
     };
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         fetchCards();
     }, []);
 
@@ -116,14 +103,16 @@ export function Cards()
                             </Link>
                         </div>
                         <h1>{category?.name} &nbsp; </h1>
-                        <div className="normal-icon">
-                            <FontAwesomeIcon icon={faPlusSquare} size="2x" onClick={() => openOverlay(1, null)} />
-                        </div>
+                        {!!category &&
+                            <div className="normal-icon">
+                                <FontAwesomeIcon icon={faPlusSquare} size="2x" onClick={() => openOverlay(1, null)} />
+                            </div>}
                         <GetUserButton />
                     </div>
                 </div>
+
                 <div className='cards-container'>
-                    {cards.length !== 0 ? cards.map(card => (
+                    {cards.length !== 0 && cards.map(card => (
                         <div key={card.id} className="card">
                             <div className="delete-icon">
                                 <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card.id)} />
@@ -135,7 +124,9 @@ export function Cards()
                             <hr />
                             <h3>{card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>
                         </div>
-                    )) : <h3 style={{ textAlign: 'center' }}>No cards found!</h3>}
+                    ))}
+
+                    {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
                 </div>
             </div>
 

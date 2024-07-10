@@ -9,76 +9,65 @@ import '../css/Common.css';
 import '../css/Button.css';
 
 
-export function Category()
-{
+export function Category() {
     const [categories, setCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryDesc, setNewCategoryDesc] = useState('');
     const [isOverlayOpen, setIsOverlayOpen] = useState(0);
     const [currentCategory, setCurrentCategory] = useState(null);
+    const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
     const API_URL = '/api';
     SetAxiosDefaults();
 
     // =========== Category functions ===========
-    const fetchCategories = async () =>
-    {
-        try
-        {
+    const fetchCategories = async () => {
+        try {
             const response = await axios.get(`${API_URL}/category/`);
             setCategories(response.data);
-        } catch (error)
-        {
+            if (response.data.length === 0) setStatusMessage('No categories found!');
+            else setStatusMessage('');
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const addCategory = async () =>
-    {
-        try
-        {
+    const addCategory = async () => {
+        try {
             await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
             closeOverlay();
             fetchCategories();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const updateCategory = async () =>
-    {
-        try
-        {
+    const updateCategory = async () => {
+        try {
             await axios.put(`${API_URL}/category/${currentCategory.id}`, { name: currentCategory.name, description: currentCategory.description });
             closeOverlay();
             fetchCategories();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const removeCategory = async (categoryId) =>
-    {
-        try
-        {
+    const removeCategory = async (categoryId) => {
+        try {
             await axios.delete(`${API_URL}/category/${categoryId}`);
             fetchCategories();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            setStatusMessage(error.response?.data);
         }
     };
 
     // ========== Overlay functions ===========
-    const openOverlay = (type, category) =>
-    {
+    const openOverlay = (type, category) => {
         setCurrentCategory(category);
         setIsOverlayOpen(type);
         setErrorMessage('');
@@ -86,8 +75,7 @@ export function Category()
         document.body.classList.add('dark-background');
     };
 
-    const closeOverlay = () =>
-    {
+    const closeOverlay = () => {
         setCurrentCategory(null);
         setNewCategoryName('');
         setNewCategoryDesc('');
@@ -97,8 +85,7 @@ export function Category()
         document.body.classList.remove('dark-background');
     };
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         fetchCategories();
     }, []);
 
@@ -121,7 +108,7 @@ export function Category()
                 </div>
 
                 <div className='cards-container'>
-                    {categories.length !== 0 ? categories.map(category => (
+                    {categories.length !== 0 && categories.map(category => (
                         <div key={category.id} className="card">
                             <h2>{category.name}</h2>
                             {!!category.description && <h3>{category.description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
@@ -134,7 +121,9 @@ export function Category()
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, category)} />
                             </div>
                         </div>
-                    )) : <h3 style={{ textAlign: 'center' }}>No categories found!</h3>}
+                    ))}
+
+                    {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
                 </div>
             </div>
 
