@@ -73,12 +73,12 @@ jobs:
             echo 'MONGODB_STRING=$MONGODB_STRING' >> .env
             echo 'ENVIRONMENT=$ENVIRONMENT' >> .env
           "
+      - name: Pull latest image
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose pull"
       - name: Stop existing containers
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
       - name: Prune dangling images
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
-      - name: Pull latest image
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose pull"
       - name: Clean local data files
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; rm -rf data/*.pkl"
       - name: Start containers again
