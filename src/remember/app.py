@@ -41,6 +41,9 @@ class Remember(metaclass=SingletonMeta):
     # =============== Category methods ===============
     def add_category(self, category:Category, user_id:str):
         """ Add a new category """
+        print("Name", category.name)
+        if not category.name:
+            return "Category name cannot be empty!", False
         if self.categories.find_one({"user_id": user_id, "category.name": category.name}):
             return f"Category '{category.name}' already exists!", False
         else:
@@ -48,11 +51,13 @@ class Remember(metaclass=SingletonMeta):
                 "user_id": user_id,
                 "category": category.to_dict()
             })
-        return f"Added category '{category.name}'", True
+        return f"Added category with ID: '{category.id}'", True
 
 
     def update_category(self, category_id:str, user_id:str, name:str, description:str):
         """ Update a category """
+        if not name:
+            return "Category name cannot be empty!", False
         _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
         if not _category:
             return f"Category ID '{category_id}' not found!", False
@@ -100,6 +105,10 @@ class Remember(metaclass=SingletonMeta):
     # =============== Card methods ===============
     def add_card(self, card:FlashCard, user_id:str):
         """ Add a card to the category """
+        if not card.front:
+            return "Front of the card cannot be empty!", False
+        if not card.back:
+            return "Back of the card cannot be empty!", False
         if not self.categories.find_one({"user_id": user_id, "category.id": card.category_id}):
             return f"Category ID '{card.category_id}' not found!", False
 
@@ -116,6 +125,10 @@ class Remember(metaclass=SingletonMeta):
 
     def update_card(self, card_id:str, user_id:str, front:str, back:str):
         """ Update a card """
+        if not front:
+            return "Front of the card cannot be empty!", False
+        if not back:
+            return "Back of the card cannot be empty!", False
         if not self.cards.find_one({"user_id": user_id, "card.id": card_id}):
             return f"Card ID '{card_id}' not found!", False
 
@@ -136,7 +149,7 @@ class Remember(metaclass=SingletonMeta):
 
     def remove_card(self, card_id:int, user_id:str):
         """ Remove a card from the category """
-        _card = self.cards.find_one({"user_id": user_id, "card_id": card_id})
+        _card = self.cards.find_one({"user_id": user_id, "card.id": card_id})
         if not _card:
             return f"Card with ID '{card_id}' not found!", False
 
@@ -173,6 +186,14 @@ class Remember(metaclass=SingletonMeta):
             ]
 
         if not all_cards:
-            return "No data to show!", False
+            return "No cards found!", False
 
         return random.choices(all_cards, k=1)[0], True
+
+    def get_stats(self, user_id:str):
+        """ Show the number of categories and cards """
+        stats = {
+            "#categories": self.categories.count_documents({"user_id":user_id}),
+            "#cards": self.cards.count_documents({"user_id":user_id})
+        }
+        return stats, True

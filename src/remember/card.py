@@ -8,12 +8,12 @@ class FlashCard:
     Flashcard class to represent a front and back side
     """
     def __init__(self, category_id:str, front:str, back:str):
-        self.id = self.create_id()
         self.front = front
         self.back = back
         self.category_id = category_id
         self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.id = self.create_id()
 
 
     def create_id(self) -> str:
@@ -36,9 +36,3 @@ class FlashCard:
             "created": self.created_at,
             "updated": self.updated_at,
         }
-
-
-    def update(self, back:str):
-        """ Update the back side of the card """
-        self.back = back
-        self.updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

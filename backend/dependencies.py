@@ -12,10 +12,6 @@ class CategoryData(BaseModel):
     name: str
     description: str = ""
 
-class Code(BaseModel):
-    code: str
-
-
 
 def get_current_user(request: Request):
     """Get the user details from Firebase, based on TokenID in the request

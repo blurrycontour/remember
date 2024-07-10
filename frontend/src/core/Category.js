@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faUser, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
 
 import '../css/Common.css';
 import '../css/Button.css';
@@ -21,42 +21,67 @@ export function Category()
     const API_URL = '/api';
     SetAxiosDefaults();
 
-    // Category functions
+    // =========== Category functions ===========
     const fetchCategories = async () =>
     {
-        const response = await axios.get(`${API_URL}/category/`);
-        setCategories(response.data);
+        try
+        {
+            const response = await axios.get(`${API_URL}/category/`);
+            setCategories(response.data);
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
+        }
     };
 
     const addCategory = async () =>
     {
-        const response = await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
-        if (response.data === null){
-            setErrorMessage('Category already exists!');
-            return;
+        try
+        {
+            await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
+            closeOverlay();
+            fetchCategories();
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
         }
-        closeOverlay();
-        fetchCategories();
-    };
-
-    const removeCategory = async (categoryId) =>
-    {
-        await axios.delete(`${API_URL}/category/${categoryId}`);
-        fetchCategories();
     };
 
     const updateCategory = async () =>
     {
-        // await axios.put(`${API_URL}/category/${currentCategory.ID}`, currentCategory);
-        closeOverlay();
-        fetchCategories();
+        try
+        {
+            await axios.put(`${API_URL}/category/${currentCategory.id}`, { name: currentCategory.name, description: currentCategory.description });
+            closeOverlay();
+            fetchCategories();
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
+        }
     };
 
-    // Overlay functions
+    const removeCategory = async (categoryId) =>
+    {
+        try
+        {
+            await axios.delete(`${API_URL}/category/${categoryId}`);
+            fetchCategories();
+        } catch (error)
+        {
+            console.error(error);
+            setErrorMessage(error.response?.data);
+        }
+    };
+
+    // ========== Overlay functions ===========
     const openOverlay = (type, category) =>
     {
         setCurrentCategory(category);
         setIsOverlayOpen(type);
+        setErrorMessage('');
         document.querySelector('.content').classList.add('blur-background');
         document.body.classList.add('dark-background');
     };
@@ -91,23 +116,19 @@ export function Category()
                         <div className="normal-icon">
                             <FontAwesomeIcon icon={faPlusSquare} size="2x" onClick={() => openOverlay(1, null)} />
                         </div>
-                        <div className='account-button'>
-                            <Link to="/account">
-                                <FontAwesomeIcon icon={faUser} size="2x" />
-                            </Link>
-                        </div>
+                        <GetUserButton />
                     </div>
                 </div>
 
                 <div className='cards-container'>
                     {categories.length !== 0 ? categories.map(category => (
-                        <div key={category.ID} className="card">
-                            <h2>{category.Name}</h2>
-                            {!!category.Description && <h3>{category.Description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
-                            <h3>Number of Cards: {category["#Cards"]}</h3>
-                            <button onClick={() => window.location.href = `/category/${category.ID}`} className='blue-button'>View</button>
+                        <div key={category.id} className="card">
+                            <h2>{category.name}</h2>
+                            {!!category.description && <h3>{category.description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
+                            <h3 style={{ color: 'gray' }}>Number of Cards → {category["#cards"]}</h3>
+                            <button onClick={() => window.location.href = `/category/${category.id}`} className='blue-button'>View</button>
                             <div className="delete-icon">
-                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category.ID)} />
+                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category.id)} />
                             </div>
                             <div className="show-icon">
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, category)} />
@@ -124,12 +145,13 @@ export function Category()
                     <p>Category Name
                         <input
                             type='text'
-                            value={currentCategory.Name}
-                            onChange={(e) => setCurrentCategory({ ...currentCategory, Name: e.target.value })} />
+                            value={currentCategory.name}
+                            onChange={(e) => { setCurrentCategory({ ...currentCategory, name: e.target.value }); setErrorMessage(''); }} />
                     </p>
                     <p>Category Description
-                        <textarea value={currentCategory.Description} onChange={(e) => setCurrentCategory({ ...currentCategory, Description: e.target.value })} />
+                        <textarea value={currentCategory.description} onChange={(e) => { setCurrentCategory({ ...currentCategory, description: e.target.value }); setErrorMessage(''); }} />
                     </p>
+                    {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCategory} className='green-button'>Save</button>
                     <button onClick={closeOverlay} className='blue-button'>Cancel</button>
                 </div>
@@ -143,10 +165,10 @@ export function Category()
                         <input
                             type='text'
                             value={newCategoryName}
-                            onChange={(e) => setNewCategoryName(e.target.value)} />
+                            onChange={(e) => { setNewCategoryName(e.target.value); setErrorMessage(''); }} />
                     </p>
                     <p>Category Description
-                        <textarea value={newCategoryDesc} onChange={(e) => setNewCategoryDesc(e.target.value)} />
+                        <textarea value={newCategoryDesc} onChange={(e) => { setNewCategoryDesc(e.target.value); setErrorMessage(''); }} />
                     </p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCategory} className='green-button'>Add Category</button>

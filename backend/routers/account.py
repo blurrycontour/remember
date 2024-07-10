@@ -2,10 +2,11 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
-import pymongo
-import os
+
+from remember import Remember
 
 from ..dependencies import get_current_user
+from ..utils import json_response_wrapper
 
 
 router = APIRouter(
@@ -28,11 +29,8 @@ async def set_user(user: Annotated[dict, Depends(get_current_user)]):
     Add user if not exists already.
     """
     try:
-        db_name = os.getenv('ENVIRONMENT').lower()
-        mongodb_string = os.getenv('MONGODB_STRING')
-        client = pymongo.MongoClient(mongodb_string)
-        db = client[db_name]
-        collection = db["users"]
+        app = Remember()
+        collection = app.db["users"]
         db_user = user.copy()
         db_user["_id"] = db_user["user_id"]
         # check of db_user exists
@@ -53,3 +51,13 @@ async def set_user(user: Annotated[dict, Depends(get_current_user)]):
                 "message": f"Error adding user: {e}",
                 "user": user,
             }, status_code=500)
+
+
+@router.get('/stats')
+async def get_stats(user: Annotated[dict, Depends(get_current_user)]):
+    """
+    Get user stats.
+    """
+    app = Remember()
+    out = app.get_stats(user_id=user["user_id"])
+    return json_response_wrapper(*out)

@@ -8,12 +8,12 @@ class Category:
     Category class to represent a category of flashcards
     """
     def __init__(self, name:str, description:str=None):
-        self.id = self.create_id()
         self.name = name
         self.description = description
         self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.cards = {}
+        self.id = self.create_id()
+        self.cards = []
 
 
     def __str__(self):
