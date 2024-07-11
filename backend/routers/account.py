@@ -28,29 +28,19 @@ async def set_user(user: Annotated[dict, Depends(get_current_user)]):
     """
     Add user if not exists already.
     """
-    try:
-        app = Remember()
-        collection = app.db["users"]
-        db_user = user.copy()
-        db_user["_id"] = db_user["user_id"]
-        # check of db_user exists
-        if collection.find_one({"_id": db_user["_id"]}):
-            return JSONResponse(content={
-                "message": "User already exists!",
-                "user": user,
-            }, status_code=200)
-        else:
-            collection.insert_one(db_user)
-            return JSONResponse(content={
-                "message": "User added!",
-                "user": user,
-            }, status_code=200)
+    app = Remember()
+    out = app.accounts.add_user(user)
+    return json_response_wrapper(*out)
 
-    except Exception as e:
-        return JSONResponse(content={
-                "message": f"Error adding user: {e}",
-                "user": user,
-            }, status_code=500)
+
+@router.delete('/user')
+async def delete_user(user: Annotated[dict, Depends(get_current_user)]):
+    """
+    Delete exisiting user.
+    """
+    app = Remember()
+    out = app.accounts.delete_user(user_id=user["user_id"])
+    return json_response_wrapper(*out)
 
 
 @router.get('/stats')
@@ -59,5 +49,15 @@ async def get_stats(user: Annotated[dict, Depends(get_current_user)]):
     Get user stats.
     """
     app = Remember()
-    out = app.get_stats(user_id=user["user_id"])
+    out = app.statistics.get_stats(user_id=user["user_id"])
+    return json_response_wrapper(*out)
+
+
+@router.delete('/stats')
+async def reset_stats(user: Annotated[dict, Depends(get_current_user)]):
+    """
+    Reset user stats.
+    """
+    app = Remember()
+    out = app.statistics.reset_stats(user_id=user["user_id"])
     return json_response_wrapper(*out)
