@@ -15,7 +15,7 @@ export function Account()
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
-    const API_URL = '/api';
+    const API_URL = process.env.REACT_APP_API_URL;
 
     SetAxiosDefaults();
 

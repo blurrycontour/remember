@@ -14,7 +14,8 @@ export function Login() {
     let location = useLocation();
     let from = location.state?.from?.pathname || "/account";
 
-    const API_URL = '/api';
+    const API_URL = process.env.REACT_APP_API_URL;
+
 
     const informUserLogin = async (token) => {
         await axios.post(`${API_URL}/account/user`, {}, { headers: { "Authorization": `Bearer ${token}` } });

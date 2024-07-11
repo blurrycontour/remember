@@ -17,7 +17,7 @@ export function Random()
     const [showBack, setShowBack] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
     const navigate = useNavigate();
-    const API_URL = '/api';
+    const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
 
 

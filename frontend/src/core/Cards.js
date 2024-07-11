@@ -20,7 +20,7 @@ export function Cards() {
     const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
 
-    const API_URL = '/api';
+    const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
 
     // =========== Card functions ===========
