@@ -13,7 +13,7 @@ a.text-link {
     text-decoration: none;
 }
 
-h1 {
+h1,h2 {
     text-align: center;
 }
 
@@ -147,4 +147,11 @@ hr {
     width: 40px; /* Adjust the size as needed */
     height: 40px; /* Adjust the size as needed */
     border-radius: 50%; /* Makes the image circular */
+}
+
+.logo-photo {
+    width: 50px; /* Adjust the size as needed */
+    height: 50px; /* Adjust the size as needed */
+    /* border-radius: 50%;*/
+    display: block;
 }

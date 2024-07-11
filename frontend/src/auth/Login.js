@@ -7,6 +7,7 @@ import { AuthContext } from './AuthProvider';
 
 import '../css/Common.css';
 import '../css/Button.css';
+import logo from '../logo512.png';
 
 
 export function Login() {
@@ -37,8 +38,12 @@ export function Login() {
 
     return (
         <div>
-            <h1>Login to see your cards!</h1>
-            <div className='card3'>
+            <div className='card2' style={{alignItems: 'center'}}>
+                <img src={logo} alt="remember-logo" className="user-photo" />
+                <h1>&nbsp; Remember</h1>
+            </div>
+            <h2 style={{ marginTop: '0px' }}>Login to see your cards!</h2>
+            <div className='card3' style={{ backgroundColor: 'white', border: 'none', boxShadow: 'none' }}>
                 <button onClick={() => handleLogin(googleProvider)} className="login-button">Login with Google</button>
                 <br />
                 <button onClick={() => handleLogin(githubProvider)} className="login-button">Login with Github</button>
