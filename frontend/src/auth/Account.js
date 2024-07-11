@@ -10,8 +10,7 @@ import '../css/Common.css';
 import '../css/Button.css';
 
 
-export function Account()
-{
+export function Account() {
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
@@ -19,27 +18,22 @@ export function Account()
 
     SetAxiosDefaults();
 
-    const handleLogout = () =>
-    {
+    const handleLogout = () => {
         user.auth.signOut();
     }
 
-    const fetchStats = async () =>
-    {
-        try
-        {
+    const fetchStats = async () => {
+        try {
             const response = await axios.get(`${API_URL}/account/stats`);
             setStats(response.data);
             setStatusMessage('');
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setStatusMessage(error.response?.data);
         }
     };
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         fetchStats();
     }, []);
 

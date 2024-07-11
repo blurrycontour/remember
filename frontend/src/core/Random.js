@@ -9,8 +9,7 @@ import '../css/Common.css';
 import '../css/Button.css';
 
 
-export function Random()
-{
+export function Random() {
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState(null);
@@ -21,52 +20,42 @@ export function Random()
     SetAxiosDefaults();
 
 
-    const fetchCategories = async () =>
-    {
-        try
-        {
+    const fetchCategories = async () => {
+        try {
             const response = await axios.get(`${API_URL}/category/`);
             setCategories(response.data);
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const fetchRandomCard = async () =>
-    {
+    const fetchRandomCard = async () => {
         setRandomCard(null);
-        try
-        {
+        try {
             const response = categoryId === 'all' ?
-            await axios.get(`${API_URL}/main/random`) :
-            await axios.get(`${API_URL}/main/random/${categoryId}`);
+                await axios.get(`${API_URL}/main/random`) :
+                await axios.get(`${API_URL}/main/random/${categoryId}`);
             setRandomCard(response.data);
             setErrorMessage('');
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const removeCard = async (cardId) =>
-    {
-        try
-        {
+    const removeCard = async (cardId) => {
+        try {
             await axios.delete(`${API_URL}/card/${cardId}`);
             setRandomCard(null);
             fetchRandomCard();
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         fetchCategories();
         fetchRandomCard();
     }, []);
