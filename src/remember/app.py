@@ -7,6 +7,8 @@ import pymongo
 from .card import FlashCard
 from .category import Category
 from .singleton import SingletonMeta
+from .statistics import Statistics
+from .accounts import Accounts
 
 
 class Remember(metaclass=SingletonMeta):
@@ -15,6 +17,9 @@ class Remember(metaclass=SingletonMeta):
     """
     def __init__(self):
         self.connect()
+        self.accounts = Accounts(self.db)
+        self.statistics = Statistics(self.db)
+
 
     def connect(self):
         """ Connect to database """
@@ -46,11 +51,12 @@ class Remember(metaclass=SingletonMeta):
             return "Category name cannot be empty!", False
         if self.categories.find_one({"user_id": user_id, "category.name": category.name}):
             return f"Category '{category.name}' already exists!", False
-        else:
-            self.categories.insert_one({
-                "user_id": user_id,
-                "category": category.to_dict()
-            })
+
+        self.categories.insert_one({
+            "user_id": user_id,
+            "category": category.to_dict()
+        })
+        self.statistics.update_category_operations(user_id, "category.add")
         return f"Added category with ID: '{category.id}'", True
 
 
@@ -66,6 +72,7 @@ class Remember(metaclass=SingletonMeta):
             {"user_id": user_id, "category.id": category_id},
             {"$set": {"category.name": name, "category.description": description, "category.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
         )
+        self.statistics.update_category_operations(user_id, "category.update")
         return f"Category ID '{category_id}' updated!", True
 
 
@@ -100,6 +107,7 @@ class Remember(metaclass=SingletonMeta):
 
         self.categories.delete_one({"user_id": user_id, "category.id": category_id})
         self.cards.delete_many({"user_id": user_id, "card.category_id": category_id})
+        self.statistics.update_category_operations(user_id, "category.delete")
         return f"Category ID '{category_id}' removed!", True
 
 
@@ -121,6 +129,7 @@ class Remember(metaclass=SingletonMeta):
             {"user_id": user_id, "category.id": card.category_id},
             {"$inc": {"category.#cards": 1}}
         )
+        self.statistics.update_category_operations(user_id, "card.add")
         return f"Card ID '{card.id}' added to category ID '{card.category_id}'", True
 
 
@@ -135,8 +144,14 @@ class Remember(metaclass=SingletonMeta):
 
         self.cards.update_one(
             {"user_id": user_id, "card.id": card_id},
-            {"$set": {"card.front": front, "card.back": back, "card.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
+            {"$set": {
+                "card.front": front,
+                "card.back": back,
+                "card.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            }
         )
+        self.statistics.update_category_operations(user_id, "card.update")
         return f"Card ID '{card_id}' updated!", True
 
 
@@ -159,6 +174,7 @@ class Remember(metaclass=SingletonMeta):
             {"user_id": user_id, "category.id": _card["card"]["category_id"]},
             {"$inc": {"category.#cards": -1}}
         )
+        self.statistics.update_category_operations(user_id, "card.delete")
         return f"Card ID '{card_id}' removed!", True
 
 
@@ -190,11 +206,3 @@ class Remember(metaclass=SingletonMeta):
             return "No cards found!", False
 
         return random.choices(all_cards, k=1)[0], True
-
-    def get_stats(self, user_id:str):
-        """ Show the number of categories and cards """
-        stats = {
-            "#categories": self.categories.count_documents({"user_id":user_id}),
-            "#cards": self.cards.count_documents({"user_id":user_id})
-        }
-        return stats, True
