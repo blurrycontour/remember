@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faHome, faUser, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faHome, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
 
 import '../css/Common.css';
@@ -25,6 +25,10 @@ export function Category() {
     const fetchCategories = async () => {
         try {
             const response = await axios.get(`${API_URL}/category/`);
+            if (typeof(response.data) === 'string'){
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
             setCategories(response.data);
             if (response.data.length === 0) setStatusMessage('No categories found!');
             else setStatusMessage('');

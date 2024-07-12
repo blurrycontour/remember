@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import { useLocation, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { signInWithPopup } from "firebase/auth";
@@ -42,7 +42,7 @@ export function Login() {
                 <img src={logo} alt="remember-logo" className="user-photo" />
                 <h1>&nbsp; Remember</h1>
             </div>
-            <h2 style={{ marginTop: '0px' }}>Login to see your cards!</h2>
+            <h2 style={{ marginTop: '0px', textAlign: 'center' }}>Login to see your cards!</h2>
             <div className='card3' style={{ backgroundColor: 'white', border: 'none', boxShadow: 'none' }}>
                 <button onClick={() => handleLogin(googleProvider)} className="login-button">Login with Google</button>
                 <br />

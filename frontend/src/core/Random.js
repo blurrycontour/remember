@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEye, faEyeSlash, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
 
 import '../css/Common.css';
@@ -14,7 +14,7 @@ export function Random() {
     const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
-    const [errorMessage, setErrorMessage] = useState('');
+    const [statusMessage, setStatusMessage] = useState('Loading...');
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -23,10 +23,15 @@ export function Random() {
     const fetchCategories = async () => {
         try {
             const response = await axios.get(`${API_URL}/category/`);
+            if (typeof(response.data) === 'string'){
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
             setCategories(response.data);
+            setStatusMessage('');
         } catch (error) {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
@@ -36,11 +41,15 @@ export function Random() {
             const response = categoryId === 'all' ?
                 await axios.get(`${API_URL}/main/random`) :
                 await axios.get(`${API_URL}/main/random/${categoryId}`);
+            if (typeof(response.data) === 'string'){
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
             setRandomCard(response.data);
-            setErrorMessage('');
+            setStatusMessage('');
         } catch (error) {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
@@ -51,7 +60,7 @@ export function Random() {
             fetchRandomCard();
         } catch (error) {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
@@ -100,7 +109,7 @@ export function Random() {
                     </div>
                 </div>}
 
-            {!!errorMessage && <h3 style={{ textAlign: 'center' }}>{errorMessage}</h3>}
+            {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
         </div>
     );
 }

@@ -25,6 +25,10 @@ export function Account() {
     const fetchStats = async () => {
         try {
             const response = await axios.get(`${API_URL}/account/stats`);
+            if (typeof(response.data) === 'string'){
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
             setStats(response.data);
             setStatusMessage('');
         } catch (error) {
@@ -51,9 +55,9 @@ export function Account() {
             </div>
 
             <div className='card3'>
-                <h2>{user.displayName}</h2>
-                {user.photoURL && <img src={user.photoURL} alt='User Photo' style={{ width: '100px', height: '100px', borderRadius: '50%' }} />}
-                <h3>{user.email}</h3>
+                <h2>{user?.displayName}</h2>
+                {user?.photoURL && <img src={user?.photoURL} alt='User Photo' style={{ width: '100px', height: '100px', borderRadius: '50%' }} />}
+                <h3>{user?.email}</h3>
                 <button onClick={handleLogout} className='login-button'>Log out</button>
             </div>
 

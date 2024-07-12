@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faHome, faUser, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faHome, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
 
 import '../css/Common.css';
@@ -27,6 +27,10 @@ export function Cards() {
     const fetchCards = async () => {
         try {
             const response = await axios.get(`${API_URL}/category/${id}`);
+            if (typeof(response.data) === 'string'){
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
             setCards(response.data.cards);
             setCategory(response.data.category);
             if (response.data.cards.length === 0) setStatusMessage('No cards found!');
