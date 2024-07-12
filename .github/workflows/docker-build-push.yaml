@@ -21,11 +21,15 @@ jobs:
       - uses: actions/checkout@v3
       - name: Get current repo name
         run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
-      - name: Build docker image
+      - name: Setup .env file
+        run: echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME" >> .env
+      - name: Build and run 'frontend' image
         run: |
-            echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME" >> .env
-            docker compose build
+            docker compose --profile build build
+            docker compose --profile build up
+      - name: Build other images
+        run: docker compose --profile deploy build
       - name: Docker login
         run: docker login -u $DOCKER_USER -p $DOCKER_TOKEN
-      - name: Push docker image to hub
+      - name: Push docker images to hub
         run: docker compose push

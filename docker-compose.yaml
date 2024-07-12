@@ -1,5 +1,6 @@
 services:
   backend:
+    profiles: ["deploy", "stage"]
     restart: unless-stopped
     # container_name: backend
     image: ${DOCKER_IMAGE_PREFIX}:backend-latest
@@ -24,6 +25,7 @@ services:
       - 'host.docker.internal:host-gateway'
 
   frontend:
+    profiles: ["build"]
     restart: on-failure
     # container_name: frontend
     image: ${DOCKER_IMAGE_PREFIX}:frontend-latest
@@ -44,6 +46,7 @@ services:
 
 
   nginx:
+    profiles: ["deploy", "stage"]
     restart: unless-stopped
     # container_name: nginx
     image: ${DOCKER_IMAGE_PREFIX}:nginx-latest
@@ -67,6 +70,7 @@ services:
 
 
   ngrok:
+    profiles: ["deploy"]
     restart: always
     image: ngrok/ngrok
     # container_name: ngrok
