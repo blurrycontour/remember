@@ -13,8 +13,8 @@
     "react-router-dom": "^6.2.1",
     "axios": "^1.7.0",
     "@fortawesome/fontawesome-free": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.15",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
     "firebase": "^10.12.2"
   },
   "scripts": {
@@ -40,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }
