@@ -94,6 +94,7 @@ export function Cards() {
 
     useEffect(() => {
         fetchCards();
+        // eslint-disable-next-line
     }, []);
 
     return (

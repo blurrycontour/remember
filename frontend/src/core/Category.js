@@ -91,6 +91,7 @@ export function Category() {
 
     useEffect(() => {
         fetchCategories();
+        // eslint-disable-next-line
     }, []);
 
     return (

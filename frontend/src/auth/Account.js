@@ -39,6 +39,7 @@ export function Account() {
 
     useEffect(() => {
         fetchStats();
+        // eslint-disable-next-line
     }, []);
 
     return (
@@ -56,7 +57,7 @@ export function Account() {
 
             <div className='card3'>
                 <h2>{user?.displayName}</h2>
-                {user?.photoURL && <img src={user?.photoURL} alt='User Photo' style={{ width: '100px', height: '100px', borderRadius: '50%' }} />}
+                {user?.photoURL && <img src={user?.photoURL} alt='User' style={{ width: '100px', height: '100px', borderRadius: '50%' }} />}
                 <h3>{user?.email}</h3>
                 <button onClick={handleLogout} className='login-button'>Log out</button>
             </div>

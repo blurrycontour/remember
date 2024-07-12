@@ -67,6 +67,7 @@ export function Random() {
     useEffect(() => {
         fetchCategories();
         fetchRandomCard();
+        // eslint-disable-next-line
     }, []);
 
 
