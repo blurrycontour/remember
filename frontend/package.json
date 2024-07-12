@@ -15,7 +15,8 @@
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.15",
-    "firebase": "^10.12.2"
+    "firebase": "^10.12.2",
+    "react-social-login-buttons": "^4.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

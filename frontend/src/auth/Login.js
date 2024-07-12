@@ -5,6 +5,8 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
 
+import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
+
 import '../css/Common.css';
 import '../css/Button.css';
 import logo from '../logo512.png';
@@ -44,9 +46,13 @@ export function Login() {
             </div>
             <h2 style={{ marginTop: '0px', textAlign: 'center' }}>Login to see your cards!</h2>
             <div className='card3' style={{ backgroundColor: 'white', border: 'none', boxShadow: 'none' }}>
-                <button onClick={() => handleLogin(googleProvider)} className="login-button">Login with Google</button>
+                <GoogleLoginButton onClick={() => handleLogin(googleProvider)} className="login-button">
+                    <span>Login with Google</span>
+                </GoogleLoginButton>
                 <br />
-                <button onClick={() => handleLogin(githubProvider)} className="login-button">Login with Github</button>
+                <GithubLoginButton onClick={() => handleLogin(githubProvider)} className="login-button">
+                    <span>Login with GitHub</span>
+                </GithubLoginButton>
             </div>
         </div>
     );
