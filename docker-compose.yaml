@@ -1,6 +1,6 @@
 services:
   backend:
-    restart: always
+    restart: unless-stopped
     # container_name: backend
     image: ${DOCKER_IMAGE_PREFIX}:backend-latest
     build:
@@ -24,13 +24,15 @@ services:
       - 'host.docker.internal:host-gateway'
 
   frontend:
-    restart: always
+    restart: on-failure
     # container_name: frontend
     image: ${DOCKER_IMAGE_PREFIX}:frontend-latest
     build:
       context: '.'
       dockerfile: frontend/Dockerfile
       network: host
+    volumes:
+      - ./frontend/build:/repo/frontend/build
     # ports:
     #   - 3000:3000
     networks:
@@ -42,11 +44,13 @@ services:
 
 
   nginx:
-    restart: always
-    image: nginx:alpine
+    restart: unless-stopped
     # container_name: nginx
-    volumes:
-      - ./nginx/default.conf:/tmp/nginx/nginx.conf
+    image: ${DOCKER_IMAGE_PREFIX}:nginx-latest
+    build:
+      context: '.'
+      dockerfile: nginx/Dockerfile
+      network: host
     command:
       - sh
       - -c
@@ -56,12 +60,11 @@ services:
         nginx -g 'daemon off;'
     ports:
       - ${NGINX_PORT}:80
-    env_file:
-      - ./.env
     networks:
       - remember-network
     extra_hosts:
       - 'host.docker.internal:host-gateway'
+
 
   ngrok:
     restart: always

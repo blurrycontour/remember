@@ -10,5 +10,5 @@ COPY frontend/public ${wd}/public
 COPY frontend/src ${wd}/src
 COPY frontend/README.md ${wd}/README.md
 
-CMD ["npm", "start"]
-# CMD ["npm", "run", "build"]
+# CMD ["npm", "start"]
+CMD ["npm", "run", "build"]
