@@ -16,24 +16,6 @@ services:
     networks:
       - db-network
 
-  # ngrok:
-  #   restart: always
-  #   image: ngrok/ngrok
-  #   # container_name: ngrok
-  #   ports:
-  #     - 4040:4040
-  #   command:
-  #     - "start"
-  #     - "mongodb"
-  #     - "--config"
-  #     - "/etc/ngrok.yml"
-  #   volumes:
-  #     - ../ngrok/ngrok.yaml:/etc/ngrok.yml
-  #   environment:
-  #     - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
-  #   networks:
-  #     - db-network
-
 networks:
   db-network:
     driver: bridge
