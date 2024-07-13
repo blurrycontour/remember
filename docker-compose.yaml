@@ -92,6 +92,7 @@ services:
 
 
   db-backup:
+    profiles: ["deploy"]
     restart: always
     image: ${DOCKER_IMAGE_PREFIX}:db-backup
     # container_name: db-backup
