@@ -15,7 +15,7 @@ def backup_to_s3(file_path:str):
 
     object_name = os.path.basename(file_path)
     object_name_base = object_name
-    object_name = f"{datetime.now().strftime('%Y-%m-%d--%H-00-00')}--{object_name}"
+    object_name = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{object_name}"
 
     s3_client = boto3.client(service_name='s3')
 
@@ -35,7 +35,7 @@ def backup_to_gcs(file_path:str):
 
     object_name = os.path.basename(file_path)
     object_name_base = object_name
-    object_name = f"{datetime.now().strftime('%Y-%m-%d--%H-00-00')}--{object_name}"
+    object_name = f"{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_{object_name}"
 
     credentials_file = os.path.expanduser("~/.gcp/gcs-credentials.json")
     storage_client = storage.Client.from_service_account_json(credentials_file)
