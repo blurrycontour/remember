@@ -73,6 +73,4 @@ To run locally:
 
 
 ## System Diagram
-## System Diagram
-
 ![System Diagram](docs/system.drawio.png)
