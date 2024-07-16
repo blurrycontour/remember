@@ -3,7 +3,7 @@ services:
     profiles: ["deploy", "stage"]
     restart: unless-stopped
     # container_name: backend
-    image: ${DOCKER_IMAGE_PREFIX}:backend-latest
+    image: ${DOCKER_IMAGE_PREFIX}:backend
     build:
       context: '.'
       dockerfile: backend/Dockerfile
@@ -24,11 +24,12 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
+
   frontend:
     profiles: ["build"]
     restart: on-failure
     # container_name: frontend
-    image: ${DOCKER_IMAGE_PREFIX}:frontend-latest
+    image: ${DOCKER_IMAGE_PREFIX}:frontend
     build:
       context: '.'
       dockerfile: frontend/Dockerfile
@@ -49,7 +50,7 @@ services:
     profiles: ["deploy", "stage"]
     restart: unless-stopped
     # container_name: nginx
-    image: ${DOCKER_IMAGE_PREFIX}:nginx-latest
+    image: ${DOCKER_IMAGE_PREFIX}:nginx
     build:
       context: '.'
       dockerfile: nginx/Dockerfile
@@ -88,6 +89,25 @@ services:
     networks:
       remember-network:
         ipv4_address: ${NGROK_DOCKER_IP}
+
+
+  db-backup:
+    profiles: ["deploy"]
+    restart: always
+    image: ${DOCKER_IMAGE_PREFIX}:db-backup
+    # container_name: db-backup
+    build:
+      context: '.'
+      dockerfile: database/Dockerfile
+      network: host
+      args:
+        - MONGODB_STRING=${MONGODB_STRING}
+    env_file:
+      - ./.env
+    volumes:
+      - ~/.aws:/root/.aws
+      - ~/.gcp:/root/.gcp
+      - ./data/mongo/backup:/data/backup
 
 
 networks:
