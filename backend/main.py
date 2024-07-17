@@ -12,7 +12,7 @@ import firebase_admin
 from firebase_admin import credentials
 
 from .utils.text_html import to_html
-from .routers import account, default, category, card
+from .routers import account, default, category, card, public
 
 
 app = FastAPI(root_path="/api")
@@ -21,6 +21,7 @@ app.include_router(default.router)
 app.include_router(category.router)
 app.include_router(card.router)
 app.include_router(account.router)
+app.include_router(public.router)
 
 
 origins = ["*"]

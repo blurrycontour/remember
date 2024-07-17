@@ -72,6 +72,7 @@ jobs:
             cd $REPO_NAME
             echo 'MONGODB_STRING=$MONGODB_STRING' >> .env
             echo 'ENVIRONMENT=$ENVIRONMENT' >> .env
+            echo 'BUILD_VERSION=$BUILD_VERSION' >> .env
           "
       - name: Pull latest images
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy pull"

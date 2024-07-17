@@ -21,6 +21,7 @@ services:
     environment:
       - MONGODB_STRING=${MONGODB_STRING}
       - ENVIRONMENT=${ENVIRONMENT}
+      - BUILD_VERSION=${BUILD_VERSION}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
