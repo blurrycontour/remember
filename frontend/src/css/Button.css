@@ -10,7 +10,7 @@
 
 .delete-icon {
     position: absolute;
-    top: 15px;
+    bottom: 11px;
     right: 13px;
     color: #FF2222;
     cursor: pointer;
@@ -19,7 +19,7 @@
 .show-icon {
     position: absolute;
     right: 10px;
-    bottom: 12px;
+    top: 15px;
     color: #007BFF;
     cursor: pointer;
 }
