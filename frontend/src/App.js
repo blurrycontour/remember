@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Random } from './core/Random';
 import { Cards } from './core/Cards';
 import { Category } from './core/Category';
+import { Footer } from './core/Footer';
 import { Login } from './auth/Login';
 import { Account } from './auth/Account';
 import { ProtectedRoute } from './auth/ProtectedRoute';
@@ -20,6 +21,7 @@ function App() {
           <Route path='/account' element={<ProtectedRoute><Account /></ProtectedRoute>} />
         </Routes>
       </AuthProvider>
+      <Footer />
     </Router>
   );
 }

@@ -20,6 +20,7 @@ h1 {
 .cards-container {
     display: block;
     justify-content: center;
+    margin-bottom: 45px;
     /* flex-wrap: wrap; */
 }
 
@@ -154,4 +155,18 @@ hr {
     height: 50px; /* Adjust the size as needed */
     /* border-radius: 50%;*/
     display: block;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #f1f1f1;
+    color: black;
+    text-align: center;
+}
+
+.footer p {
+    margin: 10px 0px;
 }

@@ -66,10 +66,20 @@ sudo rm -rf data/mongo/db/*
 docker-compose -f database/docker-compose.yaml --env-file ./.env --profile <profile> config
 ```
 
-To run locally:
+### Run Locally
 - All env vars in .env file
 - All credentials in ~/.gcp and ~/.aws
-- For application `docker compose --profile stage up -d`
+- Run the following commands:
+```bash
+# Build frontend image
+docker compose --profile build build
+# Run frontend build
+docker compose --profile build up
+# Build application images
+docker compose --profile stage build
+# Run application
+docker compose --profile stage up -d
+```
 
 
 ## System Diagram
