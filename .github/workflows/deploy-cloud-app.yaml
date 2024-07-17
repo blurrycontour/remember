@@ -76,7 +76,7 @@ jobs:
       - name: Pull latest images
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy pull"
       - name: Stop existing containers
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose down"
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile '*' down"
       - name: Prune dangling images
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
       - name: Start containers again
