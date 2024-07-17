@@ -23,7 +23,7 @@ export function Random() {
     const fetchCategories = async () => {
         try {
             const response = await axios.get(`${API_URL}/category/`);
-            if (typeof(response.data) === 'string'){
+            if (typeof (response.data) === 'string') {
                 setStatusMessage('Bad response from API server!');
                 return;
             }
@@ -41,7 +41,7 @@ export function Random() {
             const response = categoryId === 'all' ?
                 await axios.get(`${API_URL}/main/random`) :
                 await axios.get(`${API_URL}/main/random/${categoryId}`);
-            if (typeof(response.data) === 'string'){
+            if (typeof (response.data) === 'string') {
                 setStatusMessage('Bad response from API server!');
                 return;
             }
@@ -64,9 +64,20 @@ export function Random() {
         }
     };
 
+    const toggleDarkMode = () => {
+        document.body.classList.toggle('dark-mode');
+        // Save preference to localStorage
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
+    };
+
     useEffect(() => {
         fetchCategories();
         fetchRandomCard();
+        const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+        if (isDarkModeEnabled) {
+            document.body.classList.add('dark-mode');
+        }
         // eslint-disable-next-line
     }, []);
 
@@ -111,6 +122,8 @@ export function Random() {
                 </div>}
 
             {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
+
+            <button onClick={toggleDarkMode}>Toggle Dark Mode</button>
         </div>
     );
 }

@@ -170,3 +170,41 @@ hr {
 .footer p {
     margin: 8px 0px;
 }
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode a, .dark-mode a.text-link {
+    color: #bb86fc;
+}
+
+.dark-mode a:hover {
+    color: #03dac6;
+}
+
+.dark-mode .card, .dark-mode .overlay, .dark-mode .card3 {
+    border-color: #424242;
+    background-color: #333;
+    color: #e0e0e0;
+    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .footer {
+    background-color: #212121;
+    color: #e0e0e0;
+}
+
+.dark-mode .green-button, .dark-mode .blue-button, .dark-mode .login-button {
+    color: #000;
+    background-color: #bb86fc;
+    border-color: #bb86fc;
+}
+
+.dark-mode .green-button:hover, .dark-mode .blue-button:hover, .dark-mode .login-button:hover {
+    background-color: #03dac6;
+    color: #000;
+    border-color: #03dac6;
+}
