@@ -5,31 +5,25 @@ import '../css/Common.css';
 import '../css/Button.css';
 
 
-export function Footer()
-{
+export function Footer() {
     const [buildInfo, setBuildInfo] = useState(null);
     const API_URL = process.env.REACT_APP_API_URL;
 
-    const fetchBuildInfo = async () =>
-    {
-        try
-        {
+    const fetchBuildInfo = async () => {
+        try {
             const response = await axios.get(`${API_URL}/public/build`, { headers: { 'ngrok-skip-browser-warning': 'ok' } });
-            if (typeof (response.data) === 'string')
-            {
+            if (typeof (response.data) === 'string') {
                 setBuildInfo(null);
                 return;
             }
             setBuildInfo(response.data);
-        } catch (error)
-        {
+        } catch (error) {
             console.error(error);
             setBuildInfo(null);
         }
     };
 
-    useEffect(() =>
-    {
+    useEffect(() => {
         fetchBuildInfo();
         // eslint-disable-next-line
     }, []);
@@ -38,7 +32,7 @@ export function Footer()
         <div>
             {!!buildInfo &&
                 <div className='footer'>
-                    <p>Build: {buildInfo.version}</p>
+                    <p>Build: <a href={`https://github.com/blurrycontour/remember/tree/${buildInfo.version}`}>{buildInfo.version}</a></p>
                 </div>
             }
         </div>
