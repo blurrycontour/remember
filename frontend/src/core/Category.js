@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faHome, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
-
-import '../css/Common.css';
-import '../css/Button.css';
+import { faTrashAlt, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 
 
-export function Category() {
+export function Category()
+{
     const [categories, setCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryDesc, setNewCategoryDesc] = useState('');
@@ -22,56 +20,70 @@ export function Category() {
     SetAxiosDefaults();
 
     // =========== Category functions ===========
-    const fetchCategories = async () => {
-        try {
+    const fetchCategories = async () =>
+    {
+        try
+        {
             const response = await axios.get(`${API_URL}/category/`);
-            if (typeof(response.data) === 'string'){
+            if (typeof (response.data) === 'string')
+            {
                 setStatusMessage('Bad response from API server!');
                 return;
             }
             setCategories(response.data);
             if (response.data.length === 0) setStatusMessage('No categories found!');
             else setStatusMessage('');
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const addCategory = async () => {
-        try {
+    const addCategory = async () =>
+    {
+        try
+        {
             await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
             closeOverlay();
             fetchCategories();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const updateCategory = async () => {
-        try {
+    const updateCategory = async () =>
+    {
+        try
+        {
             await axios.put(`${API_URL}/category/${currentCategory.id}`, { name: currentCategory.name, description: currentCategory.description });
             closeOverlay();
             fetchCategories();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const removeCategory = async (categoryId) => {
-        try {
+    const removeCategory = async (categoryId) =>
+    {
+        try
+        {
             await axios.delete(`${API_URL}/category/${categoryId}`);
             fetchCategories();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setStatusMessage(error.response?.data);
         }
     };
 
     // ========== Overlay functions ===========
-    const openOverlay = (type, category) => {
+    const openOverlay = (type, category) =>
+    {
         setCurrentCategory(category);
         setIsOverlayOpen(type);
         setErrorMessage('');
@@ -79,7 +91,8 @@ export function Category() {
         document.body.classList.add('dark-background');
     };
 
-    const closeOverlay = () => {
+    const closeOverlay = () =>
+    {
         setCurrentCategory(null);
         setNewCategoryName('');
         setNewCategoryDesc('');
@@ -89,7 +102,8 @@ export function Category() {
         document.body.classList.remove('dark-background');
     };
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         fetchCategories();
         // eslint-disable-next-line
     }, []);
@@ -98,17 +112,11 @@ export function Category() {
         <div>
             <div className='content'>
                 <div className='card2'>
-                    <div className='header'>
-                        <div className='back-button'>
-                            <Link to="/">
-                                <FontAwesomeIcon icon={faHome} size="2x" />
-                            </Link>
-                        </div>
-                        <h1>Categories &nbsp; </h1>
-                        <div className="normal-icon">
-                            <FontAwesomeIcon icon={faPlusSquare} size="2x" onClick={() => openOverlay(1, null)} />
-                        </div>
-                        <GetUserButton />
+                    <h1>Categories &nbsp; </h1>
+                    <div className="normal-icon">
+                        <h1>
+                            <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
+                        </h1>
                     </div>
                 </div>
 

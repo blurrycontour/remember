@@ -1,13 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
 import { SetAxiosDefaults } from '../core/Utils';
-
-import '../css/Common.css';
-import '../css/Button.css';
 
 
 export function Account()
@@ -52,14 +46,7 @@ export function Account()
     return (
         <div>
             <div className='card2'>
-                <div className='header'>
-                    <div className='back-button'>
-                        <Link to="/">
-                            <FontAwesomeIcon icon={faHome} size="2x" />
-                        </Link>
-                    </div>
-                    <h1>Welcome!</h1>
-                </div>
+                <h1>Welcome!</h1>
             </div>
 
             <div className='cards-container'>

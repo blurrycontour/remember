@@ -3,13 +3,11 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
-
-import '../css/Common.css';
-import '../css/Button.css';
+import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 
 
-export function Random() {
+export function Random()
+{
     const [categories, setCategories] = useState([]);
     const [categoryId, setCategoryId] = useState('all');
     const [randomCard, setRandomCard] = useState(null);
@@ -20,51 +18,63 @@ export function Random() {
     SetAxiosDefaults();
 
 
-    const fetchCategories = async () => {
-        try {
+    const fetchCategories = async () =>
+    {
+        try
+        {
             const response = await axios.get(`${API_URL}/category/`);
-            if (typeof(response.data) === 'string'){
+            if (typeof (response.data) === 'string')
+            {
                 setStatusMessage('Bad response from API server!');
                 return;
             }
             setCategories(response.data);
             setStatusMessage('');
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
-    const fetchRandomCard = async () => {
+    const fetchRandomCard = async () =>
+    {
         setRandomCard(null);
-        try {
+        try
+        {
             const response = categoryId === 'all' ?
                 await axios.get(`${API_URL}/main/random`) :
                 await axios.get(`${API_URL}/main/random/${categoryId}`);
-            if (typeof(response.data) === 'string'){
+            if (typeof (response.data) === 'string')
+            {
                 setStatusMessage('Bad response from API server!');
                 return;
             }
             setRandomCard(response.data);
             setStatusMessage('');
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
-    const removeCard = async (cardId) => {
-        try {
+    const removeCard = async (cardId) =>
+    {
+        try
+        {
             await axios.delete(`${API_URL}/card/${cardId}`);
             setRandomCard(null);
             fetchRandomCard();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         fetchCategories();
         fetchRandomCard();
         // eslint-disable-next-line
@@ -74,13 +84,10 @@ export function Random() {
     return (
         <div>
             <div className='card2'>
-                <div className='header'>
-                    <h1>Random Card</h1>
-                    <GetUserButton />
-                </div>
+                <h1>Random Card</h1>
             </div>
 
-            <div className="card" style={{ backgroundColor: '#eee' }}>
+            <div className="card">
                 <select onChange={(e) => setCategoryId(e.target.value)} defaultValue={"all"}>
                     <option key={"all"} value={"all"}>Any</option>
                     {categories.map(category => (
@@ -106,7 +113,7 @@ export function Random() {
                         <div className="show-icon">
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
-                        <Link to={`/category/${randomCard.category.id}`} className='text-link'>Category → {randomCard.category.name}</Link>
+                        <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
                     </div>
                 </div>}
 
