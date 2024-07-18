@@ -7,8 +7,6 @@ import { AuthContext } from './AuthProvider';
 
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
-import '../css/Common.css';
-import '../css/Button.css';
 import logo from '../logo512.png';
 
 

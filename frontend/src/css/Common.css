@@ -8,11 +8,6 @@ a:hover {
     text-decoration: none;
 }
 
-a.text-link {
-    color: #007BFF;
-    text-decoration: none;
-}
-
 h1 {
     text-align: center;
 }
@@ -58,15 +53,9 @@ h1 {
     transform: translate(-50%, -50%);
 }
 
-.header {
-    display: flex;
-    align-items: center;
-}
-
 .card2 {
-    padding: 15px;
-    margin: 10px auto;
-    /* This will center the card horizontally */
+    padding: 5px;
+    margin: 5px auto;
     width: 90%;
     max-width: 500px;
     position: relative;
@@ -75,8 +64,23 @@ h1 {
     word-wrap: break-word;
 }
 
+.header {
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    word-wrap: break-word;
+    background-color: #f1f1f1;
+    color: black;
+    text-align: center;
+    z-index: 500;
+}
+
 .card:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0px 15px rgba(0, 0, 0, 0.3);
 }
 
 .card h2,
@@ -91,12 +95,19 @@ h1 {
     margin: 10px 0;
     box-sizing: border-box;
     font-size: 16px;
+    border: 1px solid black;
+    outline: none;
 }
 
 .overlay textarea {
     resize: vertical;
     min-height: 80px;
     max-height: 500px;
+}
+
+.overlay input:focus,
+.overlay textarea:focus {
+    border: 2px solid black;
 }
 
 .card select {
@@ -136,8 +147,10 @@ hr {
 
 .blur-background {
     filter: blur(8px);
-    pointer-events: none; /* Makes everything unclickable */
-    user-select: none; /* Prevents text selection */
+    pointer-events: none;
+    /* Makes everything unclickable */
+    user-select: none;
+    /* Prevents text selection */
 }
 
 .dark-background {
@@ -145,14 +158,19 @@ hr {
 }
 
 .user-photo {
-    width: 40px; /* Adjust the size as needed */
-    height: 40px; /* Adjust the size as needed */
-    border-radius: 50%; /* Makes the image circular */
+    width: 40px;
+    /* Adjust the size as needed */
+    height: 40px;
+    /* Adjust the size as needed */
+    border-radius: 50%;
+    /* Makes the image circular */
 }
 
 .logo-photo {
-    width: 50px; /* Adjust the size as needed */
-    height: 50px; /* Adjust the size as needed */
+    width: 50px;
+    /* Adjust the size as needed */
+    height: 50px;
+    /* Adjust the size as needed */
     /* border-radius: 50%;*/
     display: block;
 }
@@ -171,25 +189,27 @@ hr {
     margin: 8px 0px;
 }
 
-/* Dark mode styles */
+/* =========== Dark mode styles =========== */
 .dark-mode {
     background-color: #121212;
     color: #e0e0e0;
-}
-
-.dark-mode a, .dark-mode a.text-link {
-    color: #bb86fc;
 }
 
 .dark-mode a:hover {
     color: #03dac6;
 }
 
-.dark-mode .card, .dark-mode .overlay, .dark-mode .card3 {
+.dark-mode .card,
+.dark-mode .header,
+.dark-mode .overlay,
+.dark-mode .card3 {
     border-color: #424242;
     background-color: #333;
     color: #e0e0e0;
-    box-shadow: 0 2px 5px rgba(255, 255, 255, 0.1);
+}
+
+.dark-mode .card:hover {
+    box-shadow: 0 0px 15px rgba(255, 255, 255, 0.2);
 }
 
 .dark-mode .footer {
@@ -197,14 +217,36 @@ hr {
     color: #e0e0e0;
 }
 
-.dark-mode .green-button, .dark-mode .blue-button, .dark-mode .login-button {
+/* .dark-mode .green-button, .dark-mode .blue-button, .dark-mode .login-button {
     color: #000;
     background-color: #bb86fc;
     border-color: #bb86fc;
+} */
+
+.dark-mode .green-button:hover,
+.dark-mode .blue-button:hover,
+.dark-mode .login-button:hover {
+    background-color: black;
+    color: white;
 }
 
-.dark-mode .green-button:hover, .dark-mode .blue-button:hover, .dark-mode .login-button:hover {
-    background-color: #03dac6;
-    color: #000;
-    border-color: #03dac6;
+.dark-mode .card select {
+    background-color: #333;
+    color: white;
+}
+
+.dark-mode .header {
+    background-color: #212121;
+    color: #e0e0e0;
+}
+
+.dark-mode .overlay input,
+.dark-mode .overlay textarea {
+    background-color: black;
+    color: white;
+    border: 1px solid white;
+}
+.dark-mode .overlay input:focus,
+.dark-mode .overlay textarea:focus {
+    border: 2px solid white;
 }

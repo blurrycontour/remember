@@ -5,11 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faHome, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
 
-import '../css/Common.css';
-import '../css/Button.css';
 
-
-export function Cards() {
+export function Cards()
+{
     let { id } = useParams();
     const [cards, setCards] = useState([]);
     const [category, setCategory] = useState(null);
@@ -24,10 +22,13 @@ export function Cards() {
     SetAxiosDefaults();
 
     // =========== Card functions ===========
-    const fetchCards = async () => {
-        try {
+    const fetchCards = async () =>
+    {
+        try
+        {
             const response = await axios.get(`${API_URL}/category/${id}`);
-            if (typeof(response.data) === 'string'){
+            if (typeof (response.data) === 'string')
+            {
                 setStatusMessage('Bad response from API server!');
                 return;
             }
@@ -35,46 +36,57 @@ export function Cards() {
             setCategory(response.data.category);
             if (response.data.cards.length === 0) setStatusMessage('No cards found!');
             else setStatusMessage('');
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setStatusMessage(error.response?.data);
         }
     };
 
-    const addCard = async () => {
-        try {
+    const addCard = async () =>
+    {
+        try
+        {
             await axios.post(`${API_URL}/card/`, { category_id: category.id, front: newCardFront, back: newCardBack });
             closeOverlay();
             fetchCards();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const updateCard = async () => {
-        try {
+    const updateCard = async () =>
+    {
+        try
+        {
             await axios.put(`${API_URL}/card/${currentCard.id}`, { category_id: currentCard.id, front: currentCard.front, back: currentCard.back });
             closeOverlay();
             fetchCards();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setErrorMessage(error.response?.data);
         }
     };
 
-    const removeCard = async (cardId) => {
-        try {
+    const removeCard = async (cardId) =>
+    {
+        try
+        {
             await axios.delete(`${API_URL}/card/${cardId}`);
             fetchCards();
-        } catch (error) {
+        } catch (error)
+        {
             console.error(error);
             setStatusMessage(error.response?.data);
         }
     };
 
     // =========== Overlay functions ===========
-    const openOverlay = (type, card) => {
+    const openOverlay = (type, card) =>
+    {
         setCurrentCard(card);
         setIsOverlayOpen(type);
         setErrorMessage('');
@@ -82,7 +94,8 @@ export function Cards() {
         document.body.classList.add('dark-background');
     };
 
-    const closeOverlay = () => {
+    const closeOverlay = () =>
+    {
         setCurrentCard(null);
         setNewCardFront('');
         setNewCardBack('');
@@ -92,7 +105,8 @@ export function Cards() {
         document.body.classList.remove('dark-background');
     };
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         fetchCards();
         // eslint-disable-next-line
     }, []);
@@ -101,19 +115,13 @@ export function Cards() {
         <div>
             <div className='content'>
                 <div className='card2'>
-                    <div className='header'>
-                        <div className='back-button'>
-                            <Link to="/">
-                                <FontAwesomeIcon icon={faHome} size="2x" />
-                            </Link>
-                        </div>
-                        <h1>{category?.name} &nbsp; </h1>
-                        {!!category &&
-                            <div className="normal-icon">
-                                <FontAwesomeIcon icon={faPlusSquare} size="2x" onClick={() => openOverlay(1, null)} />
-                            </div>}
-                        <GetUserButton />
-                    </div>
+                    <h1>{category?.name} &nbsp; </h1>
+                    {!!category &&
+                        <div className="normal-icon">
+                            <h1>
+                                <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
+                            </h1>
+                        </div>}
                 </div>
 
                 <div className='cards-container'>

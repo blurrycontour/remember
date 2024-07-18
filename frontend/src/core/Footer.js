@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-import '../css/Common.css';
-import '../css/Button.css';
-
 
 export function Footer() {
     const [buildInfo, setBuildInfo] = useState(null);
