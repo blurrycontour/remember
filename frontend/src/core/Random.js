@@ -3,8 +3,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, GetUserButton } from './Utils';
-import { Header } from './Header';
+import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 
 
 export function Random()

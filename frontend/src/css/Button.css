@@ -1,6 +1,7 @@
 .back-button {
     position: absolute;
     left: 5px;
+    top: 10px;
 }
 
 .account-button {

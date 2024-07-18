@@ -1,7 +1,4 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
 import { SetAxiosDefaults } from '../core/Utils';
