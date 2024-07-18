@@ -4,6 +4,12 @@
     top: 10px;
 }
 
+.category-button {
+    position: absolute;
+    left: 34%;
+    top: 10px;
+}
+
 .account-button {
     position: absolute;
     right: 5px;
