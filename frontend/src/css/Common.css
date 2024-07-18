@@ -224,7 +224,7 @@ hr {
 .dark-mode .green-button:hover,
 .dark-mode .blue-button:hover,
 .dark-mode .login-button:hover {
-    background-color: black;
+    background-color: #252525;
     color: white;
 }
 
