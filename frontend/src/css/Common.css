@@ -16,7 +16,6 @@ h1 {
     display: block;
     justify-content: center;
     margin-bottom: 45px;
-    /* flex-wrap: wrap; */
 }
 
 .card {
@@ -24,7 +23,6 @@ h1 {
     border-radius: 5px;
     padding: 15px;
     margin: 10px auto;
-    /* This will center the card horizontally */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.2s ease-in-out;
     width: 90%;
@@ -40,7 +38,6 @@ h1 {
     background-color: #eee;
     padding: 15px;
     margin: 10px auto;
-    /* This will center the card horizontally */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.2s ease-in-out;
     width: 90%;
@@ -124,9 +121,20 @@ h1 {
     background-color: #eee;
     padding: 15px;
     margin: 10px auto;
-    /* This will center the card horizontally */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.2s ease-in-out;
+    width: 90%;
+    max-width: 500px;
+    word-wrap: break-word;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.transparent-card {
+    padding: 15px;
+    margin: 10px auto;
     width: 90%;
     max-width: 500px;
     word-wrap: break-word;
@@ -148,9 +156,7 @@ hr {
 .blur-background {
     filter: blur(8px);
     pointer-events: none;
-    /* Makes everything unclickable */
     user-select: none;
-    /* Prevents text selection */
 }
 
 .dark-background {
@@ -159,19 +165,13 @@ hr {
 
 .user-photo {
     width: 40px;
-    /* Adjust the size as needed */
     height: 40px;
-    /* Adjust the size as needed */
     border-radius: 50%;
-    /* Makes the image circular */
 }
 
 .logo-photo {
     width: 50px;
-    /* Adjust the size as needed */
     height: 50px;
-    /* Adjust the size as needed */
-    /* border-radius: 50%;*/
     display: block;
 }
 
@@ -216,12 +216,6 @@ hr {
     background-color: #212121;
     color: #e0e0e0;
 }
-
-/* .dark-mode .green-button, .dark-mode .blue-button, .dark-mode .login-button {
-    color: #000;
-    background-color: #bb86fc;
-    border-color: #bb86fc;
-} */
 
 .dark-mode .green-button:hover,
 .dark-mode .blue-button:hover,

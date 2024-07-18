@@ -23,7 +23,7 @@ export function GetUserButton() {
     return (
         <div className='account-button'>
             <Link to="/account">
-                <img src={user.photoURL} alt={user.displayName} className="user-photo" />
+                <img src={user?.photoURL} alt={user?.displayName} className="user-photo" />
             </Link>
         </div>
     );
