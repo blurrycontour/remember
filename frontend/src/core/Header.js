@@ -42,7 +42,7 @@ export function Header()
                     <GetUserButton />
                 </div>
             </div>
-            <div style={{ height: '60px' }}></div>
+            <div style={{ height: '70px' }}></div>
         </div>
     );
 }

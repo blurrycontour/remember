@@ -61,11 +61,15 @@ h1 {
     word-wrap: break-word;
 }
 
+.card2 h1 {
+    margin: 10px 0px;
+}
+
 .header {
     width: 100%;
     position: fixed;
     top: 0px;
-    padding: 0px;
+    padding: 5px 0px;
     margin: 0px;
     display: flex;
     justify-content: center;
