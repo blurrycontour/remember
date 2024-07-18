@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { GetUserButton } from './Utils';
+import { GetUserButton, CheckAndSetDarkMode } from './Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -20,12 +20,8 @@ export function Header()
 
     useEffect(() =>
     {
-        const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+        const isDarkModeEnabled = CheckAndSetDarkMode();
         setDarkMode(isDarkModeEnabled);
-        if (isDarkModeEnabled)
-        {
-            document.body.classList.add('dark-mode');
-        }
         // eslint-disable-next-line
     }, []);
 

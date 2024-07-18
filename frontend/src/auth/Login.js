@@ -4,7 +4,7 @@ import axios from 'axios';
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
-
+import { CheckAndSetDarkMode } from '../core/Utils';
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
 import logo from '../logo512.png';
@@ -38,11 +38,7 @@ export function Login()
 
     useEffect(() =>
     {
-        const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
-        if (isDarkModeEnabled)
-        {
-            document.body.classList.add('dark-mode');
-        }
+        CheckAndSetDarkMode();
         // eslint-disable-next-line
     }, []);
 

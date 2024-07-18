@@ -4,21 +4,25 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
 
 
-export function deleteCardPrompt(removeFunction, removeID) {
-    return async () => {
+export function deleteCardPrompt(removeFunction, removeID)
+{
+    return async () =>
+    {
         const isConfirmed = window.confirm('Are you sure you want to delete the card?');
         if (!isConfirmed) return;
         removeFunction(removeID);
     }
 }
 
-export function SetAxiosDefaults() {
+export function SetAxiosDefaults()
+{
     const { user } = useContext(AuthContext);
     axios.defaults.headers.common['Authorization'] = `Bearer ${user?.accessToken}`;
     axios.defaults.headers.common['ngrok-skip-browser-warning'] = 'ok';
 }
 
-export function GetUserButton() {
+export function GetUserButton()
+{
     const { user } = useContext(AuthContext);
     return (
         <div className='account-button'>
@@ -27,4 +31,14 @@ export function GetUserButton() {
             </Link>
         </div>
     );
+}
+
+export function CheckAndSetDarkMode()
+{
+    const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+    if (isDarkModeEnabled)
+    {
+        document.body.classList.add('dark-mode');
+    }
+    return isDarkModeEnabled;
 }
