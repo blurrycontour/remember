@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { GetUserButton, CheckAndSetDarkMode } from './Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 
@@ -34,11 +34,19 @@ export function Header()
                             <FontAwesomeIcon icon={faHome} size="2x" />
                         </Link>
                     </div>
-                    <DarkModeSwitch
-                        checked={isDarkMode}
-                        onChange={toggleDarkMode}
-                        size={40}
-                    />
+                    <div className='category-button'>
+                        <Link to="/category">
+                            <FontAwesomeIcon icon={faLayerGroup} size="2x" />
+                        </Link>
+                    </div>
+
+                    <div className='category-button' style={{ left: '64%', top: 'auto' }}>
+                        <DarkModeSwitch
+                            checked={isDarkMode}
+                            onChange={toggleDarkMode}
+                            size={38}
+                        />
+                    </div>
                     <GetUserButton />
                 </div>
             </div>
