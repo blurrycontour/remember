@@ -19,6 +19,7 @@ env:
   FIREBASE_CREDENTIALS: ${{secrets.FIREBASE_CREDENTIALS}}
   MONGODB_STRING : ${{secrets.MONGODB_STRING}}
   ENVIRONMENT: ${{secrets.ENVIRONMENT}}
+  BUCKET_NAME: ${{secrets.BUCKET_NAME}}
 
 jobs:
   deploy:
@@ -79,6 +80,8 @@ jobs:
             echo 'ENVIRONMENT=$ENVIRONMENT' >> .env
             echo 'BUILD_VERSION=${{ env.COMMIT_SHORT_SHA }}' >> .env
           "
+      - name: Add bucket name to .env
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUCKET_NAME=$BUCKET_NAME' >> .env"
       - name: Pull latest images
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy pull"
       - name: Stop existing containers

@@ -103,6 +103,7 @@ services:
       network: host
       args:
         - MONGODB_STRING=${MONGODB_STRING}
+        - BUCKET_NAME=${BUCKET_NAME}
     env_file:
       - ./.env
     volumes:

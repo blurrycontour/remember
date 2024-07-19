@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-from remember.backup import backup_to_gcs, backup_to_s3
+from remember.backup import CloudBackup
 
 
 MONGODB_STRING = os.getenv("MONGODB_STRING")
@@ -23,5 +23,6 @@ def create_backup():
 
 if __name__ == '__main__':
     create_backup()
-    backup_to_gcs(BACKUP_FILE)
-    # backup_to_s3(BACKUP_FILE)
+    backup = CloudBackup()
+    backup.backup_to_gcs(BACKUP_FILE)
+    backup.backup_to_s3(BACKUP_FILE)
