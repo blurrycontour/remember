@@ -40,7 +40,7 @@ export function Header()
                         </Link>
                     </div>
 
-                    <div className='category-button' style={{ left: '64%', top: 'auto' }}>
+                    <div className='category-button' style={{ left: '60%', top: 'auto' }}>
                         <DarkModeSwitch
                             checked={isDarkMode}
                             onChange={toggleDarkMode}
