@@ -64,8 +64,8 @@ services:
         cat /etc/nginx/nginx.conf
         nginx -g 'daemon off;'
     volumes:
-      - ./.logs/access.log:/var/log/nginx/file.access.log
-      - ./.logs/error.log:/var/log/nginx/file.error.log
+      - ./.logs:/var/log/nginx
+      - ./.logs:/var/log/nginx
     ports:
       - ${NGINX_PORT}:80
     networks:
