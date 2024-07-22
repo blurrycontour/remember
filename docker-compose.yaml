@@ -63,6 +63,9 @@ services:
         envsubst '' < /tmp/nginx/nginx.conf > /etc/nginx/nginx.conf
         cat /etc/nginx/nginx.conf
         nginx -g 'daemon off;'
+    volumes:
+      - ./.logs/access.log:/var/log/nginx/file.access.log
+      - ./.logs/error.log:/var/log/nginx/file.error.log
     ports:
       - ${NGINX_PORT}:80
     networks:
