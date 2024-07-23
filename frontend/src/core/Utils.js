@@ -44,3 +44,10 @@ export function CheckAndSetDarkMode()
     }
     return isDarkModeEnabled;
 }
+
+export const NotFound = () => (
+    <div>
+        <h1>404 - Not Found</h1>
+        <h3 style={{ textAlign: 'center' }}>The page you are looking for doesn't exist!</h3>
+    </div>
+);

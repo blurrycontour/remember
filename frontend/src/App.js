@@ -4,6 +4,7 @@ import { Cards } from './core/Cards';
 import { Category } from './core/Category';
 import { Footer } from './core/Footer';
 import { Header } from './core/Header';
+import { NotFound } from './core/Utils';
 import { Login } from './auth/Login';
 import { Account } from './auth/Account';
 import { ProtectedRoute } from './auth/ProtectedRoute';
@@ -29,9 +30,11 @@ function App()
         <Routes>
           <Route element={<Layout />}>
             <Route path='/' element={<ProtectedRoute><Random /></ProtectedRoute>} />
+            <Route path='/random' element={<ProtectedRoute><Random /></ProtectedRoute>} />
             <Route path='/category' element={<ProtectedRoute><Category /></ProtectedRoute>} />
             <Route path='/category/:id' element={<ProtectedRoute><Cards /></ProtectedRoute>} />
             <Route path='/account' element={<ProtectedRoute><Account /></ProtectedRoute>} />
+            <Route path='*' element={<NotFound />} />
           </Route>
           <Route path='/login' element={<Login />} />
         </Routes>
