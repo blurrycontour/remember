@@ -208,6 +208,7 @@ hr {
     align-items: center;
     height: 100vh;
     flex-direction: column;
+    transform: translateY(-10%);
 }
 
 /* =========== Dark mode styles =========== */
@@ -262,6 +263,7 @@ hr {
     color: white;
     border: 1px solid white;
 }
+
 .dark-mode .overlay input:focus,
 .dark-mode .overlay textarea:focus,
 .dark-mode .card select:focus {
