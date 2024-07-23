@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 
 
@@ -18,6 +18,7 @@ export function Cards()
     const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
     const [expandedCards, setExpandedCards] = useState({});
+    const [expandAllCards, setExpandAllCards] = useState(false);
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -106,6 +107,18 @@ export function Cards()
         document.body.classList.remove('dark-background');
     };
 
+    const expandCollapseAllCards = () =>
+    {
+        const _expandAllCards = !expandAllCards;
+        const updatedExpandedCards = {};
+        cards.forEach(card =>
+        {
+            updatedExpandedCards[card.id] = _expandAllCards;
+        });
+        setExpandedCards(updatedExpandedCards);
+        setExpandAllCards(_expandAllCards);
+    };
+
     useEffect(() =>
     {
         fetchCards();
@@ -116,7 +129,12 @@ export function Cards()
         <div>
             <div className='content'>
                 <div className='card2'>
-                    <h1>{category?.name} &nbsp; </h1>
+                    <div className="normal-icon">
+                        <h1>
+                            <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
+                        </h1>
+                    </div>
+                    <h1> &nbsp;&nbsp; {category?.name} &nbsp;&nbsp; </h1>
                     {!!category &&
                         <div className="normal-icon">
                             <h1>
