@@ -19,7 +19,7 @@ h1 {
 .cards-container {
     display: block;
     justify-content: center;
-    margin-bottom: 45px;
+    padding-bottom: 38px;
 }
 
 .card {
