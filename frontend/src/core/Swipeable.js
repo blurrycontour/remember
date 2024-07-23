@@ -13,7 +13,10 @@ export const SwipeableRoutes = ({ children }) =>
       // Swipe left: navigate based on current path
       switch (location.pathname)
       {
-        case '/random' || '/':
+        case '/':
+          navigate('/category');
+          break;
+        case '/random':
           navigate('/category');
           break;
         case '/category':
@@ -31,7 +34,9 @@ export const SwipeableRoutes = ({ children }) =>
       // Swipe right: navigate based on current path
       switch (location.pathname)
       {
-        case '/random' || '/':
+        case '/':
+          break;
+        case '/random':
           break;
         case '/category':
           navigate('/');
