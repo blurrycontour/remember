@@ -17,7 +17,8 @@
     "@fortawesome/react-fontawesome": "^0.1.15",
     "firebase": "^10.12.2",
     "react-social-login-buttons": "^4.1.0",
-    "react-toggle-dark-mode": "^1.1.1"
+    "react-toggle-dark-mode": "^1.1.1",
+    "react-swipeable": "^7.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
