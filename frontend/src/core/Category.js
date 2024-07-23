@@ -128,7 +128,7 @@ export function Category()
                             <h3 style={{ color: 'gray' }}>Number of Cards → {category["#cards"]}</h3>
                             <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
                             <div className="delete-icon">
-                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category.id)} />
+                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category)} />
                             </div>
                             <div className="show-icon">
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, category)} />

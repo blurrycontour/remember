@@ -4,13 +4,15 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
 
 
-export function deleteCardPrompt(removeFunction, removeID)
+export function deleteCardPrompt(removeFunction, removeItem)
 {
     return async () =>
     {
-        const isConfirmed = window.confirm('Are you sure you want to delete the card?');
+        const isConfirmed = removeItem.front ?
+            window.confirm(`Are you sure you want to delete the card: '${removeItem.front}' ?`) :
+            window.confirm(`Are you sure you want to delete the category: '${removeItem.name}' ?`);
         if (!isConfirmed) return;
-        removeFunction(removeID);
+        removeFunction(removeItem.id);
     }
 }
 

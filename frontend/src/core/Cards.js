@@ -128,7 +128,7 @@ export function Cards()
                     {cards.length !== 0 && cards.map(card => (
                         <div key={card.id} className="card">
                             <div className="delete-icon">
-                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card.id)} />
+                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card)} />
                             </div>
                             <div className="show-icon">
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, card)} />
