@@ -202,6 +202,14 @@ hr {
     margin: 8px 0px;
 }
 
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+
 /* =========== Dark mode styles =========== */
 .dark-mode {
     background-color: #121212;

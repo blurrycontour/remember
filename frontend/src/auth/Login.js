@@ -49,12 +49,12 @@ export function Login()
     }
 
     return (
-        <div>
+        <div className='login-container'>
             <div className='card2' style={{ alignItems: 'center' }}>
                 <img src={logo} alt="remember-logo" className="user-photo" />
-                <h1>&nbsp; Remember</h1>
+                <h1>&nbsp;Remember</h1>
             </div>
-            <h2 style={{ marginTop: '0px', textAlign: 'center' }}>Login to see your cards!</h2>
+            <h2 style={{ textAlign: 'center', margin: '5px' }}>Login to see your cards!</h2>
             <div className='transparent-card'>
                 <GoogleLoginButton onClick={() => handleLogin(googleProvider)} className="login-button">
                     <span>Login with Google</span>
