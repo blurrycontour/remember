@@ -52,7 +52,7 @@ export const SwipeableRoutes = ({ children }) =>
   });
 
   return (
-    <div style={{ width: '100vw', height: '100vh' }} {...handlers}>
+    <div style={{ width: '100%', height: '100vh' }} {...handlers}>
       {children}
     </div>
   );
