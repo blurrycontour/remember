@@ -17,6 +17,7 @@ export function Cards()
     const [currentCard, setCurrentCard] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
+    const [expandedCards, setExpandedCards] = useState({});
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -133,9 +134,17 @@ export function Cards()
                             <div className="show-icon">
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, card)} />
                             </div>
-                            <h2>{card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
-                            <hr />
-                            <h3>{card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>
+                            <div style={{ cursor: 'pointer' }} onClick={() => setExpandedCards(prev => ({ ...prev, [card.id]: !prev[card.id] }))}>
+                                <h2>
+                                    {card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}
+                                </h2>
+                                {expandedCards[card.id] && (
+                                    <div>
+                                        <hr />
+                                        <h3>{card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     ))}
 

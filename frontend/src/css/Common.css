@@ -12,6 +12,10 @@ h1 {
     text-align: center;
 }
 
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
 .cards-container {
     display: block;
     justify-content: center;
@@ -87,7 +91,8 @@ h1 {
 
 .card h2,
 .card h3 {
-    margin-top: 0;
+    margin: 0px 5px;
+    padding-bottom: 15px;
 }
 
 .overlay input,
