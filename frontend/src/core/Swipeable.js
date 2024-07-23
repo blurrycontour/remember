@@ -45,11 +45,15 @@ export const SwipeableRoutes = ({ children }) =>
       }
     },
     // Configure to your needs
-    delta: 10, // Minimum distance(px) before a swipe starts.
+    delta: 20, // Minimum distance(px) before a swipe starts.
     preventDefaultTouchmoveEvent: true, // Prevent scrolling during swipe.
     trackTouch: true,
     trackMouse: false,
   });
 
-  return <div {...handlers}>{children}</div>;
+  return (
+    <div style={{ width: '100vw', height: '100vh' }} {...handlers}>
+      {children}
+    </div>
+  );
 };
