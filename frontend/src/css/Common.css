@@ -218,6 +218,15 @@ hr {
     transform: translateY(-10%);
 }
 
+body::-webkit-scrollbar {
+    display: none;  /* Safari and Chrome */
+}
+
+body {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
 /* =========== Dark mode styles =========== */
 .dark-mode {
     background-color: #121212;

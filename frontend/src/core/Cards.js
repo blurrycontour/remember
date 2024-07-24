@@ -129,18 +129,21 @@ export function Cards()
         <div>
             <div className='content'>
                 <div className='card2'>
-                    <div className="normal-icon">
-                        <h1>
-                            <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
-                        </h1>
-                    </div>
+                    {!!category &&
+                        <div className="normal-icon">
+                            <h1>
+                                <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
+                            </h1>
+                        </div>
+                    }
                     <h1> &nbsp;&nbsp; {category?.name} &nbsp;&nbsp; </h1>
                     {!!category &&
                         <div className="normal-icon">
                             <h1>
                                 <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
                             </h1>
-                        </div>}
+                        </div>
+                    }
                 </div>
 
                 <div className='cards-container'>
