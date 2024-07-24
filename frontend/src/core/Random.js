@@ -113,7 +113,9 @@ export function Random()
                         <div className="show-icon">
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
-                        <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
+                        <h3 style={{ fontSize: '1em' }}>
+                            <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
+                        </h3>
                     </div>
                 </div>}
 

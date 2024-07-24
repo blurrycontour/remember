@@ -125,12 +125,12 @@ export function Category()
                         <div key={category.id} className="card">
                             <h2>{category.name}</h2>
                             {!!category.description && <h3>{category.description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
-                            <h3 style={{ color: 'gray' }}>Number of Cards → {category["#cards"]}</h3>
+                            <h3 style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h3>
                             <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
                             <div className="delete-icon">
                                 <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category)} />
                             </div>
-                            <div className="show-icon">
+                            <div className="edit-icon">
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, category)} />
                             </div>
                         </div>

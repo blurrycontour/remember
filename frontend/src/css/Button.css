@@ -17,16 +17,24 @@
 
 .delete-icon {
     position: absolute;
-    bottom: 11px;
-    right: 13px;
+    bottom: 20px;
+    right: 15px;
     color: #FF2222;
     cursor: pointer;
 }
 
 .show-icon {
     position: absolute;
-    right: 10px;
-    top: 15px;
+    right: 13px;
+    top: 23px;
+    color: #007BFF;
+    cursor: pointer;
+}
+
+.edit-icon {
+    position: absolute;
+    right: 12px;
+    top: 23px;
     color: #007BFF;
     cursor: pointer;
 }

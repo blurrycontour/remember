@@ -146,20 +146,22 @@ export function Cards()
                 <div className='cards-container'>
                     {cards.length !== 0 && cards.map(card => (
                         <div key={card.id} className="card">
-                            <div className="delete-icon">
-                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card)} />
-                            </div>
-                            <div className="show-icon">
+                            <div className="edit-icon">
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, card)} />
                             </div>
                             <div style={{ cursor: 'pointer' }} onClick={() => setExpandedCards(prev => ({ ...prev, [card.id]: !prev[card.id] }))}>
                                 <h2>
-                                    {card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}
+                                    {card.front}
+                                    {/* {card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)} */}
                                 </h2>
                                 {expandedCards[card.id] && (
                                     <div>
+                                        <div className="delete-icon">
+                                            <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card)} />
+                                        </div>
                                         <hr />
-                                        <h3>{card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>
+                                        <h3>{card.back}</h3>
+                                        {/* <h3>{card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3> */}
                                     </div>
                                 )}
                             </div>
