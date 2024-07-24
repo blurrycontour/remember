@@ -113,8 +113,9 @@ h1 {
 
 .overlay textarea {
     resize: vertical;
-    min-height: 80px;
+    min-height: 50px;
     max-height: 500px;
+    height: 82px;
 }
 
 .overlay input:focus,

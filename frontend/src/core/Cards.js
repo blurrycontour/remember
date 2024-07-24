@@ -150,10 +150,7 @@ export function Cards()
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, card)} />
                             </div>
                             <div style={{ cursor: 'pointer' }} onClick={() => setExpandedCards(prev => ({ ...prev, [card.id]: !prev[card.id] }))}>
-                                <h2>
-                                    {card.front}
-                                    {/* {card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)} */}
-                                </h2>
+                                <h2>{card.front}</h2>
                                 {expandedCards[card.id] && (
                                     <div>
                                         <div className="delete-icon">
@@ -161,7 +158,6 @@ export function Cards()
                                         </div>
                                         <hr />
                                         <h3>{card.back}</h3>
-                                        {/* <h3>{card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3> */}
                                     </div>
                                 )}
                             </div>
@@ -176,8 +172,8 @@ export function Cards()
             {isOverlayOpen === 2 && (
                 <div className='overlay'>
                     <h3>Edit Card</h3>
-                    <p>Front <textarea value={currentCard.front} onChange={(e) => { setCurrentCard({ ...currentCard, front: e.target.value }); setErrorMessage(''); }} /></p>
-                    <p>Back <textarea value={currentCard.back} onChange={(e) => { setCurrentCard({ ...currentCard, back: e.target.value }); setErrorMessage(''); }} /></p>
+                    <p>Front <textarea style={{ height: '65px' }} value={currentCard.front} onChange={(e) => { setCurrentCard({ ...currentCard, front: e.target.value }); setErrorMessage(''); }} /></p>
+                    <p>Back <textarea style={{ height: '122px' }} value={currentCard.back} onChange={(e) => { setCurrentCard({ ...currentCard, back: e.target.value }); setErrorMessage(''); }} /></p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCard} className='green-button'>Save</button>
                     <button onClick={closeOverlay} className='blue-button'>Cancel</button>
@@ -188,8 +184,8 @@ export function Cards()
             {isOverlayOpen === 1 && (
                 <div className="overlay">
                     <h3>Add a new Card 🧾</h3>
-                    <p>Front <textarea value={newCardFront} onChange={(e) => { setNewCardFront(e.target.value); setErrorMessage(''); }} /></p>
-                    <p>Back <textarea value={newCardBack} onChange={(e) => { setNewCardBack(e.target.value); setErrorMessage(''); }} style={{ height: '' }} /></p>
+                    <p>Front <textarea style={{ height: '65px' }} value={newCardFront} onChange={(e) => { setNewCardFront(e.target.value); setErrorMessage(''); }} /></p>
+                    <p>Back <textarea style={{ height: '122px' }} value={newCardBack} onChange={(e) => { setNewCardBack(e.target.value); setErrorMessage(''); }} /></p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCard} className='green-button'>Add Card</button>
                     <button onClick={closeOverlay} className='blue-button'>Cancel</button>
