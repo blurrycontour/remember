@@ -218,11 +218,11 @@ hr {
     transform: translateY(-10%);
 }
 
-body::-webkit-scrollbar {
+html::-webkit-scrollbar {
     display: none;  /* Safari and Chrome */
 }
 
-body {
+html {
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
 }
