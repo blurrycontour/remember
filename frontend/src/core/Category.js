@@ -36,7 +36,7 @@ export function Category()
         } catch (error)
         {
             console.error(error);
-            setErrorMessage(error.response?.data);
+            setStatusMessage(error.response?.data);
         }
     };
 

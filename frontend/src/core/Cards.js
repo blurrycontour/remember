@@ -19,6 +19,8 @@ export function Cards()
     const [errorMessage, setErrorMessage] = useState('');
     const [expandedCards, setExpandedCards] = useState({});
     const [expandAllCards, setExpandAllCards] = useState(false);
+    const [sortType, setSortType] = useState('updated');
+    const [sortOrder, setSortOrder] = useState('desc');
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -34,7 +36,8 @@ export function Cards()
                 setStatusMessage('Bad response from API server!');
                 return;
             }
-            setCards(response.data.cards);
+            // setCards(response.data.cards);
+            setCards(sortCards(response.data.cards, sortType, sortOrder));
             setCategory(response.data.category);
             if (response.data.cards.length === 0) setStatusMessage('No cards found!');
             else setStatusMessage('');
@@ -119,11 +122,35 @@ export function Cards()
         setExpandAllCards(_expandAllCards);
     };
 
+    const sortCards = (cards, type, order) => {
+        return cards.sort((a, b) => {
+            let comparison = 0;
+            switch (type) {
+                case 'front':
+                    comparison = a.front.localeCompare(b.front);
+                    break;
+                case 'created':
+                    comparison = new Date(a.created) - new Date(b.created);
+                    break;
+                case 'updated':
+                    comparison = new Date(a.updated) - new Date(b.updated);
+                    break;
+                default:
+                    comparison = a.front.localeCompare(b.front);
+            }
+            return order === 'asc' ? comparison : -comparison;
+        });
+    };
+
     useEffect(() =>
     {
         fetchCards();
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        setCards(prevCards => sortCards([...prevCards], sortType, sortOrder));
+    }, [sortType, sortOrder]);
 
     return (
         <div>
@@ -144,6 +171,19 @@ export function Cards()
                             </h1>
                         </div>
                     }
+                </div>
+
+                <div className='tool-card' style={{width: 'auto'}}>
+                    <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+                        <option value="front">Front</option>
+                        <option value="created">Created</option>
+                        <option value="updated">Updated</option>
+                    </select>
+                    <span style={{padding: '0px 8px'}}></span>
+                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
                 </div>
 
                 <div className='cards-container'>
