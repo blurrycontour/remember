@@ -28,19 +28,18 @@ export function Header()
     return (
         <div>
             <div className='header'>
-                <div className='card2'>
-                    <div className='back-button'>
+                <div className='card2' style={{ justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div className='nav-button'>
                         <Link to="/">
                             <FontAwesomeIcon icon={faHome} size="2x" />
                         </Link>
                     </div>
-                    <div className='category-button'>
+                    <div className='nav-button'>
                         <Link to="/category">
                             <FontAwesomeIcon icon={faLayerGroup} size="2x" />
                         </Link>
                     </div>
-
-                    <div className='category-button' style={{ left: '60%', top: 'auto' }}>
+                    <div className='nav-button'>
                         <DarkModeSwitch
                             checked={isDarkMode}
                             onChange={toggleDarkMode}

@@ -1,4 +1,4 @@
-.back-button {
+/* .home-button {
     position: absolute;
     left: 5px;
     top: 10px;
@@ -13,6 +13,10 @@
 .account-button {
     position: absolute;
     right: 5px;
+} */
+
+.nav-button {
+    width: 25%;
 }
 
 .delete-icon {
