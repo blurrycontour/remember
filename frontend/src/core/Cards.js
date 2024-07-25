@@ -19,8 +19,8 @@ export function Cards()
     const [errorMessage, setErrorMessage] = useState('');
     const [expandedCards, setExpandedCards] = useState({});
     const [expandAllCards, setExpandAllCards] = useState(false);
-    const [sortType, setSortType] = useState('name');
-    const [sortOrder, setSortOrder] = useState('asc');
+    const [sortType, setSortType] = useState('updated');
+    const [sortOrder, setSortOrder] = useState('desc');
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -36,7 +36,8 @@ export function Cards()
                 setStatusMessage('Bad response from API server!');
                 return;
             }
-            setCards(response.data.cards);
+            // setCards(response.data.cards);
+            setCards(sortCards(response.data.cards, sortType, sortOrder));
             setCategory(response.data.category);
             if (response.data.cards.length === 0) setStatusMessage('No cards found!');
             else setStatusMessage('');
@@ -124,14 +125,18 @@ export function Cards()
     const sortCards = (cards, type, order) => {
         return cards.sort((a, b) => {
             let comparison = 0;
-            if (type === 'name') {
-                comparison = a.front.localeCompare(b.front);
-            } else if (type === 'created') {
-                comparison = new Date(a.created) - new Date(b.created);
-            } else if (type === 'updated') {
-                comparison = new Date(a.updated) - new Date(b.updated);
-            } else if (type === 'title') {
-                comparison = a.title.localeCompare(b.title);
+            switch (type) {
+                case 'front':
+                    comparison = a.front.localeCompare(b.front);
+                    break;
+                case 'created':
+                    comparison = new Date(a.created) - new Date(b.created);
+                    break;
+                case 'updated':
+                    comparison = new Date(a.updated) - new Date(b.updated);
+                    break;
+                default:
+                    comparison = a.front.localeCompare(b.front);
             }
             return order === 'asc' ? comparison : -comparison;
         });
@@ -168,16 +173,17 @@ export function Cards()
                     }
                 </div>
 
-                <div className='sort-controls'>
+                <div className='tool-card' style={{width: 'auto'}}>
                     <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
-                        <option value="name">Name</option>
+                        <option value="front">Front</option>
                         <option value="created">Created</option>
                         <option value="updated">Updated</option>
-                        <option value="title">Title</option>
                     </select>
-                    <button onClick={() => setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc')}>
-                        {sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-                    </button>
+                    <span style={{padding: '0px 8px'}}></span>
+                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
                 </div>
 
                 <div className='cards-container'>
