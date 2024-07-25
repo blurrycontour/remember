@@ -27,11 +27,9 @@ export function GetUserButton()
 {
     const { user } = useContext(AuthContext);
     return (
-        <div className='nav-button'>
-            <Link to="/account">
-                <img src={user?.photoURL} alt={user?.displayName} className="user-photo" />
-            </Link>
-        </div>
+        <Link to="/account">
+            <img src={user?.photoURL} alt={user?.displayName} className="user-photo" />
+        </Link>
     );
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { GetUserButton, CheckAndSetDarkMode } from './Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 export function Header()
 {
     const [isDarkMode, setDarkMode] = useState(false);
+    const location = useLocation();
 
     const toggleDarkMode = () =>
     {
@@ -16,6 +17,10 @@ export function Header()
         const _isDarkMode = document.body.classList.contains('dark-mode');
         setDarkMode(_isDarkMode);
         localStorage.setItem('darkMode', _isDarkMode ? 'enabled' : 'disabled');
+    };
+
+    const getNavClass = (path) => {
+        return location.pathname === path ? 'nav-button active' : 'nav-button';
     };
 
     useEffect(() =>
@@ -28,13 +33,13 @@ export function Header()
     return (
         <div>
             <div className='header'>
-                <div className='card2' style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div className='nav-button'>
+                <div className='card2' style={{ justifyContent: 'space-between', alignItems: 'center', margin: '0' }}>
+                    <div className={getNavClass('/')}>
                         <Link to="/">
                             <FontAwesomeIcon icon={faHome} size="2x" />
                         </Link>
                     </div>
-                    <div className='nav-button'>
+                    <div className={getNavClass('/category')}>
                         <Link to="/category">
                             <FontAwesomeIcon icon={faLayerGroup} size="2x" />
                         </Link>
@@ -46,7 +51,9 @@ export function Header()
                             size={38}
                         />
                     </div>
-                    <GetUserButton />
+                    <div className={getNavClass('/account')}>
+                        <GetUserButton />
+                    </div>
                 </div>
             </div>
             <div style={{ height: '70px' }}></div>

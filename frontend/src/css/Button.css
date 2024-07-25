@@ -17,6 +17,18 @@
 
 .nav-button {
     width: 25%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.nav-button.active {
+    background-color: #c7c7c7;
+}
+
+.dark-mode .nav-button.active {
+    background-color: #353535;
 }
 
 .delete-icon {
