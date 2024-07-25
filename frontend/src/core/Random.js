@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faEye, faEyeSlash, faRandom } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
 
 
@@ -94,7 +94,9 @@ export function Random()
                     ))}
                 </select>
                 <span style={{padding: '0px 8px'}}></span>
-                <button onClick={fetchRandomCard} style={{ minWidth: '150px' }} className='green-button'>Random Card</button>
+                <button onClick={fetchRandomCard} style={{ minWidth: '100px' }} className='green-button'>
+                    <FontAwesomeIcon size="xl" icon={faRandom} />
+                </button>
             </div>
 
             {!!randomCard &&
