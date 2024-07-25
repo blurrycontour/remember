@@ -19,6 +19,8 @@ export function Cards()
     const [errorMessage, setErrorMessage] = useState('');
     const [expandedCards, setExpandedCards] = useState({});
     const [expandAllCards, setExpandAllCards] = useState(false);
+    const [sortType, setSortType] = useState('name');
+    const [sortOrder, setSortOrder] = useState('asc');
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -119,11 +121,31 @@ export function Cards()
         setExpandAllCards(_expandAllCards);
     };
 
+    const sortCards = (cards, type, order) => {
+        return cards.sort((a, b) => {
+            let comparison = 0;
+            if (type === 'name') {
+                comparison = a.front.localeCompare(b.front);
+            } else if (type === 'created') {
+                comparison = new Date(a.created) - new Date(b.created);
+            } else if (type === 'updated') {
+                comparison = new Date(a.updated) - new Date(b.updated);
+            } else if (type === 'title') {
+                comparison = a.title.localeCompare(b.title);
+            }
+            return order === 'asc' ? comparison : -comparison;
+        });
+    };
+
     useEffect(() =>
     {
         fetchCards();
         // eslint-disable-next-line
     }, []);
+
+    useEffect(() => {
+        setCards(prevCards => sortCards([...prevCards], sortType, sortOrder));
+    }, [sortType, sortOrder]);
 
     return (
         <div>
@@ -144,6 +166,18 @@ export function Cards()
                             </h1>
                         </div>
                     }
+                </div>
+
+                <div className='sort-controls'>
+                    <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+                        <option value="name">Name</option>
+                        <option value="created">Created</option>
+                        <option value="updated">Updated</option>
+                        <option value="title">Title</option>
+                    </select>
+                    <button onClick={() => setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc')}>
+                        {sortOrder === 'asc' ? 'Ascending' : 'Descending'}
+                    </button>
                 </div>
 
                 <div className='cards-container'>
