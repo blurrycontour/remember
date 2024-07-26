@@ -15,8 +15,8 @@ export function Category()
     const [currentCategory, setCurrentCategory] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
-    const [sortType, setSortType] = useState('updated');
-    const [sortOrder, setSortOrder] = useState('desc');
+    const [sortType, setSortType] = useState(localStorage.getItem('sortTypeCategories') || 'name');
+    const [sortOrder, setSortOrder] = useState(localStorage.getItem('sortOrderCategories') || 'asc');
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -113,6 +113,8 @@ export function Category()
 
     useEffect(() => {
         setCategories(prevCategories => SortItems([...prevCategories], sortType, sortOrder));
+        localStorage.setItem('sortTypeCategories', sortType);
+        localStorage.setItem('sortOrderCategories', sortOrder);
     }, [sortType, sortOrder]);
 
 

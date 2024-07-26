@@ -19,8 +19,8 @@ export function Cards()
     const [errorMessage, setErrorMessage] = useState('');
     const [expandedCards, setExpandedCards] = useState({});
     const [expandAllCards, setExpandAllCards] = useState(false);
-    const [sortType, setSortType] = useState('updated');
-    const [sortOrder, setSortOrder] = useState('desc');
+    const [sortType, setSortType] = useState(localStorage.getItem('sortTypeCards') || 'front');
+    const [sortOrder, setSortOrder] = useState(localStorage.getItem('sortOrderCards') || 'asc');
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -130,6 +130,8 @@ export function Cards()
 
     useEffect(() => {
         setCards(prevCards => SortItems([...prevCards], sortType, sortOrder));
+        localStorage.setItem('sortTypeCards', sortType);
+        localStorage.setItem('sortOrderCards', sortOrder);
     }, [sortType, sortOrder]);
 
 
