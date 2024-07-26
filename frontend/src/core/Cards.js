@@ -44,7 +44,7 @@ export function Cards()
         } catch (error)
         {
             console.error(error);
-            setStatusMessage(error.response?.data);
+            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
