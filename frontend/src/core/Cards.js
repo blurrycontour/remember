@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems } from './Utils';
 
 
 export function Cards()
@@ -37,7 +37,7 @@ export function Cards()
                 return;
             }
             // setCards(response.data.cards);
-            setCards(sortCards(response.data.cards, sortType, sortOrder));
+            setCards(SortItems(response.data.cards, sortType, sortOrder));
             setCategory(response.data.category);
             if (response.data.cards.length === 0) setStatusMessage('No cards found!');
             else setStatusMessage('');
@@ -122,26 +122,6 @@ export function Cards()
         setExpandAllCards(_expandAllCards);
     };
 
-    const sortCards = (cards, type, order) => {
-        return cards.sort((a, b) => {
-            let comparison = 0;
-            switch (type) {
-                case 'front':
-                    comparison = a.front.localeCompare(b.front);
-                    break;
-                case 'created':
-                    comparison = new Date(a.created) - new Date(b.created);
-                    break;
-                case 'updated':
-                    comparison = new Date(a.updated) - new Date(b.updated);
-                    break;
-                default:
-                    comparison = a.front.localeCompare(b.front);
-            }
-            return order === 'asc' ? comparison : -comparison;
-        });
-    };
-
     useEffect(() =>
     {
         fetchCards();
@@ -149,8 +129,9 @@ export function Cards()
     }, []);
 
     useEffect(() => {
-        setCards(prevCards => sortCards([...prevCards], sortType, sortOrder));
+        setCards(prevCards => SortItems([...prevCards], sortType, sortOrder));
     }, [sortType, sortOrder]);
+
 
     return (
         <div>
@@ -174,6 +155,8 @@ export function Cards()
                 </div>
 
                 <div className='tool-card' style={{width: 'auto'}}>
+                    <h3 style={{ minWidth: '70px' }} >Sort by:</h3>
+                    <span style={{padding: '0px 8px'}}></span>
                     <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
                         <option value="front">Front</option>
                         <option value="created">Created</option>

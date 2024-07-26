@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems } from './Utils';
 
 
 export function Category()
@@ -15,6 +15,8 @@ export function Category()
     const [currentCategory, setCurrentCategory] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
     const [errorMessage, setErrorMessage] = useState('');
+    const [sortType, setSortType] = useState('updated');
+    const [sortOrder, setSortOrder] = useState('desc');
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -30,7 +32,8 @@ export function Category()
                 setStatusMessage('Bad response from API server!');
                 return;
             }
-            setCategories(response.data);
+            // setCategories(response.data);
+            setCategories(SortItems(response.data, sortType, sortOrder));
             if (response.data.length === 0) setStatusMessage('No categories found!');
             else setStatusMessage('');
         } catch (error)
@@ -108,6 +111,11 @@ export function Category()
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() => {
+        setCategories(prevCategories => SortItems([...prevCategories], sortType, sortOrder));
+    }, [sortType, sortOrder]);
+
+
     return (
         <div>
             <div className='content'>
@@ -118,6 +126,21 @@ export function Category()
                             <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
                         </h1>
                     </div>
+                </div>
+
+                <div className='tool-card' style={{width: 'auto'}}>
+                    <h3 style={{ minWidth: '70px' }} >Sort by:</h3>
+                    <span style={{padding: '0px 8px'}}></span>
+                    <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
+                        <option value="name">Name</option>
+                        <option value="created">Created</option>
+                        <option value="updated">Updated</option>
+                    </select>
+                    <span style={{padding: '0px 8px'}}></span>
+                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                        <option value="asc">Ascending</option>
+                        <option value="desc">Descending</option>
+                    </select>
                 </div>
 
                 <div className='cards-container'>

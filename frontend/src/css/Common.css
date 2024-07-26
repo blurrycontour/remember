@@ -42,6 +42,7 @@ h1 {
 .tool-card {
     padding: 0px 15px;
     margin: 10px auto;
+    margin-top: 0px;
     width: 90%;
     max-width: 500px;
     position: relative;
@@ -68,7 +69,7 @@ h1 {
 }
 
 .card2 {
-    margin: 5px 0px;
+    margin: 5px auto;
     padding: 0px;
     width: 100%;
     max-width: 500px;

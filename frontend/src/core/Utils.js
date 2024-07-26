@@ -49,3 +49,30 @@ export const NotFound = () => (
         <h3 style={{ textAlign: 'center' }}>The page you are looking for doesn't exist!</h3>
     </div>
 );
+
+
+export function SortItems(items, type, order)
+{
+    return items.sort((a, b) =>
+    {
+        let comparison = 0;
+        switch (type)
+        {
+            case 'front':
+                comparison = a.front.localeCompare(b.front);
+                break;
+            case 'name':
+                comparison = a.name.localeCompare(b.name);
+                break;
+            case 'created':
+                comparison = new Date(a.created) - new Date(b.created);
+                break;
+            case 'updated':
+                comparison = new Date(a.updated) - new Date(b.updated);
+                break;
+            default:
+                comparison = a.front.localeCompare(b.front);
+        }
+        return order === 'asc' ? comparison : -comparison;
+    });
+};
