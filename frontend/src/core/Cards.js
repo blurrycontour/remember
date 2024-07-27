@@ -165,7 +165,7 @@ export function Cards()
                         <option value="updated">Updated</option>
                     </select>
                     <span style={{padding: '0px 8px'}}></span>
-                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                    <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{minWidth: '128px'}}>
                         <option value="asc">Ascending</option>
                         <option value="desc">Descending</option>
                     </select>
