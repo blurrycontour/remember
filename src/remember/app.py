@@ -60,19 +60,35 @@ class Remember(metaclass=SingletonMeta):
         return f"Added category with ID: '{category.id}'", True
 
 
-    def update_category(self, category_id:str, user_id:str, name:str, description:str):
+    def update_category(self, category_id:str, user_id:str, name:str, description:str, lightweight:bool=False):
         """ Update a category """
-        if not name:
-            return "Category name cannot be empty!", False
         _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
         if not _category:
             return f"Category ID '{category_id}' not found!", False
 
-        self.categories.update_one(
-            {"user_id": user_id, "category.id": category_id},
-            {"$set": {"category.name": name, "category.description": description, "category.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")}}
-        )
-        self.statistics.update_category_operations(user_id, "category.update")
+        if lightweight:
+            self.categories.update_one(
+                {"user_id": user_id, "category.id": category_id},
+                {"$set": {
+                    "category.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    }
+                }
+            )
+        else:
+            if not name:
+                return "Category name cannot be empty!", False
+
+            self.categories.update_one(
+                {"user_id": user_id, "category.id": category_id},
+                {"$set": {
+                    "category.name": name,
+                    "category.description": description,
+                    "category.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                    }
+                }
+            )
+            self.statistics.update_category_operations(user_id, "category.update")
+
         return f"Category ID '{category_id}' updated!", True
 
 
@@ -130,6 +146,10 @@ class Remember(metaclass=SingletonMeta):
             {"$inc": {"category.#cards": 1}}
         )
         self.statistics.update_category_operations(user_id, "card.add")
+
+        # Set card's category updated time
+        self.update_category(card.category_id, user_id, None, None, lightweight=True)
+
         return f"Card ID '{card.id}' added to category ID '{card.category_id}'", True
 
 
@@ -142,7 +162,7 @@ class Remember(metaclass=SingletonMeta):
         if not self.cards.find_one({"user_id": user_id, "card.id": card_id}):
             return f"Card ID '{card_id}' not found!", False
 
-        self.cards.update_one(
+        _card = self.cards.find_one_and_update(
             {"user_id": user_id, "card.id": card_id},
             {"$set": {
                 "card.front": front,
@@ -152,6 +172,10 @@ class Remember(metaclass=SingletonMeta):
             }
         )
         self.statistics.update_category_operations(user_id, "card.update")
+
+        # Set card's category updated time
+        self.update_category(_card["card"]["category_id"], user_id, None, None, lightweight=True)
+
         return f"Card ID '{card_id}' updated!", True
 
 
@@ -175,6 +199,9 @@ class Remember(metaclass=SingletonMeta):
             {"$inc": {"category.#cards": -1}}
         )
         self.statistics.update_category_operations(user_id, "card.delete")
+
+        # Set card's category updated time
+        self.update_category(_card["card"]["category_id"], user_id, None, None, lightweight=True)
         return f"Card ID '{card_id}' removed!", True
 
 
