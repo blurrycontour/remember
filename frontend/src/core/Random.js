@@ -22,7 +22,7 @@ export function Random()
         try
         {
             const response = await axios.get(`${API_URL}/category/`);
-            if (typeof (response.data) === 'string')
+            if (response.headers['content-type'] === 'text/html')
             {
                 setStatusMessage('Bad response from API server!');
                 return;
@@ -32,7 +32,7 @@ export function Random()
         } catch (error)
         {
             console.error(error);
-            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
+            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
@@ -45,7 +45,7 @@ export function Random()
             const response = categoryId === 'all' ?
                 await axios.get(`${API_URL}/main/random`) :
                 await axios.get(`${API_URL}/main/random/${categoryId}`);
-            if (typeof (response.data) === 'string')
+            if (response.headers['content-type'] === 'text/html')
             {
                 setStatusMessage('Bad response from API server!');
                 return;
@@ -55,7 +55,7 @@ export function Random()
         } catch (error)
         {
             console.error(error);
-            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
+            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
@@ -69,7 +69,7 @@ export function Random()
         } catch (error)
         {
             console.error(error);
-            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
+            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
         }
     };
 
