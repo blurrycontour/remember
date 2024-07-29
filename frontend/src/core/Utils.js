@@ -97,11 +97,13 @@ export function SetAxiosRetry() {
     axiosRetry(axios, {
         retries: 5,
         retryCondition: (error) => {
-            const shouldRetry = error.response?.status === 502;
-            if (shouldRetry) {
-                console.log('Retrying request:', error.config.url);
-            }
-            return shouldRetry;
+            return error.response?.status === 502;
+        },
+        retryDelay: (retryCount) => {
+            return 25;
+        },
+        onRetry: (retryCount, error, requestConfig) => {
+            console.log(`Retry attempt #${retryCount} for request: ${requestConfig.url}`);
         }
     });
 }
