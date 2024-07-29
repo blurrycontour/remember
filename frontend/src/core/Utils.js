@@ -103,7 +103,7 @@ export function SetAxiosRetry() {
             return 25;
         },
         onRetry: (retryCount, error, requestConfig) => {
-            console.log(`Retry attempt #${retryCount} for request: ${requestConfig.url}`);
+            console.log(`Retry #${retryCount} for request: ${requestConfig.url}`);
         }
     });
 }
