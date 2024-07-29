@@ -1,8 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
-import { SetAxiosDefaults, HandleAxiosError } from '../core/Utils';
+import { SetAxiosDefaults, HandleAxiosError, SetAxiosRetry } from '../core/Utils';
 
+
+SetAxiosRetry();
 
 export function Account()
 {

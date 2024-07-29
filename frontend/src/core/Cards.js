@@ -3,8 +3,10 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry } from './Utils';
 
+
+SetAxiosRetry();
 
 export function Cards()
 {

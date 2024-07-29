@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { SetAxiosRetry } from './Utils';
 
+SetAxiosRetry();
 
 export function Footer() {
     const [buildInfo, setBuildInfo] = useState(null);

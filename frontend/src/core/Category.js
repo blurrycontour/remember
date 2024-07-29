@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry } from './Utils';
 
+
+SetAxiosRetry();
 
 export function Category()
 {

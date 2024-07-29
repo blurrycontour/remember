@@ -4,11 +4,13 @@ import axios from 'axios';
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
-import { CheckAndSetDarkMode } from '../core/Utils';
+import { CheckAndSetDarkMode, SetAxiosRetry } from '../core/Utils';
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
 import logo from '../logo512.png';
 
+
+SetAxiosRetry();
 
 export function Login()
 {

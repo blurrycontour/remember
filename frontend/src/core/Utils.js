@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
+import axiosRetry from 'axios-retry';
 
 
 export function deleteCardPrompt(removeFunction, removeItem)
@@ -89,4 +90,18 @@ export function HandleAxiosError(error, setErrorMessage)
     )
     :
     setErrorMessage('Failed to connect to API server!');
+}
+
+
+export function SetAxiosRetry() {
+    axiosRetry(axios, {
+        retries: 5,
+        retryCondition: (error) => {
+            const shouldRetry = error.response?.status === 502;
+            if (shouldRetry) {
+                console.log('Retrying request:', error.config.url);
+            }
+            return shouldRetry;
+        }
+    });
 }
