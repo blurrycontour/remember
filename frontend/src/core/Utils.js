@@ -77,3 +77,16 @@ export function SortItems(items, type, order)
         return order === 'asc' ? comparison : -comparison;
     });
 };
+
+
+export function HandleAxiosError(error, setErrorMessage)
+{
+    console.error(error);
+    error.response ?
+    (
+        error.response.headers['content-type'] === 'text/html' ?
+        setErrorMessage(error.message) : setErrorMessage(error.response.data)
+    )
+    :
+    setErrorMessage('Failed to connect to API server!');
+}

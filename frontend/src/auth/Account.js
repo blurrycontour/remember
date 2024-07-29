@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
-import { SetAxiosDefaults } from '../core/Utils';
+import { SetAxiosDefaults, HandleAxiosError } from '../core/Utils';
 
 
 export function Account()
@@ -32,8 +32,7 @@ export function Account()
             setStatusMessage('');
         } catch (error)
         {
-            console.error(error);
-            error.response ? setStatusMessage(error.response.data) : setStatusMessage('Failed to connect to API server!');
+            HandleAxiosError(error, setStatusMessage);
         }
     };
 

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faRandom } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError } from './Utils';
 
 
 export function Random()
@@ -31,8 +31,7 @@ export function Random()
             setStatusMessage('');
         } catch (error)
         {
-            console.error(error);
-            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
+            HandleAxiosError(error, setStatusMessage);
         }
     };
 
@@ -54,8 +53,7 @@ export function Random()
             setRandomCard(response.data);
         } catch (error)
         {
-            console.error(error);
-            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
+            HandleAxiosError(error, setStatusMessage);
         }
     };
 
@@ -68,8 +66,7 @@ export function Random()
             fetchRandomCard();
         } catch (error)
         {
-            console.error(error);
-            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
+            HandleAxiosError(error, setStatusMessage);
         }
     };
 

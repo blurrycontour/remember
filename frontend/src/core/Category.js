@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError } from './Utils';
 
 
 export function Category()
@@ -38,8 +38,7 @@ export function Category()
             else setStatusMessage('');
         } catch (error)
         {
-            console.error(error);
-            error.response ? setStatusMessage(error.message) : setStatusMessage('Failed to connect to API server!');
+            HandleAxiosError(error, setStatusMessage);
         }
     };
 
@@ -52,8 +51,7 @@ export function Category()
             fetchCategories();
         } catch (error)
         {
-            console.error(error);
-            setErrorMessage(error.response?.data);
+            HandleAxiosError(error, setErrorMessage);
         }
     };
 
@@ -66,8 +64,7 @@ export function Category()
             fetchCategories();
         } catch (error)
         {
-            console.error(error);
-            setErrorMessage(error.response?.data);
+            HandleAxiosError(error, setErrorMessage);
         }
     };
 
@@ -79,8 +76,7 @@ export function Category()
             fetchCategories();
         } catch (error)
         {
-            console.error(error);
-            setStatusMessage(error.response?.data);
+            HandleAxiosError(error, setStatusMessage);
         }
     };
 
