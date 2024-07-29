@@ -38,9 +38,10 @@ export function Random()
 
     const fetchRandomCard = async () =>
     {
-        setRandomCard(null);
         try
         {
+            setRandomCard(null);
+            setStatusMessage('Loading...');
             const response = categoryId === 'all' ?
                 await axios.get(`${API_URL}/main/random`) :
                 await axios.get(`${API_URL}/main/random/${categoryId}`);
@@ -49,8 +50,8 @@ export function Random()
                 setStatusMessage('Bad response from API server!');
                 return;
             }
-            setRandomCard(response.data);
             setStatusMessage('');
+            setRandomCard(response.data);
         } catch (error)
         {
             console.error(error);
