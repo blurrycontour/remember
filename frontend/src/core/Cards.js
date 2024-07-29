@@ -204,7 +204,7 @@ export function Cards()
                     <p>Back <textarea style={{ height: '122px' }} value={currentCard.back} onChange={(e) => { setCurrentCard({ ...currentCard, back: e.target.value }); setErrorMessage(''); }} /></p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCard} className='green-button'>Save</button>
-                    <button onClick={closeOverlay} className='blue-button'>Cancel</button>
+                    <button onClick={closeOverlay} className='red-button'>Cancel</button>
                 </div>
             )}
 
@@ -216,7 +216,7 @@ export function Cards()
                     <p>Back <textarea style={{ height: '122px' }} value={newCardBack} onChange={(e) => { setNewCardBack(e.target.value); setErrorMessage(''); }} /></p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCard} className='green-button'>Add Card</button>
-                    <button onClick={closeOverlay} className='blue-button'>Cancel</button>
+                    <button onClick={closeOverlay} className='red-button'>Cancel</button>
                 </div>
             )}
         </div>

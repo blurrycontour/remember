@@ -180,7 +180,7 @@ export function Category()
                     </p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCategory} className='green-button'>Save</button>
-                    <button onClick={closeOverlay} className='blue-button'>Cancel</button>
+                    <button onClick={closeOverlay} className='red-button'>Cancel</button>
                 </div>
             )}
 
@@ -199,7 +199,7 @@ export function Category()
                     </p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCategory} className='green-button'>Add Category</button>
-                    <button onClick={closeOverlay} className='blue-button'>Cancel</button>
+                    <button onClick={closeOverlay} className='red-button'>Cancel</button>
                 </div>
             )}
         </div>
