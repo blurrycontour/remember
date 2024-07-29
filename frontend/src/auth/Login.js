@@ -21,7 +21,13 @@ export function Login()
 
     const informUserLogin = async (token) =>
     {
-        await axios.post(`${API_URL}/account/user`, {}, { headers: { "Authorization": `Bearer ${token}`, "ngrok-skip-browser-warning": 'ok' } });
+        await axios.post(`${API_URL}/account/user`, {}, { headers:
+            {
+                "Authorization": `Bearer ${token}`,
+                "ngrok-skip-browser-warning": true,
+                "disable-tunnel-reminder": true
+            }
+        });
     };
 
     const handleLogin = async (provider) =>

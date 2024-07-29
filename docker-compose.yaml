@@ -95,6 +95,26 @@ services:
         ipv4_address: ${NGROK_DOCKER_IP}
 
 
+  localtunnel:
+    profiles: ["deploy"]
+    restart: always
+    image: ${DOCKER_IMAGE_PREFIX}:localtunnel
+    # container_name: localtunnel
+    build:
+      context: '.'
+      dockerfile: localtunnel/Dockerfile
+      network: host
+    command:
+      - "--port"
+      - "80"
+      - "--local-host"
+      - "nginx"
+      - "--subdomain"
+      - "remember"
+    networks:
+      - remember-network
+
+
   db-backup:
     profiles: ["deploy"]
     restart: always

@@ -8,7 +8,12 @@ export function Footer() {
 
     const fetchBuildInfo = async () => {
         try {
-            const response = await axios.get(`${API_URL}/public/build`, { headers: { 'ngrok-skip-browser-warning': 'ok' } });
+            const response = await axios.get(`${API_URL}/public/build`, { headers:
+                {
+                    "ngrok-skip-browser-warning": true,
+                    "disable-tunnel-reminder": true
+                }
+            });
             if (typeof (response.data) === 'string') {
                 setBuildInfo(null);
                 return;
