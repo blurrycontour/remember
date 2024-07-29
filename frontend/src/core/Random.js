@@ -93,7 +93,7 @@ export function Random()
                         <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
                     ))}
                 </select>
-                <span style={{padding: '0px 8px'}}></span>
+                <span style={{ padding: '0px 8px' }}></span>
                 <button onClick={fetchRandomCard} style={{ minWidth: '100px' }} className='green-button'>
                     <FontAwesomeIcon size="xl" icon={faRandom} />
                 </button>
@@ -103,17 +103,19 @@ export function Random()
                 <div className='cards-container'>
                     <div key={randomCard.card.id} className="card">
                         <div className="delete-icon">
-                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.card.id)} />
+                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.card)} />
                         </div>
-                        <h2>{randomCard.card.front.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h2>
-                        <hr />
-                        {showBack && <h3>{randomCard.card.back.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
                         <div className="show-icon">
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
-                        <h3 style={{ fontSize: '1em' }}>
-                            <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
-                        </h3>
+                        <div style={{ cursor: 'pointer' }} onClick={() => setShowBack(!showBack)}>
+                            <h2>{randomCard.card.front}</h2>
+                            <hr />
+                            {showBack && <h3>{randomCard.card.back}</h3>}
+                            <h3 style={{ fontSize: '1em' }}>
+                                <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
+                            </h3>
+                        </div>
                     </div>
                 </div>}
 
