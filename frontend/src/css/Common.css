@@ -52,10 +52,8 @@ h1 {
 
 .overlay {
     border: 1px solid #ccc;
-    border-radius: 5px;
     background-color: #eee;
     padding: 15px;
-    margin: 10px auto;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.2s ease-in-out;
     width: 90%;
@@ -63,7 +61,7 @@ h1 {
     word-wrap: break-word;
     position: fixed;
     z-index: 1000;
-    top: 30%;
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -117,7 +115,7 @@ h1 {
 .overlay input,
 .overlay textarea {
     width: 100%;
-    padding: 10px 20px;
+    padding: 10px 10px;
     margin: 10px 0;
     box-sizing: border-box;
     font-size: 16px;
