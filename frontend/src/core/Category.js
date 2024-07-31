@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry } from './Utils';
+import { faTrashAlt, faEdit, faPlusSquare, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe } from './Utils';
 
 
 SetAxiosRetry();
@@ -22,6 +22,7 @@ export function Category()
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
+    const preventSwipeHandlers = PreventSwipe();
 
     // =========== Category functions ===========
     const fetchCategories = async () =>
@@ -165,8 +166,8 @@ export function Category()
 
             {/* Edit overlay window */}
             {isOverlayOpen === 2 && (
-                <div className='overlay'>
-                    <h3>Edit Category</h3>
+                <div className='overlay' {...preventSwipeHandlers}>
+                    <h3>Edit Category &nbsp;<FontAwesomeIcon icon={faLayerGroup} size="1x" /></h3>
                     <p>Category Name
                         <input
                             type='text'
@@ -184,8 +185,8 @@ export function Category()
 
             {/* Add overlay window */}
             {isOverlayOpen === 1 && (
-                <div className="overlay">
-                    <h3>Add a new Category</h3>
+                <div className='overlay' {...preventSwipeHandlers}>
+                    <h3>Add a new Category &nbsp;<FontAwesomeIcon icon={faLayerGroup} size="1x" /></h3>
                     <p>Category Name
                         <input
                             type='text'

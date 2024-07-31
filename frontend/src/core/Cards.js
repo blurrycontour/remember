@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe } from './Utils';
 
 
 SetAxiosRetry();
@@ -26,6 +26,7 @@ export function Cards()
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
+    const preventSwipeHandlers = PreventSwipe();
 
     // =========== Card functions ===========
     const fetchCards = async () =>
@@ -196,8 +197,8 @@ export function Cards()
 
             {/* Edit overlay window */}
             {isOverlayOpen === 2 && (
-                <div className='overlay'>
-                    <h3>Edit Card</h3>
+                <div className='overlay' {...preventSwipeHandlers}>
+                    <h3>Edit Card 🧾</h3>
                     <p>Front <textarea style={{ height: '65px' }} value={currentCard.front} onChange={(e) => { setCurrentCard({ ...currentCard, front: e.target.value }); setErrorMessage(''); }} /></p>
                     <p>Back <textarea style={{ height: '122px' }} value={currentCard.back} onChange={(e) => { setCurrentCard({ ...currentCard, back: e.target.value }); setErrorMessage(''); }} /></p>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
@@ -208,7 +209,7 @@ export function Cards()
 
             {/* Add overlay window */}
             {isOverlayOpen === 1 && (
-                <div className="overlay">
+                <div className='overlay' {...preventSwipeHandlers}>
                     <h3>Add a new Card 🧾</h3>
                     <p>Front <textarea style={{ height: '65px' }} value={newCardFront} onChange={(e) => { setNewCardFront(e.target.value); setErrorMessage(''); }} /></p>
                     <p>Back <textarea style={{ height: '122px' }} value={newCardBack} onChange={(e) => { setNewCardBack(e.target.value); setErrorMessage(''); }} /></p>

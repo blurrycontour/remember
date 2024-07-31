@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
 import axiosRetry from 'axios-retry';
+import { useSwipeable } from 'react-swipeable';
 
 
 export function deleteCardPrompt(removeFunction, removeItem)
@@ -106,4 +107,13 @@ export function SetAxiosRetry() {
             console.log(`Retry #${retryCount} for request: ${requestConfig.url}`);
         }
     });
+}
+
+export function PreventSwipe()
+{
+    const handlers = useSwipeable({
+        onSwiped: (eventData) => eventData.event.stopPropagation(),
+        onSwiping: (eventData) => eventData.event.stopPropagation(),
+    });
+    return handlers;
 }
