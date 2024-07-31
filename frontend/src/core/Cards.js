@@ -178,7 +178,7 @@ export function Cards()
                                 <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, card)} />
                             </div>
                             <div style={{ cursor: 'pointer' }} onClick={() => setExpandedCards(prev => ({ ...prev, [card.id]: !prev[card.id] }))}>
-                                <h2>{card.front}</h2>
+                                <h2 className='card-hx'>{card.front}</h2>
                                 {expandedCards[card.id] && (
                                     <div>
                                         <div className="delete-icon">

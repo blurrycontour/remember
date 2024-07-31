@@ -38,10 +38,6 @@ export function MarkdownPreview({ source })
     return (
         <MDEditor.Markdown
             source={source}
-            style={{
-                whiteSpace: 'pre-wrap',
-                padding: '5px 20px 5px 0px'
-            }}
             className='md-preview'
         />
     );

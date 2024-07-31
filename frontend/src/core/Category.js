@@ -148,9 +148,9 @@ export function Category()
                 <div className='cards-container'>
                     {categories.length !== 0 && categories.map(category => (
                         <div key={category.id} className="card">
-                            <h2>{category.name}</h2>
+                            <h2 className='card-hx'>{category.name}</h2>
                             {!!category.description && <MarkdownPreview source={category.description} />}
-                            <h4 style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h4>
+                            <h4 className='card-hx' style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h4>
                             <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
                             <div className="delete-icon">
                                 <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category)} />

@@ -110,10 +110,10 @@ export function Random()
                             <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
                         </div>
                         <div style={{ cursor: 'pointer' }} onClick={() => setShowBack(!showBack)}>
-                            <h2>{randomCard.card.front}</h2>
+                            <h2 className='card-hx'>{randomCard.card.front}</h2>
                             <hr />
                             {showBack && <MarkdownPreview source={randomCard.card.back} />}
-                            <h3 style={{ fontSize: '1em' }}>
+                            <h3 className='card-hx' style={{ fontSize: '1em' }}>
                                 <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
                             </h3>
                         </div>
