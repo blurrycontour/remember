@@ -15,6 +15,7 @@ export function Header()
     {
         document.body.classList.toggle('dark-mode');
         const _isDarkMode = document.body.classList.contains('dark-mode');
+        document.documentElement.setAttribute('data-color-mode', _isDarkMode ? 'dark' : 'light');
         setDarkMode(_isDarkMode);
         localStorage.setItem('darkMode', _isDarkMode ? 'enabled' : 'disabled');
     };

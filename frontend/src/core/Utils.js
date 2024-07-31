@@ -43,6 +43,7 @@ export function CheckAndSetDarkMode()
     {
         document.body.classList.add('dark-mode');
     }
+    document.documentElement.setAttribute('data-color-mode', isDarkModeEnabled ? 'dark' : 'light');
     return isDarkModeEnabled;
 }
 

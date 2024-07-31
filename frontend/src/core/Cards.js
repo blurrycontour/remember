@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe } from './Utils';
+import { MarkdownEditor, MarkdownPreview } from './Editor';
 
 
 SetAxiosRetry();
@@ -184,7 +185,7 @@ export function Cards()
                                             <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card)} />
                                         </div>
                                         <hr />
-                                        <h3>{card.back}</h3>
+                                        <MarkdownPreview source={card.back} />
                                     </div>
                                 )}
                             </div>
@@ -199,8 +200,16 @@ export function Cards()
             {isOverlayOpen === 2 && (
                 <div className='overlay' {...preventSwipeHandlers}>
                     <h3>Edit Card 🧾</h3>
-                    <p>Front <textarea style={{ height: '65px' }} value={currentCard.front} onChange={(e) => { setCurrentCard({ ...currentCard, front: e.target.value }); setErrorMessage(''); }} /></p>
-                    <p>Back <textarea style={{ height: '122px' }} value={currentCard.back} onChange={(e) => { setCurrentCard({ ...currentCard, back: e.target.value }); setErrorMessage(''); }} /></p>
+                    <p>Front
+                        <textarea
+                            className='overlay-textarea'
+                            style={{ height: '65px' }}
+                            value={currentCard.front}
+                            onChange={(e) => { setCurrentCard({ ...currentCard, front: e.target.value }); setErrorMessage(''); }}
+                        />
+                    </p>
+                    <p>Back</p>
+                    <MarkdownEditor value={currentCard.back} onChange={(v) => { setCurrentCard({ ...currentCard, back: v }); setErrorMessage(''); }} height={150}/>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCard} className='green-button'>Save</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
@@ -211,8 +220,16 @@ export function Cards()
             {isOverlayOpen === 1 && (
                 <div className='overlay' {...preventSwipeHandlers}>
                     <h3>Add a new Card 🧾</h3>
-                    <p>Front <textarea style={{ height: '65px' }} value={newCardFront} onChange={(e) => { setNewCardFront(e.target.value); setErrorMessage(''); }} /></p>
-                    <p>Back <textarea style={{ height: '122px' }} value={newCardBack} onChange={(e) => { setNewCardBack(e.target.value); setErrorMessage(''); }} /></p>
+                    <p>Front
+                        <textarea
+                            className='overlay-textarea'
+                            style={{ height: '65px' }}
+                            value={newCardFront}
+                            onChange={(e) => { setNewCardFront(e.target.value); setErrorMessage(''); }}
+                        />
+                    </p>
+                    <p>Back</p>
+                    <MarkdownEditor value={newCardBack} onChange={(v) => { setNewCardBack(v); setErrorMessage(''); }} height={150}/>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCard} className='green-button'>Add Card</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>

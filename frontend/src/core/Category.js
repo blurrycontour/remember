@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faPlusSquare, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe } from './Utils';
+import { MarkdownEditor, MarkdownPreview } from './Editor';
 
 
 SetAxiosRetry();
@@ -148,8 +149,8 @@ export function Category()
                     {categories.length !== 0 && categories.map(category => (
                         <div key={category.id} className="card">
                             <h2>{category.name}</h2>
-                            {!!category.description && <h3>{category.description.split('\n').map((line, index) => <span key={index}>{line}<br /></span>)}</h3>}
-                            <h3 style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h3>
+                            {!!category.description && <MarkdownPreview source={category.description} />}
+                            <h4 style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h4>
                             <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
                             <div className="delete-icon">
                                 <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category)} />
@@ -170,13 +171,13 @@ export function Category()
                     <h3>Edit Category &nbsp;<FontAwesomeIcon icon={faLayerGroup} size="1x" /></h3>
                     <p>Category Name
                         <input
+                            className='overlay-input'
                             type='text'
                             value={currentCategory.name}
                             onChange={(e) => { setCurrentCategory({ ...currentCategory, name: e.target.value }); setErrorMessage(''); }} />
                     </p>
-                    <p>Category Description
-                        <textarea value={currentCategory.description} onChange={(e) => { setCurrentCategory({ ...currentCategory, description: e.target.value }); setErrorMessage(''); }} />
-                    </p>
+                    <p>Category Description</p>
+                    <MarkdownEditor value={currentCategory.description} onChange={(v) => { setCurrentCategory({ ...currentCategory, description: v }); setErrorMessage(''); }} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCategory} className='green-button'>Save</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
@@ -189,13 +190,13 @@ export function Category()
                     <h3>Add a new Category &nbsp;<FontAwesomeIcon icon={faLayerGroup} size="1x" /></h3>
                     <p>Category Name
                         <input
+                            className='overlay-input'
                             type='text'
                             value={newCategoryName}
                             onChange={(e) => { setNewCategoryName(e.target.value); setErrorMessage(''); }} />
                     </p>
-                    <p>Category Description
-                        <textarea value={newCategoryDesc} onChange={(e) => { setNewCategoryDesc(e.target.value); setErrorMessage(''); }} />
-                    </p>
+                    <p>Category Description</p>
+                    <MarkdownEditor value={newCategoryDesc} onChange={(v) => { setNewCategoryDesc(v); setErrorMessage(''); }} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCategory} className='green-button'>Add Category</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
