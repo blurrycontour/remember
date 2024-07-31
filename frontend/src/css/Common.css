@@ -110,7 +110,7 @@ h1 {
 }
 
 .md-preview {
-    background-color: #252525;
+    background-color: white;
 }
 
 .md-preview h2,
@@ -265,6 +265,10 @@ html {
 
 .dark-mode .w-md-editor {
     border: 1px solid white;
+}
+
+.dark-mode .md-preview {
+    background-color: #252525;
 }
 
 .dark-mode a:hover {
