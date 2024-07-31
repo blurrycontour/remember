@@ -209,7 +209,7 @@ export function Cards()
                         />
                     </p>
                     <p>Back</p>
-                    <MarkdownEditor value={currentCard.back} onChange={(v) => { setCurrentCard({ ...currentCard, back: v }); setErrorMessage(''); }} height={150}/>
+                    <MarkdownEditor value={currentCard.back} onChange={(v) => { setCurrentCard({ ...currentCard, back: v }); setErrorMessage(''); }} height={200} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCard} className='green-button'>Save</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
@@ -229,7 +229,7 @@ export function Cards()
                         />
                     </p>
                     <p>Back</p>
-                    <MarkdownEditor value={newCardBack} onChange={(v) => { setNewCardBack(v); setErrorMessage(''); }} height={150}/>
+                    <MarkdownEditor value={newCardBack} onChange={(v) => { setNewCardBack(v); setErrorMessage(''); }} height={200} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCard} className='green-button'>Add Card</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
