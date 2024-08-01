@@ -37,8 +37,9 @@ services:
       network: host
     volumes:
       - ./frontend/build:/repo/frontend/build
-    # ports:
-    #   - 3000:3000
+    command: ["npm", "start"]
+    ports:
+      - 3000:3000
     networks:
       - remember-network
     env_file:

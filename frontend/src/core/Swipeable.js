@@ -10,47 +10,28 @@ export const SwipeableRoutes = ({ children }) =>
   const handlers = useSwipeable({
     onSwipedLeft: () =>
     {
-      // Swipe left: navigate based on current path
-      switch (location.pathname)
-      {
-        case '/':
-          navigate('/category');
-          break;
-        case '/random':
-          navigate('/category');
-          break;
-        case '/category':
-          navigate('/account');
-          break;
-        case '/account':
-          break;
-        default:
-          navigate('/category');
-          break;
+      if (location.pathname === '/' || location.pathname === '/random') {
+        navigate('/category');
+      } else if (location.pathname === '/category') {
+        const lastCardID = localStorage.getItem('lastCardID');
+        navigate(lastCardID ? `/category/${lastCardID}` : '/account');
+      } else if (location.pathname.includes('/category/')) {
+        navigate('/account');
       }
     },
     onSwipedRight: () =>
     {
-      // Swipe right: navigate based on current path
-      switch (location.pathname)
-      {
-        case '/':
-          break;
-        case '/random':
-          break;
-        case '/category':
-          navigate('/');
-          break;
-        case '/account':
-          navigate('/category');
-          break;
-        default:
-          navigate('/category');
-          break;
+      if (location.pathname === '/category') {
+        navigate('/');
+      } else if (location.pathname.includes('/category/')) {
+        navigate('/category');
+      } else if (location.pathname === '/account') {
+        const lastCardID = localStorage.getItem('lastCardID');
+        navigate(lastCardID ? `/category/${lastCardID}` : '/category');
       }
     },
     // Configure to your needs
-    delta: 20, // Minimum distance(px) before a swipe starts.
+    delta: 40, // Minimum distance(px) before a swipe starts.
     preventDefaultTouchmoveEvent: true, // Prevent scrolling during swipe.
     trackTouch: true,
     trackMouse: false,
