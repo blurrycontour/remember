@@ -2,7 +2,7 @@ import React from 'react';
 import MDEditor, { commands } from '@uiw/react-md-editor';
 
 
-export function MarkdownEditor({ value, onChange, height=200 })
+export function MarkdownEditor({ value, onChange, height=200, placeholder='' })
 {
     return (
         <MDEditor
@@ -10,22 +10,21 @@ export function MarkdownEditor({ value, onChange, height=200 })
             onChange={onChange}
             preview="edit"
             height={height}
+            placeholder={placeholder}
             commands={[
                 commands.bold,
-                commands.italic,
                 commands.link,
-                // commands.hr,
                 commands.table,
-                // commands.code,
                 commands.codeBlock,
-                commands.divider,
                 commands.unorderedListCommand,
                 commands.orderedListCommand,
                 commands.checkedListCommand,
             ]}
             extraCommands={[
                 commands.codeEdit,
+                commands.divider,
                 commands.codePreview,
+                commands.divider,
                 commands.fullscreen,
             ]}
         />

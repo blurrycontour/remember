@@ -208,7 +208,7 @@ export function Cards()
                             onChange={(e) => { setCurrentCard({ ...currentCard, front: e.target.value }); setErrorMessage(''); }}
                         />
                     </p>
-                    <p>Back</p>
+                    <p style={{ marginBottom: '10px' }}>Back</p>
                     <MarkdownEditor value={currentCard.back} onChange={(v) => { setCurrentCard({ ...currentCard, back: v }); setErrorMessage(''); }} height={200} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCard} className='green-button'>Save</button>
@@ -228,7 +228,7 @@ export function Cards()
                             onChange={(e) => { setNewCardFront(e.target.value); setErrorMessage(''); }}
                         />
                     </p>
-                    <p>Back</p>
+                    <p style={{ marginBottom: '10px' }}>Back</p>
                     <MarkdownEditor value={newCardBack} onChange={(v) => { setNewCardBack(v); setErrorMessage(''); }} height={200} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCard} className='green-button'>Add Card</button>

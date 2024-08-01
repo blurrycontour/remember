@@ -176,7 +176,7 @@ export function Category()
                             value={currentCategory.name}
                             onChange={(e) => { setCurrentCategory({ ...currentCategory, name: e.target.value }); setErrorMessage(''); }} />
                     </p>
-                    <p>Category Description</p>
+                    <p style={{ marginBottom: '10px' }}>Category Description</p>
                     <MarkdownEditor value={currentCategory.description} onChange={(v) => { setCurrentCategory({ ...currentCategory, description: v }); setErrorMessage(''); }} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCategory} className='green-button'>Save</button>
@@ -195,7 +195,7 @@ export function Category()
                             value={newCategoryName}
                             onChange={(e) => { setNewCategoryName(e.target.value); setErrorMessage(''); }} />
                     </p>
-                    <p>Category Description</p>
+                    <p style={{ marginBottom: '10px' }}>Category Description</p>
                     <MarkdownEditor value={newCategoryDesc} onChange={(v) => { setNewCategoryDesc(v); setErrorMessage(''); }} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCategory} className='green-button'>Add Category</button>

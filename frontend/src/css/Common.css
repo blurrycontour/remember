@@ -112,16 +112,14 @@ h1 {
     background-color: white;
 }
 
-/* .md-preview h2,
-.md-preview h3,
-.md-preview h4 {
-    margin: 0;
-    padding: 0;
-} */
+.w-md-editor svg {
+    width: fit-content;
+    height: 16px;
+}
 
-/* .card h3 {
-    font-weight: 400;
-} */
+.w-md-editor-toolbar-divider {
+    vertical-align: unset;
+}
 
 .overlay-input,
 .overlay-textarea {
@@ -141,10 +139,6 @@ h1 {
     height: 82px;
 }
 
-/* .overlay-input:focus,
-.overlay-textarea:focus {
-    border: 2px solid black;
-} */
 .overlay p, .overlay button {
     font-size: 17px;
 }
@@ -192,10 +186,6 @@ hr {
     border-color: gray;
     opacity: 0.2;
     margin: 12px 0px;
-}
-
-.card p {
-    margin-bottom: 0px;
 }
 
 .blur-background {
@@ -325,8 +315,3 @@ html {
     color: white;
     border: 1px solid white;
 }
-/*
-.dark-mode .overlay-input:focus,
-.dark-mode .overlay-textarea:focus {
-    border: 2px solid white;
-} */
