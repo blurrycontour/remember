@@ -17,11 +17,15 @@ export const SwipeableRoutes = ({ children }) =>
         navigate(lastCardID ? `/category/${lastCardID}` : '/account');
       } else if (location.pathname.includes('/category/')) {
         navigate('/account');
+      } else if (location.pathname === '/account') {
+        navigate('/');
       }
     },
     onSwipedRight: () =>
     {
-      if (location.pathname === '/category') {
+      if (location.pathname === '/' || location.pathname === '/random') {
+        navigate('/account');
+      } else if (location.pathname === '/category') {
         navigate('/');
       } else if (location.pathname.includes('/category/')) {
         navigate('/category');
