@@ -37,7 +37,7 @@ services:
       network: host
     volumes:
       - ./frontend/build:/repo/frontend/build
-    command: ["npm", "start"]
+    # command: ["npm", "start"]
     ports:
       - 3000:3000
     networks:
