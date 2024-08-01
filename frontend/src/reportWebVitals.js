@@ -10,4 +10,15 @@ const reportWebVitals = onPerfEntry => {
   }
 };
 
+function sendToGoogleAnalytics({ id, name, value }) {
+  window.gtag('event', name, {
+    event_category: 'Web Vitals',
+    event_label: id,
+    value: Math.round(name === 'CLS' ? value * 1000 : value), // values must be integers
+    non_interaction: true, // avoids affecting bounce rate
+  });
+}
+
+export { sendToGoogleAnalytics };
+
 export default reportWebVitals;
