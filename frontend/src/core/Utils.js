@@ -74,6 +74,9 @@ export function SortItems(items, type, order)
             case 'updated':
                 comparison = new Date(a.updated) - new Date(b.updated);
                 break;
+            case 'nCards':
+                comparison = a["#cards"] - b["#cards"];
+                break;
             default:
                 comparison = a.front.localeCompare(b.front);
         }

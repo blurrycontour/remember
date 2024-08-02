@@ -137,6 +137,7 @@ export function Category()
                         <option value="name">Name</option>
                         <option value="created">Created</option>
                         <option value="updated">Updated</option>
+                        <option value="nCards">#Cards</option>
                     </select>
                     <span style={{padding: '0px 5px'}}></span>
                     <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{minWidth: '128px'}}>
