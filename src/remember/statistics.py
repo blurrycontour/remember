@@ -33,6 +33,7 @@ class Statistics:
 
         stats = _stats.copy()
         stats.pop("_id")
+        stats.pop("user_id")
 
         return stats, True
 
