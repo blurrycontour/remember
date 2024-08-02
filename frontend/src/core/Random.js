@@ -89,7 +89,7 @@ export function Random()
 
             <div className="tool-card">
                 <select onChange={(e) => setCategoryId(e.target.value)} defaultValue={"all"}>
-                    <option key={"all"} value={"all"}>Any</option>
+                    <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option>
                     {categories.map(category => (
                         <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
                     ))}
