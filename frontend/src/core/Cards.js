@@ -150,7 +150,7 @@ export function Cards()
                     {!!category &&
                         <div className="normal-icon">
                             <h1>
-                                <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
+                                <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={category.id ? () => openOverlay(1, null) : () => {}} />
                             </h1>
                         </div>
                     }

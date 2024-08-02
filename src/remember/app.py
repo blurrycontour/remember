@@ -100,8 +100,10 @@ class Remember(metaclass=SingletonMeta):
 
     def get_category(self, user_id:str, category_id:str=None, only_category:bool=False):
         """ Get a category i.e. return list of cards in the category """
-        _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
+        if category_id == "all":
+            return self.get_all(user_id)
 
+        _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
         if not _category:
             return f"Category ID '{category_id}' not found!", False
 
@@ -207,10 +209,11 @@ class Remember(metaclass=SingletonMeta):
 
     def get_all(self, user_id:str):
         """ Show all cards in all categories """
-        _data, _ = self.get_categories(user_id)
-        for category in _data:
-            category["cards"] = self.get_category(category_id=category["id"], user_id=user_id)[0]["cards"]
-        return _data, True
+        _cards = self.cards.find({"user_id": user_id})
+        return {
+                "category": {"name":"[All Cards]"},
+                "cards": [_card["card"] for _card in _cards]
+            }, True
 
 
     def random(self, user_id:str, category_id:str=None):

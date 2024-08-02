@@ -35,7 +35,7 @@ export function Header()
     };
 
     const getCategoryLink = () => {
-        const lastCardID = localStorage.getItem('lastCardID');
+        const lastCardID = localStorage.getItem('lastCardID') || 'all';
         return lastCardID ? `/category/${lastCardID}` : "/category";
     };
 

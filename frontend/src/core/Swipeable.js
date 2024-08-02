@@ -13,7 +13,7 @@ export const SwipeableRoutes = ({ children }) =>
       if (location.pathname === '/' || location.pathname === '/random') {
         navigate('/category');
       } else if (location.pathname === '/category') {
-        const lastCardID = localStorage.getItem('lastCardID');
+        const lastCardID = localStorage.getItem('lastCardID') || 'all';
         navigate(lastCardID ? `/category/${lastCardID}` : '/account');
       } else if (location.pathname.includes('/category/')) {
         navigate('/account');
@@ -30,7 +30,7 @@ export const SwipeableRoutes = ({ children }) =>
       } else if (location.pathname.includes('/category/')) {
         navigate('/category');
       } else if (location.pathname === '/account') {
-        const lastCardID = localStorage.getItem('lastCardID');
+        const lastCardID = localStorage.getItem('lastCardID') || 'all';
         navigate(lastCardID ? `/category/${lastCardID}` : '/category');
       }
     },
