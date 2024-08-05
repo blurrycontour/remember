@@ -148,7 +148,7 @@ export function Cards()
                     }
                     <h1> &nbsp;&nbsp; {category?.name} &nbsp;&nbsp; </h1>
                     {!!category &&
-                        <div className="normal-icon">
+                        <div className="normal-icon" style={category?.id ? {opacity: 1} : {opacity: 0.3}} >
                             <h1>
                                 <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={category.id ? () => openOverlay(1, null) : () => {}} />
                             </h1>
