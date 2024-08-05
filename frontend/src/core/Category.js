@@ -131,7 +131,7 @@ export function Category()
                     </div>
                 </div>
                 <div className='card2'>
-                    <button onClick={() => navigate('/category/all')} className='blue-button'>View All Categories</button>
+                    <button onClick={() => navigate('/category/all')} className='blue-button'>View All Cards</button>
                 </div>
 
                 <div className='tool-card' style={{ width: 'auto' }}>
