@@ -27,7 +27,8 @@ export function Login()
             {
                 "Authorization": `Bearer ${token}`,
                 "ngrok-skip-browser-warning": true,
-                "disable-tunnel-reminder": true
+                "disable-tunnel-reminder": true,
+                "localtonet-skip-warning": true
             }
         });
     };

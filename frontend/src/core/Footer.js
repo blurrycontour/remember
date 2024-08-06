@@ -13,7 +13,8 @@ export function Footer() {
             const response = await axios.get(`${API_URL}/public/build`, { headers:
                 {
                     "ngrok-skip-browser-warning": true,
-                    "disable-tunnel-reminder": true
+                    "disable-tunnel-reminder": true,
+                    "localtonet-skip-warning": true
                 }
             });
             if (typeof (response.data) === 'string') {

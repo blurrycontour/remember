@@ -24,6 +24,7 @@ export function SetAxiosDefaults()
     axios.defaults.headers.common['Authorization'] = `Bearer ${user?.accessToken}`;
     axios.defaults.headers.common['ngrok-skip-browser-warning'] = true;
     axios.defaults.headers.common['disable-tunnel-reminder'] = true;
+    axios.defaults.headers.common['localtonet-skip-warning'] = true;
 }
 
 export function GetUserButton()
