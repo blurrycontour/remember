@@ -14,6 +14,7 @@ env:
   SSH_KEY: ${{secrets.SSH_KEY}}
   SSH_IP: ${{secrets.SSH_IP}}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
+  LOCALTONET_AUTHTOKEN: ${{secrets.LOCALTONET_AUTHTOKEN}}
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
   GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}
   FIREBASE_CREDENTIALS: ${{secrets.FIREBASE_CREDENTIALS}}
@@ -72,6 +73,8 @@ jobs:
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
       - name: Add ngrok authtoken to .env
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
+      - name: Add localtonet authtoken to .env
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'LOCALTONET_AUTHTOKEN=$LOCALTONET_AUTHTOKEN' >> .env"
       - name: Add mongodb credentials to .env
         run: |
           ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
