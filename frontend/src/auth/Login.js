@@ -7,7 +7,7 @@ import { AuthContext } from './AuthProvider';
 import { CheckAndSetDarkMode, SetAxiosRetry } from '../core/Utils';
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
-import logo from '../logo512.png';
+import logo from '../logo192.png';
 
 
 SetAxiosRetry();
