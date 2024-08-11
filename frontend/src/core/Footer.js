@@ -14,8 +14,7 @@ export function Footer() {
                 {
                     "ngrok-skip-browser-warning": true,
                     "disable-tunnel-reminder": true,
-                    "localtonet-skip-warning": true,
-                    "Accept-Encoding": "gzip"
+                    "localtonet-skip-warning": true
                 }
             });
             if (typeof (response.data) === 'string') {
