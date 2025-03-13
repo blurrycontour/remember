@@ -12,7 +12,7 @@ SetAxiosRetry();
 export function Random()
 {
     const [categories, setCategories] = useState([]);
-    const [categoryId, setCategoryId] = useState('all');
+    const [categoryId, setCategoryId] = useState(localStorage.getItem('randomSelectedCategoryId') || 'all');
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
     const [statusMessage, setStatusMessage] = useState('Loading...');
@@ -80,6 +80,11 @@ export function Random()
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() =>
+    {
+        localStorage.setItem('randomSelectedCategoryId', categoryId);
+    }, [categoryId]);
+
 
     return (
         <div>
@@ -88,7 +93,7 @@ export function Random()
             </div>
 
             <div className="tool-card">
-                <select onChange={(e) => setCategoryId(e.target.value)} defaultValue={"all"}>
+                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
                     <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option>
                     {categories.map(category => (
                         <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
