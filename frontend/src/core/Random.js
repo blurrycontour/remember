@@ -84,7 +84,8 @@ export function Random()
     useEffect(() =>
     {
         setStorageItem('randomSelectedCategoryId', categoryId);
-    }, [categoryId, setStorageItem]);
+        // eslint-disable-next-line
+    }, [categoryId]);
 
 
     return (

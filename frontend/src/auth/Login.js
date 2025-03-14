@@ -4,7 +4,7 @@ import axios from 'axios';
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
-import { CheckAndSetDarkMode, SetAxiosRetry } from '../core/Utils';
+import { SetAxiosRetry, UseLocalStorage } from '../core/Utils';
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
 import logo from '../logo192.png';
@@ -14,6 +14,7 @@ SetAxiosRetry();
 
 export function Login()
 {
+    const { getStorageItem } = UseLocalStorage();
     const { user } = useContext(AuthContext);
     let location = useLocation();
     let from = location.state?.from?.pathname || "/account";
@@ -47,7 +48,9 @@ export function Login()
 
     useEffect(() =>
     {
-        CheckAndSetDarkMode();
+        const isDarkModeEnabled = getStorageItem('darkMode', 'disabled') === 'enabled';
+        if (isDarkModeEnabled) document.body.classList.add('dark-mode');
+        document.documentElement.setAttribute('data-color-mode', isDarkModeEnabled ? 'dark' : 'light');
         // eslint-disable-next-line
     }, []);
 

@@ -37,18 +37,6 @@ export function GetUserButton()
     );
 }
 
-export function CheckAndSetDarkMode()
-{
-    const { getStorageItem } = UseLocalStorage();
-    const isDarkModeEnabled = getStorageItem('darkMode', 'disabled') === 'enabled';
-    if (isDarkModeEnabled)
-    {
-        document.body.classList.add('dark-mode');
-    }
-    document.documentElement.setAttribute('data-color-mode', isDarkModeEnabled ? 'dark' : 'light');
-    return isDarkModeEnabled;
-}
-
 export const NotFound = () => (
     <div>
         <h1>404 - Not Found</h1>

@@ -113,12 +113,12 @@ export function Category()
     }, []);
 
     useEffect(() =>
-        {
-            setCategories(prevCategories => SortItems([...prevCategories], sortType, sortOrder));
-            setStorageItem('sortTypeCategories', sortType);
-            setStorageItem('sortOrderCategories', sortOrder);
-            // eslint-disable-next-line
-        }, [sortType, sortOrder]);
+    {
+        setCategories(prevCategories => SortItems([...prevCategories], sortType, sortOrder));
+        setStorageItem('sortTypeCategories', sortType);
+        setStorageItem('sortOrderCategories', sortOrder);
+        // eslint-disable-next-line
+    }, [sortType, sortOrder]);
 
 
     return (

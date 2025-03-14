@@ -129,7 +129,8 @@ export function Cards()
         // eslint-disable-next-line
     }, []);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         setCards(prevCards => SortItems([...prevCards], sortType, sortOrder));
         setStorageItem('sortTypeCards', sortType);
         setStorageItem('sortOrderCards', sortOrder);
