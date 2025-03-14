@@ -122,3 +122,21 @@ export function PreventSwipe()
     });
     return handlers;
 }
+
+export function UseLocalStorage() {
+    const { user } = useContext(AuthContext);
+    const userEmail = user?.email || 'unknown';
+
+    const setStorageItem = (key, value) => {
+        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
+        data[key] = value;
+        localStorage.setItem(userEmail, JSON.stringify(data));
+    };
+
+    const getStorageItem = (key, defaultValue) => {
+        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
+        return data[key] || defaultValue;
+    };
+
+    return { setStorageItem, getStorageItem };
+}

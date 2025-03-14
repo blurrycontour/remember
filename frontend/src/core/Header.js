@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { GetUserButton, CheckAndSetDarkMode } from './Utils';
+import { GetUserButton, CheckAndSetDarkMode, UseLocalStorage } from './Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faLayerGroup, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
@@ -8,6 +8,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 export function Header()
 {
+    const { setStorageItem, getStorageItem } = UseLocalStorage();
     const [isDarkMode, setDarkMode] = useState(false);
     const location = useLocation();
 
@@ -17,14 +18,14 @@ export function Header()
         const _isDarkMode = document.body.classList.contains('dark-mode');
         document.documentElement.setAttribute('data-color-mode', _isDarkMode ? 'dark' : 'light');
         setDarkMode(_isDarkMode);
-        localStorage.setItem('darkMode', _isDarkMode ? 'enabled' : 'disabled');
+        setStorageItem('darkMode', _isDarkMode ? 'enabled' : 'disabled');
     };
 
     const getNavClass = (path) => {
         if (path === '/category/') {
             if (location.pathname.includes("/category/")) {
                 const currentCardID = location.pathname.split('/').pop();
-                localStorage.setItem('lastCardID', currentCardID);
+                setStorageItem('lastCardID', currentCardID);
                 return 'nav-button active';
             } else {
                 return 'nav-button';
@@ -35,7 +36,7 @@ export function Header()
     };
 
     const getCategoryLink = () => {
-        const lastCardID = localStorage.getItem('lastCardID') || 'all';
+        const lastCardID = getStorageItem('lastCardID', 'all');
         return lastCardID ? `/category/${lastCardID}` : "/category";
     };
 
