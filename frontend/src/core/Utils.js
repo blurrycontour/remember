@@ -37,17 +37,6 @@ export function GetUserButton()
     );
 }
 
-export function CheckAndSetDarkMode()
-{
-    const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
-    if (isDarkModeEnabled)
-    {
-        document.body.classList.add('dark-mode');
-    }
-    document.documentElement.setAttribute('data-color-mode', isDarkModeEnabled ? 'dark' : 'light');
-    return isDarkModeEnabled;
-}
-
 export const NotFound = () => (
     <div>
         <h1>404 - Not Found</h1>
@@ -121,4 +110,22 @@ export function PreventSwipe()
         onSwiping: (eventData) => eventData.event.stopPropagation(),
     });
     return handlers;
+}
+
+export function UseLocalStorage() {
+    const { user } = useContext(AuthContext);
+    const userEmail = user?.email || 'unknown';
+
+    const setStorageItem = (key, value) => {
+        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
+        data[key] = value;
+        localStorage.setItem(userEmail, JSON.stringify(data));
+    };
+
+    const getStorageItem = (key, defaultValue) => {
+        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
+        return data[key] || defaultValue;
+    };
+
+    return { setStorageItem, getStorageItem };
 }

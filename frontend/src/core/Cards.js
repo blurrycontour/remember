@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
 
 
@@ -12,6 +12,7 @@ SetAxiosRetry();
 export function Cards()
 {
     let { id } = useParams();
+    const { setStorageItem, getStorageItem } = UseLocalStorage();
     const [cards, setCards] = useState([]);
     const [category, setCategory] = useState(null);
     const [newCardFront, setNewCardFront] = useState('');
@@ -22,8 +23,8 @@ export function Cards()
     const [errorMessage, setErrorMessage] = useState('');
     const [expandedCards, setExpandedCards] = useState({});
     const [expandAllCards, setExpandAllCards] = useState(false);
-    const [sortType, setSortType] = useState(localStorage.getItem('sortTypeCards') || 'front');
-    const [sortOrder, setSortOrder] = useState(localStorage.getItem('sortOrderCards') || 'asc');
+    const [sortType, setSortType] = useState(getStorageItem('sortTypeCards', 'front'));
+    const [sortOrder, setSortOrder] = useState(setStorageItem('sortOrderCards', 'asc'));
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -128,10 +129,12 @@ export function Cards()
         // eslint-disable-next-line
     }, []);
 
-    useEffect(() => {
+    useEffect(() =>
+    {
         setCards(prevCards => SortItems([...prevCards], sortType, sortOrder));
-        localStorage.setItem('sortTypeCards', sortType);
-        localStorage.setItem('sortOrderCards', sortOrder);
+        setStorageItem('sortTypeCards', sortType);
+        setStorageItem('sortOrderCards', sortOrder);
+        // eslint-disable-next-line
     }, [sortType, sortOrder]);
 
 

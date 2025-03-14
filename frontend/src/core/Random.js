@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faRandom } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError, SetAxiosRetry } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage } from './Utils';
 import { MarkdownPreview } from './Editor';
 
 
@@ -11,8 +11,9 @@ SetAxiosRetry();
 
 export function Random()
 {
+    const { setStorageItem, getStorageItem } = UseLocalStorage();
     const [categories, setCategories] = useState([]);
-    const [categoryId, setCategoryId] = useState(localStorage.getItem('randomSelectedCategoryId') || 'all');
+    const [categoryId, setCategoryId] = useState(getStorageItem('randomSelectedCategoryId', 'all'));
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
     const [statusMessage, setStatusMessage] = useState('Loading...');
@@ -82,7 +83,8 @@ export function Random()
 
     useEffect(() =>
     {
-        localStorage.setItem('randomSelectedCategoryId', categoryId);
+        setStorageItem('randomSelectedCategoryId', categoryId);
+        // eslint-disable-next-line
     }, [categoryId]);
 
 

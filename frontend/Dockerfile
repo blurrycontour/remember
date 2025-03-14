@@ -1,4 +1,4 @@
-FROM node:20.15.1-slim
+FROM node:23.10-slim
 
 ARG wd=/repo/frontend
 WORKDIR ${wd}
