@@ -39,7 +39,8 @@ export function GetUserButton()
 
 export function CheckAndSetDarkMode()
 {
-    const isDarkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+    const { getStorageItem } = UseLocalStorage();
+    const isDarkModeEnabled = getStorageItem('darkMode', 'disabled') === 'enabled';
     if (isDarkModeEnabled)
     {
         document.body.classList.add('dark-mode');
