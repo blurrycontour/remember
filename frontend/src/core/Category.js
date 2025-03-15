@@ -192,7 +192,10 @@ export function Category()
                             )
                         )}
                     </button>
-                    <button onClick={() => navigate('/category/all')} className='blue-button' style={{ margin: '8px 2px', minWidth: '100px' }}>View All</button>
+                    <button onClick={() => navigate('/category/all')} className='blue-button'
+                        style={{ margin: '8px 2px', minWidth: '100px', padding: '10px 8px' }}>
+                            View All
+                    </button>
                 </div>
 
                 {/* Search bar */}
