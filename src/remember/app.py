@@ -9,6 +9,7 @@ from .category import Category
 from .singleton import SingletonMeta
 from .statistics import Statistics
 from .accounts import Accounts
+from .search import Search
 
 
 class Remember(metaclass=SingletonMeta):
@@ -19,6 +20,7 @@ class Remember(metaclass=SingletonMeta):
         self.connect()
         self.accounts = Accounts(self.db)
         self.statistics = Statistics(self.db)
+        self.search = Search(self.db)
 
 
     def connect(self):
