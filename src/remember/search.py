@@ -14,8 +14,8 @@ class Search:
                 "user_id": user_id,
                 "category.id": {"$regex": category_id},
                 "$or": [
-                    {"category.name": {"$regex": query}},
-                    {"category.description": {"$regex": query}}
+                    {"category.name": {"$regex": query, "$options": "i"}},
+                    {"category.description": {"$regex": query, "$options": "i"}}
                 ]
             })
             return [item["category"] for item in items], True
@@ -25,8 +25,8 @@ class Search:
                 "user_id": user_id,
                 "card.category_id": {"$regex": category_id},
                 "$or": [
-                    {"card.front": {"$regex": query}},
-                    {"card.back": {"$regex": query}}
+                    {"card.front": {"$regex": query, "$options": "i"}},
+                    {"card.back": {"$regex": query, "$options": "i"}}
                 ]
             })
             return [item["card"] for item in items], True
