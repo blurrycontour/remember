@@ -133,13 +133,21 @@ export function UseLocalStorage() {
 }
 
 export const SearchBar = ({ setSearchString, fetchSearchResults }) => {
+    const handleKeyPress = (event) => {
+        if (event.key === 'Enter') {
+            fetchSearchResults();
+        }
+    };
+
     return (
         <div className="tool-card">
             <input
                 className='overlay-input'
                 type='text'
                 placeholder="Search..."
-                onChange={(e) => { setSearchString(e.target.value); }} />
+                onChange={(e) => { setSearchString(e.target.value); }}
+                onKeyDown={handleKeyPress}
+            />
             <span style={{ padding: '0px 8px' }}></span>
             <button onClick={fetchSearchResults} style={{ minWidth: '70px' }} className='green-button'>
                 <FontAwesomeIcon size="xl" icon={faMagnifyingGlass} />
