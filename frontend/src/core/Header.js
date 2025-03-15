@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { GetUserButton, UseLocalStorage } from './Utils';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHome, faLayerGroup, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faLayerGroup, faNoteSticky, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 
@@ -68,6 +68,11 @@ export function Header()
                             <FontAwesomeIcon icon={faNoteSticky} size="2x" />
                         </Link>
                     </div>
+                    <div className={getNavClass('/search')}>
+                        <Link to="/search">
+                            <FontAwesomeIcon icon={faMagnifyingGlass} size="2x" />
+                        </Link>
+                    </div>
                     <div className='nav-button'>
                         <DarkModeSwitch
                             checked={isDarkMode}
@@ -80,7 +85,7 @@ export function Header()
                     </div>
                 </div>
             </div>
-            <div style={{ height: '70px' }}></div>
+            <div style={{ height: '65px' }}></div>
         </div>
     );
 }

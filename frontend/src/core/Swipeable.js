@@ -18,6 +18,8 @@ export const SwipeableRoutes = ({ children }) =>
         const lastCardID = getStorageItem('lastCardID', 'all');
         navigate(lastCardID ? `/category/${lastCardID}` : '/account');
       } else if (location.pathname.includes('/category/')) {
+        navigate('/search');
+      } else if (location.pathname === '/search') {
         navigate('/account');
       } else if (location.pathname === '/account') {
         navigate('/');
@@ -32,6 +34,8 @@ export const SwipeableRoutes = ({ children }) =>
       } else if (location.pathname.includes('/category/')) {
         navigate('/category');
       } else if (location.pathname === '/account') {
+        navigate('/search');
+      } else if (location.pathname === '/search') {
         const lastCardID = getStorageItem('lastCardID', 'all');
         navigate(lastCardID ? `/category/${lastCardID}` : '/category');
       }
