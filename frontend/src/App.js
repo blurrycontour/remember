@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from 'react-router-dom';
 import { Random } from './core/Random';
 import { Cards } from './core/Cards';
-import { Search } from './core/Search';
 import { Category } from './core/Category';
 import { Footer } from './core/Footer';
 import { Header } from './core/Header';
@@ -35,7 +34,6 @@ function App()
             <Route path='/random' element={<ProtectedRoute><Random /></ProtectedRoute>} />
             <Route path='/category' element={<ProtectedRoute><Category /></ProtectedRoute>} />
             <Route path='/category/:id' element={<ProtectedRoute><Cards /></ProtectedRoute>} />
-            <Route path='/search' element={<ProtectedRoute><Search /></ProtectedRoute>} />
             <Route path='/account' element={<ProtectedRoute><Account /></ProtectedRoute>} />
           </Route>
           <Route element={<Layout />}>

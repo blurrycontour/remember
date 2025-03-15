@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../auth/AuthProvider';
 import axiosRetry from 'axios-retry';
 import { useSwipeable } from 'react-swipeable';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 
 export function deleteCardPrompt(removeFunction, removeItem)
@@ -129,3 +131,19 @@ export function UseLocalStorage() {
 
     return { setStorageItem, getStorageItem };
 }
+
+export const SearchBar = ({ setSearchString, fetchSearchResults }) => {
+    return (
+        <div className="tool-card">
+            <input
+                className='overlay-input'
+                type='text'
+                placeholder="Search..."
+                onChange={(e) => { setSearchString(e.target.value); }} />
+            <span style={{ padding: '0px 8px' }}></span>
+            <button onClick={fetchSearchResults} style={{ minWidth: '70px' }} className='green-button'>
+                <FontAwesomeIcon size="xl" icon={faMagnifyingGlass} />
+            </button>
+        </div>
+    );
+};

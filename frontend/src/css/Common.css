@@ -246,6 +246,7 @@ html {
     border: 1px solid black;
 }
 
+
 /* =========== Dark mode styles =========== */
 .dark-mode {
     background-color: #121212;
@@ -314,4 +315,8 @@ html {
     background-color: black;
     color: white;
     border: 1px solid white;
+}
+
+.dark-mode .sort-button {
+    color: #e0e0e0;
 }
