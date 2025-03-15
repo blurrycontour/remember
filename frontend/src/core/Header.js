@@ -8,7 +8,7 @@ import { DarkModeSwitch } from 'react-toggle-dark-mode';
 
 export function Header()
 {
-    const { setStorageItem, getStorageItem } = UseLocalStorage();
+    const { setStorageItem, getStorageItem, setUserStorageItem } = UseLocalStorage();
     const [isDarkMode, setDarkMode] = useState(false);
     const location = useLocation();
 
@@ -19,6 +19,7 @@ export function Header()
         document.documentElement.setAttribute('data-color-mode', _isDarkMode ? 'dark' : 'light');
         setDarkMode(_isDarkMode);
         setStorageItem('darkMode', _isDarkMode ? 'enabled' : 'disabled');
+        // localStorage.setItem('unknown@user', JSON.stringify({'darkMode': _isDarkMode ? 'enabled' : 'disabled'}));
     };
 
     const getNavClass = (path) => {
@@ -42,7 +43,9 @@ export function Header()
 
     useEffect(() =>
     {
-        const isDarkModeEnabled = getStorageItem('darkMode', 'disabled') === 'enabled';
+        const darkModeValue = getStorageItem('darkMode', 'unset');
+        if (darkModeValue !== 'unset') setUserStorageItem('unknown@user', 'darkMode', darkModeValue);
+        const isDarkModeEnabled = darkModeValue === 'enabled';
         if (isDarkModeEnabled) document.body.classList.add('dark-mode');
         document.documentElement.setAttribute('data-color-mode', isDarkModeEnabled ? 'dark' : 'light');
         setDarkMode(isDarkModeEnabled);

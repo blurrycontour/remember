@@ -116,7 +116,7 @@ export function PreventSwipe()
 
 export function UseLocalStorage() {
     const { user } = useContext(AuthContext);
-    const userEmail = user?.email || 'unknown';
+    const userEmail = user?.email || 'unknown@user';
 
     const setStorageItem = (key, value) => {
         const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
@@ -129,7 +129,13 @@ export function UseLocalStorage() {
         return data[key] || defaultValue;
     };
 
-    return { setStorageItem, getStorageItem };
+    const setUserStorageItem = (userEmail, key, value) => {
+        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
+        data[key] = value;
+        localStorage.setItem(userEmail, JSON.stringify(data));
+    };
+
+    return { setStorageItem, getStorageItem, setUserStorageItem };
 }
 
 export const SearchBar = ({ setSearchString, fetchSearchResults }) => {
