@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEdit, faPlusSquare, faLayerGroup, faSliders } from '@fortawesome/free-solid-svg-icons';
-import { faSortAlphaDown, faSortAlphaUp, faSortNumericDown, faSortNumericUp } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
 
@@ -180,15 +180,15 @@ export function Category()
                     <button onClick={toggleSortOrder} className='sort-button'>
                         {sortOrder === 'asc' ? (
                             sortType === 'name' ? (
-                                <FontAwesomeIcon icon={faSortAlphaDown} size="xl" />
+                                <FontAwesomeIcon icon={faArrowDownAZ} size="xl" />
                             ) : (
-                                <FontAwesomeIcon icon={faSortNumericDown} size="xl" />
+                                <FontAwesomeIcon icon={faArrowDown19} size="xl" />
                             )
                         ) : (
                             sortType === 'name' ? (
-                                <FontAwesomeIcon icon={faSortAlphaUp} size="xl" />
+                                <FontAwesomeIcon icon={faArrowDownZA} size="xl" />
                             ) : (
-                                <FontAwesomeIcon icon={faSortNumericUp} size="xl" />
+                                <FontAwesomeIcon icon={faArrowDown91} size="xl" />
                             )
                         )}
                     </button>
