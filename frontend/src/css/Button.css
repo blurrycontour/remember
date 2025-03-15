@@ -128,3 +128,12 @@
     color: black;
     border: 2px solid #FF2222;
 }
+
+.sort-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    font-size: 1.2em;
+    color: black;
+}

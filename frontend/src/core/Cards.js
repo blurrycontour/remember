@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage } from './Utils';
+import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
 
 
@@ -13,6 +14,7 @@ export function Cards()
 {
     let { id } = useParams();
     const { setStorageItem, getStorageItem } = UseLocalStorage();
+    const [searchString, setSearchString] = useState('');
     const [cards, setCards] = useState([]);
     const [category, setCategory] = useState(null);
     const [newCardFront, setNewCardFront] = useState('');
@@ -29,6 +31,41 @@ export function Cards()
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
     const preventSwipeHandlers = PreventSwipe();
+
+
+    // =========== Search functions ===========
+    const fetchSearchResults = async () =>
+    {
+        try
+        {
+            setCards([]);
+            setStatusMessage('Searching...');
+            const response = await axios.get(`${API_URL}/search/`, {
+                params: {
+                    query: searchString,
+                    itype: 'card',
+                    category_id: id
+                }
+            });
+            if (response.headers['content-type'] === 'text/html')
+            {
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
+            setCards(SortItems(response.data, sortType, sortOrder));
+            if (response.data.length === 0) setStatusMessage('No cards found!');
+            else setStatusMessage('');
+        } catch (error)
+        {
+            HandleAxiosError(error, setStatusMessage);
+        }
+    };
+
+    // =========== Sort functions ===========
+    const toggleSortOrder = () => {
+        setSortOrder(prevOrder => prevOrder === 'asc' ? 'desc' : 'asc');
+    };
+
 
     // =========== Card functions ===========
     const fetchCards = async () =>
@@ -159,9 +196,10 @@ export function Cards()
                     }
                 </div>
 
+                {/* Sort bar */}
                 {!!category &&
                     <div className='tool-card' style={{width: 'auto'}}>
-                        <h3 style={{ minWidth: '70px' }} >Sort by:</h3>
+                        <h3><FontAwesomeIcon icon={faSliders} size="lg" /></h3>
                         <span style={{padding: '0px 5px'}}></span>
                         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
                             <option value="front">Front</option>
@@ -169,14 +207,33 @@ export function Cards()
                             <option value="updated">Updated</option>
                         </select>
                         <span style={{padding: '0px 5px'}}></span>
-                        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{minWidth: '128px'}}>
-                            <option value="asc">Ascending</option>
-                            <option value="desc">Descending</option>
-                        </select>
+                        <button onClick={toggleSortOrder} className='sort-button'>
+                            {sortOrder === 'asc' ? (
+                                sortType === 'front' ? (
+                                    <FontAwesomeIcon icon={faArrowDownAZ} size="xl" />
+                                ) : (
+                                    <FontAwesomeIcon icon={faArrowDown19} size="xl" />
+                                )
+                            ) : (
+                                sortType === 'front' ? (
+                                    <FontAwesomeIcon icon={faArrowDownZA} size="xl" />
+                                ) : (
+                                    <FontAwesomeIcon icon={faArrowDown91} size="xl" />
+                                )
+                            )}
+                        </button>
                     </div>
                 }
 
+                {/* Search bar */}
+                <SearchBar
+                    setSearchString={setSearchString}
+                    fetchSearchResults={fetchSearchResults}
+                />
+
                 <div className='cards-container'>
+                    {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
+
                     {cards.length !== 0 && cards.map(card => (
                         <div key={card.id} className="card">
                             <div className="edit-icon">
@@ -196,8 +253,6 @@ export function Cards()
                             </div>
                         </div>
                     ))}
-
-                    {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
                 </div>
             </div>
 

@@ -41,8 +41,7 @@ h1 {
 
 .tool-card {
     padding: 0px 15px;
-    margin: 10px auto;
-    margin-top: 0px;
+    margin: 0 auto auto;
     width: 90%;
     max-width: 650px;
     position: relative;
@@ -246,6 +245,7 @@ html {
     border: 1px solid black;
 }
 
+
 /* =========== Dark mode styles =========== */
 .dark-mode {
     background-color: #121212;
@@ -314,4 +314,8 @@ html {
     background-color: black;
     color: white;
     border: 1px solid white;
+}
+
+.dark-mode .sort-button {
+    color: #e0e0e0;
 }
