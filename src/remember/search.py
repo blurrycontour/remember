@@ -10,12 +10,18 @@ class Search:
     def __call__(self, query:str, user_id:str, itype:str, category_id:str, start:str, end:str, page:int):
         """ Search for a item in the database """
         if itype in ["category", "categories"]:
+            try:
+                query_int = int(query)
+            except ValueError:
+                query_int = None
+
             items = self.categories.find({
                 "user_id": user_id,
                 "category.id": {"$regex": category_id},
                 "$or": [
                     {"category.name": {"$regex": query, "$options": "i"}},
-                    {"category.description": {"$regex": query, "$options": "i"}}
+                    {"category.description": {"$regex": query, "$options": "i"}},
+                    {"category.#ncards": query_int} if query_int is not None else {}
                 ]
             })
             return [item["category"] for item in items], True
