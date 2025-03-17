@@ -27,23 +27,36 @@ jobs:
           echo "COMPOSE_BAKE=true" >> .env
       - name: Setup .env file
         run: echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME" >> .env
+
+      # Frontend image build
       - name: Cache frontend image
         uses: actions/cache@v4
-        id: cache-docker-frontend
+        id: cache-docker-frontend-image
         with:
           path: ~/.cache/docker/frontend.tar
           key: ${{ runner.os }}-frontend-image-${{ hashFiles('frontend/package.json') }}
       - name: Build 'frontend' image
-        if: steps.cache-docker-frontend.outputs.cache-hit != 'true'
+        if: steps.cache-docker-frontend-image.outputs.cache-hit != 'true'
         run: |
           docker compose --profile build build
           mkdir -p ~/.cache/docker/images
           docker save -o ~/.cache/docker/frontend.tar ${DOCKER_USER}/${REPO_NAME}:frontend
       - name: Load 'frontend' image
-        if: steps.cache-docker-frontend.outputs.cache-hit == 'true'
+        if: steps.cache-docker-frontend-image.outputs.cache-hit == 'true'
         run: docker load -i ~/.cache/docker/frontend.tar
+
+      # Frontend image run
+      - name: Cache frontend image run output
+        uses: actions/cache@v4
+        id: cache-docker-frontend-output
+        with:
+          path: frontend/build
+          key: ${{ runner.os }}-frontend-output-${{ hashFiles('frontend/package.json','frontend/src/**','frontend/public/**') }}
       - name: Run 'frontend' image
+        if: steps.cache-docker-frontend-output.outputs.cache-hit != 'true'
         run: docker compose --profile build up
+
+      # Other images
       - name: Build other images
         run: docker compose --profile deploy build
       - name: Docker login
