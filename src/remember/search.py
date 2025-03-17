@@ -21,7 +21,7 @@ class Search:
                 "$or": [
                     {"category.name": {"$regex": query, "$options": "i"}},
                     {"category.description": {"$regex": query, "$options": "i"}},
-                    {"category.#ncards": query_int} if query_int is not None else {}
+                    {"category.#cards": query_int} if query_int is not None else {}
                 ]
             })
             return [item["category"] for item in items], True
