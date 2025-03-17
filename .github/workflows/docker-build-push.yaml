@@ -3,10 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
-    # paths:
-    #   - pb2/**
-    #   - protos/**
-    #   - server.py
   pull_request:
     branches: [ "main" ]
 
@@ -29,7 +25,7 @@ jobs:
         run: echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME" >> .env
 
       # Frontend image build
-      - name: Cache frontend image
+      - name: Cache - frontend image
         uses: actions/cache@v4
         id: cache-docker-frontend-image
         with:
@@ -46,7 +42,7 @@ jobs:
         run: docker load -i ~/.cache/docker/frontend.tar
 
       # Frontend image run
-      - name: Cache frontend image run output
+      - name: Cache - frontend image run output
         uses: actions/cache@v4
         id: cache-docker-frontend-output
         with:
