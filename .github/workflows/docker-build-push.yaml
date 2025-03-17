@@ -3,10 +3,6 @@ name: Docker Image CI
 on:
   push:
     branches: [ "main" ]
-    # paths:
-    #   - pb2/**
-    #   - protos/**
-    #   - server.py
   pull_request:
     branches: [ "main" ]
 
@@ -15,18 +11,48 @@ env:
   DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get current repo name
         run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - name: Use docker compose bake
+        run: |
+          export COMPOSE_BAKE=true
+          echo "COMPOSE_BAKE=true" >> .env
       - name: Setup .env file
         run: echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME" >> .env
-      - name: Build and run 'frontend' image
+
+      # Frontend image build
+      - name: Cache - frontend image
+        uses: actions/cache@v4
+        id: cache-docker-frontend-image
+        with:
+          path: ~/.cache/docker/frontend.tar
+          key: ${{ runner.os }}-frontend-image-${{ hashFiles('frontend/package.json','frontend/Dockerfile') }}
+      - name: Build 'frontend' image
+        if: steps.cache-docker-frontend-image.outputs.cache-hit != 'true'
         run: |
-            docker compose --profile build build
-            docker compose --profile build up
+          docker compose --profile build build
+          mkdir -p ~/.cache/docker/images
+          docker save -o ~/.cache/docker/frontend.tar ${DOCKER_USER}/${REPO_NAME}:frontend
+      - name: Load 'frontend' image
+        if: steps.cache-docker-frontend-image.outputs.cache-hit == 'true'
+        run: docker load -i ~/.cache/docker/frontend.tar
+
+      # Frontend image run
+      - name: Cache - frontend image run output
+        uses: actions/cache@v4
+        id: cache-docker-frontend-output
+        with:
+          path: frontend/build
+          key: ${{ runner.os }}-frontend-output-${{ hashFiles('frontend/package.json','frontend/Dockerfile','frontend/src/**','frontend/public/**') }}
+      - name: Run 'frontend' image
+        if: steps.cache-docker-frontend-output.outputs.cache-hit != 'true'
+        run: docker compose --profile build up
+
+      # Other images
       - name: Build other images
         run: docker compose --profile deploy build
       - name: Docker login
