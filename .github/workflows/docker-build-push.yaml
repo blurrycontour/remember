@@ -15,18 +15,35 @@ env:
   DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}
 
 jobs:
-  build:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Get current repo name
         run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - name: Use docker compose bake
+        run: |
+          export COMPOSE_BAKE=true
+          echo "COMPOSE_BAKE=true" >> .env
       - name: Setup .env file
         run: echo "DOCKER_IMAGE_PREFIX=$DOCKER_USER/$REPO_NAME" >> .env
-      - name: Build and run 'frontend' image
+      - name: Cache frontend image
+        uses: actions/cache@v4
+        id: cache-docker-frontend
+        with:
+          path: ~/.cache/docker/frontend.tar
+          key: ${{ runner.os }}-frontend-image-${{ hashFiles('frontend/package.json') }}
+      - name: Build 'frontend' image
+        if: steps.cache-docker-frontend.outputs.cache-hit != 'true'
         run: |
-            docker compose --profile build build
-            docker compose --profile build up
+          docker compose --profile build build
+          mkdir -p ~/.cache/docker/images
+          docker save -o ~/.cache/docker/frontend.tar ${DOCKER_USER}/${REPO_NAME}:frontend
+      - name: Load 'frontend' image
+        if: steps.cache-docker-frontend.outputs.cache-hit == 'true'
+        run: docker load -i ~/.cache/docker/frontend.tar
+      - name: Run 'frontend' image
+        run: docker compose --profile build up
       - name: Build other images
         run: docker compose --profile deploy build
       - name: Docker login
