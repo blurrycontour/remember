@@ -30,7 +30,7 @@ jobs:
         id: cache-docker-frontend-image
         with:
           path: ~/.cache/docker/frontend.tar
-          key: ${{ runner.os }}-frontend-image-${{ hashFiles('frontend/package.json') }}
+          key: ${{ runner.os }}-frontend-image-${{ hashFiles('frontend/package.json','frontend/Dockerfile') }}
       - name: Build 'frontend' image
         if: steps.cache-docker-frontend-image.outputs.cache-hit != 'true'
         run: |
@@ -47,7 +47,7 @@ jobs:
         id: cache-docker-frontend-output
         with:
           path: frontend/build
-          key: ${{ runner.os }}-frontend-output-${{ hashFiles('frontend/package.json','frontend/src/**','frontend/public/**') }}
+          key: ${{ runner.os }}-frontend-output-${{ hashFiles('frontend/package.json','frontend/Dockerfile','frontend/src/**','frontend/public/**') }}
       - name: Run 'frontend' image
         if: steps.cache-docker-frontend-output.outputs.cache-hit != 'true'
         run: docker compose --profile build up
