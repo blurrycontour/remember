@@ -8,6 +8,10 @@ on:
 
   workflow_dispatch:
 
+  push:
+    tags:
+      - '*'
+
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   SSH_USER: ${{secrets.SSH_USER}}
@@ -93,3 +97,16 @@ jobs:
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
       - name: Start containers again
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy up -d"
+
+
+  release:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set git tag as build version
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
+      - name: Stop 'backend' container
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy down backend"
+      - name: Start 'backend' container again
+        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy up -d backend"
