@@ -34,16 +34,16 @@ jobs:
       - uses: actions/checkout@v4
       - name: Get current repo name
         run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
-      - name: Add IP to known_host
-        run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
-      - name: Add ssh private key
-        run: |
-          eval $(ssh-agent)
-          ssh-add - <<< "$SSH_KEY"
-          echo "$SSH_KEY" > ~/.ssh/id_cloud
-          chmod 0600 ~/.ssh/id_cloud
+      - uses: ./github/actions/setup-ssh-keys
+        with:
+          ssh_ip: $SSH_IP
+          ssh_key: $SSH_KEY
+      - uses: ./github/actions/setup-cloud-credentials
+        with:
+          ssh_ip: $SSH_IP
+          aws_credentials: $AWS_CREDENTIALS
+          gcs_credentials: $GCS_CREDENTIALS
+          firebase_credentials: $FIREBASE_CREDENTIALS
       - name: Get the docker-compose file
         run: |
             ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
@@ -52,22 +52,6 @@ jobs:
                 git fetch
                 git reset --hard $GITHUB_SHA
             "
-      - name: Create aws credentials file
-        run: |
-          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
-            mkdir -p ~/.aws
-            echo $AWS_CREDENTIALS | base64 --decode > ~/.aws/credentials
-            chmod 644 ~/.aws/credentials
-          "
-      - name: Create gcp credentials file
-        run: |
-          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
-            mkdir -p ~/.gcp
-            echo $GCS_CREDENTIALS | base64 --decode > ~/.gcp/gcs-credentials.json
-            chmod 644 ~/.gcp/gcs-credentials.json
-            echo $FIREBASE_CREDENTIALS | base64 --decode > ~/.gcp/firebase-credentials.json
-            chmod 644 ~/.gcp/firebase-credentials.json
-          "
       - name: Get the short commit sha
         run: |
           short_sha=$(git rev-parse --short $GITHUB_SHA)
@@ -104,6 +88,10 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v4
+      - uses: ./github/actions/setup-ssh-keys
+        with:
+          ssh_ip: $SSH_IP
+          ssh_key: $SSH_KEY
       - name: Set git tag as build version
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
       - name: Stop 'backend' container
