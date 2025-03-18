@@ -20,6 +20,7 @@ runs:
   using: "composite"
   steps:
     - name: Create aws credentials file
+      shell: bash
       run: |
         ssh -i ~/.ssh/id_cloud ${{ inputs.ssh_ip }} "
           mkdir -p ~/.aws
@@ -27,6 +28,7 @@ runs:
           chmod 644 ~/.aws/credentials
         "
     - name: Create gcs credentials file
+      shell: bash
       run: |
         ssh -i ~/.ssh/id_cloud ${{ inputs.ssh_ip }} "
           mkdir -p ~/.gcp
@@ -35,6 +37,7 @@ runs:
         "
     - name: Create firebase credentials file
       if: ${{ inputs.firebase_credentials }}
+      shell: bash
       run: |
         ssh -i ~/.ssh/id_cloud ${{ inputs.ssh_ip }} "
           mkdir -p ~/.gcp

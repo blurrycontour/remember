@@ -14,10 +14,12 @@ runs:
   using: "composite"
   steps:
     - name: Add IP to known_host
+      shell: bash
       run: |
         mkdir -p ~/.ssh
         ssh-keyscan ${{ inputs.ssh_ip }} >> ~/.ssh/known_hosts
     - name: Add ssh private key
+      shell: bash
       run: |
         eval $(ssh-agent)
         ssh-add - <<< "${{ inputs.ssh_key }}"
