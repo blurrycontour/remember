@@ -92,6 +92,10 @@ jobs:
         with:
           ssh_ip: $SSH_IP
           ssh_key: $SSH_KEY
+      - name: Debug
+        run: |
+          ls -la ~/.ssh
+          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; ls -la"
       - name: Set git tag as build version
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
       - name: Stop 'backend' container
