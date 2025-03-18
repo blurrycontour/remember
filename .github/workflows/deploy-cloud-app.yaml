@@ -33,7 +33,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Get current repo name
-        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+        run: echo """REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)""" >> $GITHUB_ENV
       - uses: ./.github/actions/setup-ssh-keys
         with:
           ssh_ip: $SSH_IP
@@ -88,14 +88,12 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v4
+      - name: Get current repo name
+        run: echo """REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)""" >> $GITHUB_ENV
       - uses: ./.github/actions/setup-ssh-keys
         with:
           ssh_ip: $SSH_IP
           ssh_key: $SSH_KEY
-      - name: Debug
-        run: |
-          ls -la ~/.ssh
-          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; ls -la"
       - name: Set git tag as build version
         run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
       - name: Stop 'backend' container
