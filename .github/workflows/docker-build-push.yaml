@@ -36,10 +36,7 @@ jobs:
         run: |
           docker compose --profile build build
           mkdir -p ~/.cache/docker/images
-          docker save -o ~/.cache/docker/frontend.tar ${DOCKER_USER}/${REPO_NAME}:frontend
-      - name: Load 'frontend' image
-        if: steps.cache-docker-frontend-image.outputs.cache-hit == 'true'
-        run: docker load -i ~/.cache/docker/frontend.tar
+          docker save --output ~/.cache/docker/frontend.tar ${DOCKER_USER}/${REPO_NAME}:frontend
 
       # Frontend image run
       - name: CACHE - 'frontend' image run output
@@ -48,6 +45,9 @@ jobs:
         with:
           path: frontend/build
           key: ${{ runner.os }}-frontend-output-${{ hashFiles('frontend/package.json','frontend/Dockerfile','frontend/src/**','frontend/public/**') }}
+      - name: Load 'frontend' image
+        if: ${{ steps.cache-docker-frontend-image.outputs.cache-hit == 'true' && steps.cache-docker-frontend-output.outputs.cache-hit != 'true' }}
+        run: docker load --input ~/.cache/docker/frontend.tar
       - name: Run 'frontend' image
         if: steps.cache-docker-frontend-output.outputs.cache-hit != 'true'
         run: docker compose --profile build up
