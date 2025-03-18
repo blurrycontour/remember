@@ -1,0 +1,25 @@
+name: "Setup SSH Keys"
+
+description: "Setup SSH configuration on runners"
+
+inputs:
+  ssh_ip:
+    description: "The IP address of the SSH server"
+    required: true
+  ssh_key:
+    description: "The SSH private key"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Add IP to known_host
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan ${{ inputs.ssh_ip }} >> ~/.ssh/known_hosts
+    - name: Add ssh private key
+      run: |
+        eval $(ssh-agent)
+        ssh-add - <<< "${{ inputs.ssh_key }}"
+        echo "${{ inputs.ssh_key }}" > ~/.ssh/id_cloud
+        chmod 0600 ~/.ssh/id_cloud
