@@ -35,18 +35,13 @@ jobs:
       - name: Get current repo name
         run: echo """REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)""" >> $GITHUB_ENV
       - uses: ./.github/actions/setup-ssh-keys
-        with:
-          ssh_ip: $SSH_IP
-          ssh_key: $SSH_KEY
       - uses: ./.github/actions/setup-cloud-credentials
         with:
-          ssh_ip: $SSH_IP
-          aws_credentials: $AWS_CREDENTIALS
-          gcs_credentials: $GCS_CREDENTIALS
-          firebase_credentials: $FIREBASE_CREDENTIALS
+          ssh_host: "remote"
+          add_firebase_credentials: true
       - name: Get the docker-compose file
         run: |
-            ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            ssh remote "
                 if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
                 cd remember
                 git fetch
@@ -58,29 +53,29 @@ jobs:
           echo "COMMIT_SHORT_SHA=$short_sha" >> $GITHUB_ENV
           echo "COMMIT_SHORT_SHA=$short_sha"
       - name: Create .env from .env.template file
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
+        run: ssh remote "cd $REPO_NAME; cp .env.template .env"
       - name: Add ngrok authtoken to .env
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
+        run: ssh remote "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Add localtonet authtoken to .env
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'LOCALTONET_AUTHTOKEN=$LOCALTONET_AUTHTOKEN' >> .env"
+        run: ssh remote "cd $REPO_NAME; echo 'LOCALTONET_AUTHTOKEN=$LOCALTONET_AUTHTOKEN' >> .env"
       - name: Add mongodb credentials to .env
         run: |
-          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+          ssh remote "
             cd $REPO_NAME
             echo 'MONGODB_STRING=$MONGODB_STRING' >> .env
             echo 'ENVIRONMENT=$ENVIRONMENT' >> .env
             echo 'BUILD_VERSION=${{ env.COMMIT_SHORT_SHA }}' >> .env
           "
       - name: Add bucket name to .env
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUCKET_NAME=$BUCKET_NAME' >> .env"
+        run: ssh remote "cd $REPO_NAME; echo 'BUCKET_NAME=$BUCKET_NAME' >> .env"
       - name: Pull latest images
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy pull"
+        run: ssh remote "cd $REPO_NAME; docker compose --profile deploy pull"
       - name: Stop existing containers
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile '*' down"
+        run: ssh remote "cd $REPO_NAME; docker compose --profile '*' down"
       - name: Prune dangling images
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
+        run: ssh remote "docker image prune -f"
       - name: Start containers again
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy up -d"
+        run: ssh remote "cd $REPO_NAME; docker compose --profile deploy up -d"
 
 
   release:
@@ -91,12 +86,9 @@ jobs:
       - name: Get current repo name
         run: echo """REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)""" >> $GITHUB_ENV
       - uses: ./.github/actions/setup-ssh-keys
-        with:
-          ssh_ip: $SSH_IP
-          ssh_key: $SSH_KEY
       - name: Set git tag as build version
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
+        run: ssh remote "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
       - name: Stop 'backend' container
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy down backend"
+        run: ssh remote "cd $REPO_NAME; docker compose --profile deploy down backend"
       - name: Start 'backend' container again
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose --profile deploy up -d backend"
+        run: ssh remote "cd $REPO_NAME; docker compose --profile deploy up -d backend"

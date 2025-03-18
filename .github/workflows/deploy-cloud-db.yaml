@@ -31,35 +31,33 @@ jobs:
           ssh_key: $SSH_KEY
       - uses: ./.github/actions/setup-cloud-credentials
         with:
-          ssh_ip: $SSH_IP
-          aws_credentials: $AWS_CREDENTIALS
-          gcs_credentials: $GCS_CREDENTIALS
+          ssh_host: "remote"
       - name: Get the docker-compose file
         run: |
-            ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+            ssh remote "
                 if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
                 cd remember
                 git fetch
                 git reset --hard $GITHUB_SHA
             "
       - name: Create .env from .env.template file
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; cp .env.template .env"
+        run: ssh remote "cd $REPO_NAME; cp .env.template .env"
       - name: Add ngrok authtoken to .env
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
+        run: ssh remote "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Add mongodb root credentials to .env
         run: |
-          ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "
+          ssh remote "
             cd $REPO_NAME
             echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env
             echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env
           "
       - name: Pull latest image
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml pull"
+        run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml pull"
       - name: Stop existing containers
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml down"
+        run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml down"
       - name: Prune dangling images
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "docker image prune -f"
+        run: ssh remote "docker image prune -f"
       - name: Clean local data files
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; sudo rm -rf data/mongo/db/*"
+        run: ssh remote "cd $REPO_NAME; sudo rm -rf data/mongo/db/*"
       - name: Start containers again
-        run: ssh -i ~/.ssh/id_cloud $SSH_USER@$SSH_IP "cd $REPO_NAME; docker compose -f database/docker-compose.yaml --env-file .env up -d"
+        run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml --env-file .env up -d"
