@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,6 +32,7 @@ export function Cards()
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
     const preventSwipeHandlers = PreventSwipe();
+    const optionsMenuRef = useRef(null);
 
 
     // =========== Search functions ===========
@@ -134,7 +135,6 @@ export function Cards()
         setCurrentCard(card);
         setIsOverlayOpen(type);
         setErrorMessage('');
-        setOptionsVisibleCard(null);
         document.querySelector('.content').classList.add('blur-background');
         document.body.classList.add('dark-background');
     };
@@ -146,7 +146,6 @@ export function Cards()
         setNewCardBack('');
         setErrorMessage('');
         setIsOverlayOpen(0);
-        setOptionsVisibleCard(null);
         document.querySelector('.content').classList.remove('blur-background');
         document.body.classList.remove('dark-background');
     };
@@ -159,20 +158,31 @@ export function Cards()
         {
             updatedExpandedCards[card.id] = _expandAllCards;
         });
-        setOptionsVisibleCard(null);
         setExpandedCards(updatedExpandedCards);
         setExpandAllCards(_expandAllCards);
     };
 
     const expandCollapseSingleCard = (cardId) =>
-        {
-            setOptionsVisibleCard(null);
-            setExpandedCards(prev => ({ ...prev, [cardId]: !prev[cardId] }));
-        };
+    {
+        setExpandedCards(prev => ({ ...prev, [cardId]: !prev[cardId] }));
+    };
 
     const toggleOptions = (cardId) => {
         optionsVisibleCard === cardId ? setOptionsVisibleCard(null) : setOptionsVisibleCard(cardId);
     };
+
+    const handleClickOutside = (event) => {
+        if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
+            setOptionsVisibleCard(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() =>
     {
@@ -253,7 +263,7 @@ export function Cards()
                             <div className="options-icon">
                                 <FontAwesomeIcon icon={faBars} size="lg" onClick={() => toggleOptions(card.id)} />
                                 {optionsVisibleCard === card.id && (
-                                    <div className="options-menu">
+                                    <div className="options-menu" ref={optionsMenuRef}>
                                         <button onClick={() => openOverlay(2, card)}>
                                             <FontAwesomeIcon icon={faEdit} size="lg" />
                                             &nbsp;&nbsp;Edit
