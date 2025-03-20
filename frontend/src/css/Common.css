@@ -245,6 +245,40 @@ html {
     border: 1px solid black;
 }
 
+.options-icon {
+    position: absolute;
+    right: 13px;
+    top: 23px;
+    color: #007BFF;
+    cursor: pointer;
+}
+
+.options-menu {
+    top: 5px;
+    right: 25px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    padding: 0px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.2s ease-in-out;
+    position: absolute;
+    z-index: 500;
+}
+
+.options-menu button {
+    font-size: 16px;
+    display: flex;
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    background: none;
+    align-items: end;
+    cursor: pointer;
+}
+
+.options-menu button:hover {
+    background-color: #ddd;
+}
 
 /* =========== Dark mode styles =========== */
 .dark-mode {
@@ -272,6 +306,11 @@ html {
     border-color: lightgray;
 }
 
+.dark-mode .options-menu {
+    border-color: #757575;
+}
+
+.dark-mode .options-menu button,
 .dark-mode .card,
 .dark-mode .header,
 .dark-mode .overlay,
@@ -288,6 +327,10 @@ html {
 .dark-mode .footer {
     background-color: #212121;
     color: #e0e0e0;
+}
+
+.dark-mode .options-menu button:hover {
+    background-color: #3e3e3e;
 }
 
 .dark-mode .green-button:hover,

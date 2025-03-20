@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faBars, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
@@ -27,6 +27,7 @@ export function Cards()
     const [expandAllCards, setExpandAllCards] = useState(false);
     const [sortType, setSortType] = useState(getStorageItem('sortTypeCards', 'front'));
     const [sortOrder, setSortOrder] = useState(setStorageItem('sortOrderCards', 'asc'));
+    const [optionsVisibleCard, setOptionsVisibleCard] = useState(null);
 
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
@@ -133,6 +134,7 @@ export function Cards()
         setCurrentCard(card);
         setIsOverlayOpen(type);
         setErrorMessage('');
+        setOptionsVisibleCard(null);
         document.querySelector('.content').classList.add('blur-background');
         document.body.classList.add('dark-background');
     };
@@ -144,6 +146,7 @@ export function Cards()
         setNewCardBack('');
         setErrorMessage('');
         setIsOverlayOpen(0);
+        setOptionsVisibleCard(null);
         document.querySelector('.content').classList.remove('blur-background');
         document.body.classList.remove('dark-background');
     };
@@ -156,8 +159,19 @@ export function Cards()
         {
             updatedExpandedCards[card.id] = _expandAllCards;
         });
+        setOptionsVisibleCard(null);
         setExpandedCards(updatedExpandedCards);
         setExpandAllCards(_expandAllCards);
+    };
+
+    const expandCollapseSingleCard = (cardId) =>
+        {
+            setOptionsVisibleCard(null);
+            setExpandedCards(prev => ({ ...prev, [cardId]: !prev[cardId] }));
+        };
+
+    const toggleOptions = (cardId) => {
+        optionsVisibleCard === cardId ? setOptionsVisibleCard(null) : setOptionsVisibleCard(cardId);
     };
 
     useEffect(() =>
@@ -236,16 +250,25 @@ export function Cards()
 
                     {cards.length !== 0 && cards.map(card => (
                         <div key={card.id} className="card">
-                            <div className="edit-icon">
-                                <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, card)} />
+                            <div className="options-icon">
+                                <FontAwesomeIcon icon={faBars} size="lg" onClick={() => toggleOptions(card.id)} />
+                                {optionsVisibleCard === card.id && (
+                                    <div className="options-menu">
+                                        <button onClick={() => openOverlay(2, card)}>
+                                            <FontAwesomeIcon icon={faEdit} size="lg" />
+                                            &nbsp;&nbsp;Edit
+                                        </button>
+                                        <button onClick={deleteCardPrompt(removeCard, card, [setOptionsVisibleCard])}>
+                                            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+                                            &nbsp;&nbsp;Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                            <div style={{ cursor: 'pointer' }} onClick={() => setExpandedCards(prev => ({ ...prev, [card.id]: !prev[card.id] }))}>
+                            <div style={{ cursor: 'pointer' }} onClick={() => expandCollapseSingleCard(card.id)}>
                                 <h2 className='card-hx'>{card.front}</h2>
                                 {expandedCards[card.id] && (
                                     <div>
-                                        <div className="delete-icon">
-                                            <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCard, card)} />
-                                        </div>
                                         <hr />
                                         <MarkdownPreview source={card.back} />
                                     </div>
