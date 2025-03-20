@@ -8,10 +8,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 
 
-export function deleteCardPrompt(removeFunction, removeItem)
+export function deleteCardPrompt(removeFunction, removeItem, xFunctions=[])
 {
     return async () =>
     {
+        for (const xFunction of xFunctions) xFunction(null);
+
         const isConfirmed = removeItem.front ?
             window.confirm(`Are you sure you want to delete the card: '${removeItem.front}' ?`) :
             window.confirm(`Are you sure you want to delete the category: '${removeItem.name}' ?`);

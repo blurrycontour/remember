@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEdit, faPlusSquare, faLayerGroup, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrashAlt, faBars, faPlusSquare, faLayerGroup, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
@@ -23,10 +23,13 @@ export function Category()
     const [errorMessage, setErrorMessage] = useState('');
     const [sortType, setSortType] = useState(getStorageItem('sortTypeCategories', 'name'));
     const [sortOrder, setSortOrder] = useState(getStorageItem('sortOrderCategories', 'asc'));
+    const [optionsVisibleCategory, setOptionsVisibleCategory] = useState(null);
+
     const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
     const preventSwipeHandlers = PreventSwipe();
+    const optionsMenuRef = useRef(null);
 
 
     // =========== Search functions ===========
@@ -140,6 +143,23 @@ export function Category()
         document.body.classList.remove('dark-background');
     };
 
+    const toggleOptions = (categoryId) => {
+        optionsVisibleCategory === categoryId ? setOptionsVisibleCategory(null) : setOptionsVisibleCategory(categoryId);
+    };
+
+    const handleClickOutside = (event) => {
+        if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
+            setOptionsVisibleCategory(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
     useEffect(() =>
     {
         fetchCategories();
@@ -213,11 +233,20 @@ export function Category()
                             {!!category.description && <MarkdownPreview source={category.description} />}
                             <h4 className='card-hx' style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h4>
                             <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
-                            <div className="delete-icon">
-                                <FontAwesomeIcon icon={faTrashAlt} size="lg" onClick={deleteCardPrompt(removeCategory, category)} />
-                            </div>
-                            <div className="edit-icon">
-                                <FontAwesomeIcon icon={faEdit} size="lg" onClick={() => openOverlay(2, category)} />
+                            <div className="options-icon">
+                                <FontAwesomeIcon icon={faBars} size="lg" onClick={() => toggleOptions(category.id)} />
+                                {optionsVisibleCategory === category.id && (
+                                    <div className="options-menu" ref={optionsMenuRef}>
+                                        <button onClick={() => openOverlay(2, category)}>
+                                            <FontAwesomeIcon icon={faEdit} size="lg" />
+                                            &nbsp;&nbsp;Edit
+                                        </button>
+                                        <button onClick={deleteCardPrompt(removeCategory, category, [setOptionsVisibleCategory])}>
+                                            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+                                            &nbsp;&nbsp;Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
