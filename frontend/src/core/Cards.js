@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faBars, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faEdit, faTrashAlt, faBars, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
@@ -177,6 +177,28 @@ export function Cards()
         }
     };
 
+    const toggleFavorite = async (card) =>
+    {
+        setOptionsVisibleCard(null);
+        try
+        {
+            const response = await axios.patch(`${API_URL}/card/${card.id}/favorite`);
+            if (typeof (response.data) === 'string')
+            {
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
+            console.log(response.data.favorite);
+            card.favorite = response.data.favorite;
+            // fetchCards();
+            // if (response.st === 0) setStatusMessage('No cards found!');
+            // else setStatusMessage('');
+        } catch (error)
+        {
+            HandleAxiosError(error, setStatusMessage);
+        }
+    };
+
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -267,6 +289,10 @@ export function Cards()
                                         <button onClick={() => openOverlay(2, card)}>
                                             <FontAwesomeIcon icon={faEdit} size="lg" />
                                             &nbsp;&nbsp;Edit
+                                        </button>
+                                        <button onClick={() => toggleFavorite(card)}>
+                                            <FontAwesomeIcon icon={faStar} size="lg" />
+                                            &nbsp;&nbsp;{card.favorite ? 'Unfavorite' : 'Favorite'}
                                         </button>
                                         <button onClick={deleteCardPrompt(removeCard, card, [setOptionsVisibleCard])}>
                                             <FontAwesomeIcon icon={faTrashAlt} size="lg" />

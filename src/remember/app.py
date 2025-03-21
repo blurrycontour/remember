@@ -238,3 +238,22 @@ class Remember(metaclass=SingletonMeta):
             return "No cards found!", False
 
         return random.choices(all_cards, k=1)[0], True
+
+
+    def favorite_card(self, card_id:str, user_id:str):
+        """ Mark a card as favorite/unfavorite """
+        _card = self.cards.find_one({"user_id": user_id, "card.id": card_id})
+        if not _card:
+            return f"Card ID '{card_id}' not found!", False
+
+        set_favorite_status = not _card["card"].get("favorite", False)
+        _card = self.cards.find_one_and_update(
+            {"user_id": user_id, "card.id": card_id},
+            {"$set": {
+                "card.favorite": set_favorite_status,
+                "card.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            }
+        )
+        self.statistics.update_category_operations(user_id, "card.favorite")
+        return {"favorite": set_favorite_status}, True

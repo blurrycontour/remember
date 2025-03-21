@@ -65,7 +65,7 @@ export function Account()
                     <h3 style={{ margin: '0.5em' }}>{stats.category.add}➕ &nbsp; {stats.category.update}🖋️ &nbsp; {stats.category.delete}🗑️</h3>
                     <hr />
                     <h3 style={{ margin: '0.5em' }}>Cards → {stats.card.count}</h3>
-                    <h3 style={{ margin: '0.5em' }}>{stats.card.add}➕ &nbsp; {stats.card.update}🖋️ &nbsp; {stats.card.delete}🗑️</h3>
+                    <h3 style={{ margin: '0.5em' }}>{stats.card.add}➕ &nbsp; {stats.card.update}🖋️ &nbsp; {stats.card.delete}🗑️ &nbsp; {stats.card.favorite}⭐</h3>
                 </div>}
             </div>
 
