@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ "main" ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   DOCKER_TOKEN: ${{secrets.DOCKER_TOKEN}}

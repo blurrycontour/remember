@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faEdit, faTrashAlt, faBars, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
-import { MarkdownEditor, MarkdownPreview } from './Editor';
+import { SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar, CardTemplate, API_URL } from './Utils';
+import { MarkdownEditor } from './Editor';
 
 
 SetAxiosRetry();
@@ -29,7 +29,6 @@ export function Cards()
     const [sortOrder, setSortOrder] = useState(setStorageItem('sortOrderCards', 'asc'));
     const [optionsVisibleCard, setOptionsVisibleCard] = useState(null);
 
-    const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
     const preventSwipeHandlers = PreventSwipe();
     const optionsMenuRef = useRef(null);
@@ -162,42 +161,12 @@ export function Cards()
         setExpandAllCards(_expandAllCards);
     };
 
-    const expandCollapseSingleCard = (cardId) =>
-    {
-        setExpandedCards(prev => ({ ...prev, [cardId]: !prev[cardId] }));
-    };
-
-    const toggleOptions = (cardId) => {
-        optionsVisibleCard === cardId ? setOptionsVisibleCard(null) : setOptionsVisibleCard(cardId);
-    };
-
     const handleClickOutside = (event) => {
         if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
             setOptionsVisibleCard(null);
         }
     };
 
-    const toggleFavorite = async (card) =>
-    {
-        setOptionsVisibleCard(null);
-        try
-        {
-            const response = await axios.patch(`${API_URL}/card/${card.id}/favorite`);
-            if (typeof (response.data) === 'string')
-            {
-                setStatusMessage('Bad response from API server!');
-                return;
-            }
-            console.log(response.data.favorite);
-            card.favorite = response.data.favorite;
-            // fetchCards();
-            // if (response.st === 0) setStatusMessage('No cards found!');
-            // else setStatusMessage('');
-        } catch (error)
-        {
-            HandleAxiosError(error, setStatusMessage);
-        }
-    };
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
@@ -285,36 +254,17 @@ export function Cards()
                     {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
 
                     {cards.length !== 0 && cards.map(card => (
-                        <div key={card.id} className="card">
-                            <div className="options-icon">
-                                <FontAwesomeIcon icon={faBars} size="lg" onClick={() => toggleOptions(card.id)} />
-                                {optionsVisibleCard === card.id && (
-                                    <div className="options-menu" ref={optionsMenuRef}>
-                                        <button onClick={() => openOverlay(2, card)}>
-                                            <FontAwesomeIcon icon={faEdit} size="lg" />
-                                            &nbsp;&nbsp;Edit
-                                        </button>
-                                        <button onClick={() => toggleFavorite(card)}>
-                                            <FontAwesomeIcon icon={faStar} size="lg" />
-                                            &nbsp;&nbsp;{card.favorite ? 'Unfavorite' : 'Favorite'}
-                                        </button>
-                                        <button onClick={deleteCardPrompt(removeCard, card, [setOptionsVisibleCard])}>
-                                            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
-                                            &nbsp;&nbsp;Delete
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                            <div style={{ cursor: 'pointer' }} onClick={() => expandCollapseSingleCard(card.id)}>
-                                <h2 className='card-hx'>{card.front}</h2>
-                                {expandedCards[card.id] && (
-                                    <div>
-                                        <hr />
-                                        <MarkdownPreview source={card.back} />
-                                    </div>
-                                )}
-                            </div>
-                        </div>
+                        <CardTemplate
+                            card={card}
+                            showBack={expandedCards[card.id]}
+                            onShowBack={() => setExpandedCards({ ...expandedCards, [card.id]: !expandedCards[card.id] })}
+                            optionsVisibleCard={optionsVisibleCard}
+                            setOptionsVisibleCard={setOptionsVisibleCard}
+                            openOverlay={openOverlay}
+                            removeCard={removeCard}
+                            optionsMenuRef={optionsMenuRef}
+                            setStatusMessage={setStatusMessage}
+                        />
                     ))}
                 </div>
             </div>

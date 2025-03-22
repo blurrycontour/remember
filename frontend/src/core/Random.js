@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrashAlt, faEye, faEyeSlash, faRandom } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage } from './Utils';
-import { MarkdownPreview } from './Editor';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL, CardTemplate } from './Utils';
 
 
 SetAxiosRetry();
@@ -17,9 +16,10 @@ export function Random()
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
     const [statusMessage, setStatusMessage] = useState('Loading...');
+    const [optionsVisibleCard, setOptionsVisibleCard] = useState(null);
 
     const navigate = useNavigate();
-    const API_URL = process.env.REACT_APP_API_URL;
+    const optionsMenuRef = useRef(null);
     SetAxiosDefaults();
 
 
@@ -47,9 +47,7 @@ export function Random()
         {
             setRandomCard(null);
             setStatusMessage('Loading...');
-            const response = categoryId === 'all' ?
-                await axios.get(`${API_URL}/main/random`) :
-                await axios.get(`${API_URL}/main/random/${categoryId}`);
+            const response = await axios.get(`${API_URL}/main/random/${categoryId}`);
             if (response.headers['content-type'] === 'text/html')
             {
                 setStatusMessage('Bad response from API server!');
@@ -75,6 +73,20 @@ export function Random()
             HandleAxiosError(error, setStatusMessage);
         }
     };
+
+    const handleClickOutside = (event) => {
+        if (optionsMenuRef.current && !optionsMenuRef.current.contains(event.target)) {
+            setOptionsVisibleCard(null);
+        }
+    };
+
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     useEffect(() =>
     {
@@ -121,27 +133,22 @@ export function Random()
                 </button>
             </div>
 
+            {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
+
             {!!randomCard &&
                 <div className='cards-container'>
-                    <div key={randomCard.card.id} className="card">
-                        <div className="delete-icon">
-                            <FontAwesomeIcon icon={faTrashAlt} size="xl" onClick={deleteCardPrompt(removeCard, randomCard.card)} />
-                        </div>
-                        <div className="show-icon">
-                            <FontAwesomeIcon size="xl" icon={showBack ? faEyeSlash : faEye} onClick={() => setShowBack(!showBack)} />
-                        </div>
-                        <div style={{ cursor: 'pointer' }} onClick={() => setShowBack(!showBack)}>
-                            <h2 className='card-hx'>{randomCard.card.front}</h2>
-                            <hr />
-                            {showBack && <MarkdownPreview source={randomCard.card.back} />}
-                            <h3 className='card-hx' style={{ fontSize: '1em' }}>
-                                <Link to={`/category/${randomCard.category.id}`}>Category → {randomCard.category.name}</Link>
-                            </h3>
-                        </div>
-                    </div>
+                    <CardTemplate
+                        card={randomCard.card}
+                        showBack={showBack}
+                        onShowBack={() => setShowBack(!showBack)}
+                        optionsVisibleCard={optionsVisibleCard}
+                        setOptionsVisibleCard={setOptionsVisibleCard}
+                        removeCard={removeCard}
+                        optionsMenuRef={optionsMenuRef}
+                        setStatusMessage={setStatusMessage}
+                        category={randomCard.category}
+                    />
                 </div>}
-
-            {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
         </div>
     );
 }

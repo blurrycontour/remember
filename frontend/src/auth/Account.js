@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
-import { SetAxiosDefaults, HandleAxiosError, SetAxiosRetry } from '../core/Utils';
+import { SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, API_URL } from '../core/Utils';
 
 
 SetAxiosRetry();
@@ -11,7 +11,6 @@ export function Account()
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
-    const API_URL = process.env.REACT_APP_API_URL;
 
     SetAxiosDefaults();
 
