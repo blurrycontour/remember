@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faRandom } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Utils';
 import { MarkdownPreview } from './Editor';
 
 
@@ -19,7 +19,6 @@ export function Random()
     const [statusMessage, setStatusMessage] = useState('Loading...');
 
     const navigate = useNavigate();
-    const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
 
 

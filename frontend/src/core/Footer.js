@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { SetAxiosRetry } from './Utils';
+import { SetAxiosRetry, API_URL } from './Utils';
 
 SetAxiosRetry();
 
 export function Footer() {
     const [buildInfo, setBuildInfo] = useState(null);
-    const API_URL = process.env.REACT_APP_API_URL;
 
     const fetchBuildInfo = async () => {
         try {

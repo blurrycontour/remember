@@ -4,7 +4,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faBars, faPlusSquare, faLayerGroup, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
+import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar, API_URL } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
 
 
@@ -26,7 +26,6 @@ export function Category()
     const [optionsVisibleCategory, setOptionsVisibleCategory] = useState(null);
 
     const navigate = useNavigate();
-    const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
     const preventSwipeHandlers = PreventSwipe();
     const optionsMenuRef = useRef(null);

@@ -4,7 +4,7 @@ import axios from 'axios';
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
-import { SetAxiosRetry, UseLocalStorage } from '../core/Utils';
+import { SetAxiosRetry, UseLocalStorage, API_URL } from '../core/Utils';
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
 import logo from '../logo192.png';
@@ -18,8 +18,6 @@ export function Login()
     const { user } = useContext(AuthContext);
     let location = useLocation();
     let from = location.state?.from?.pathname || "/account";
-
-    const API_URL = process.env.REACT_APP_API_URL;
 
 
     const informUserLogin = async (token) =>
