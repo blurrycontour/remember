@@ -27,7 +27,7 @@ export function Random()
     {
         try
         {
-            const response = await axios.get(`${API_URL}/category/`);
+            const response = await axios.get(`${API_URL}/category/?meta=true`);
             if (response.headers['content-type'] === 'text/html')
             {
                 setStatusMessage('Bad response from API server!');
@@ -110,7 +110,7 @@ export function Random()
 
             <div className="tool-card">
                 <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-                    <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option>
+                    {/* <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option> */}
                     {categories.map(category => (
                         <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
                     ))}

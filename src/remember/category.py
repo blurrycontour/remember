@@ -35,4 +35,5 @@ class Category:
             "created": self.created_at,
             "updated": self.updated_at,
             "#cards": len(self.cards),
+            "#favorites": 0,
         }

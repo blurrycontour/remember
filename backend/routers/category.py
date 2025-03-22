@@ -17,9 +17,9 @@ print('> Loading category router')
 
 
 @router.get('/')
-async def get_categories(user: Annotated[dict, Depends(get_current_user)]):
+async def get_categories(user: Annotated[dict, Depends(get_current_user)], meta:bool=False):
     app = Remember()
-    out = app.get_categories(user_id=user["user_id"])
+    out = app.get_categories(meta=meta, user_id=user["user_id"])
     return json_response_wrapper(*out)
 
 
