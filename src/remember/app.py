@@ -105,6 +105,9 @@ class Remember(metaclass=SingletonMeta):
         if category_id == "all":
             return self.get_all(user_id)
 
+        if category_id == "favorites":
+            return self.get_favorites(user_id)
+
         _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
         if not _category:
             return f"Category ID '{category_id}' not found!", False
@@ -214,6 +217,15 @@ class Remember(metaclass=SingletonMeta):
         _cards = self.cards.find({"user_id": user_id})
         return {
                 "category": {"name":"[All Cards]"},
+                "cards": [_card["card"] for _card in _cards]
+            }, True
+
+
+    def get_favorites(self, user_id:str):
+        """ Show all favorites cards """
+        _cards = self.cards.find({"user_id": user_id, "card.favorite": True})
+        return {
+                "category": {"name":"[Favorite Cards]"},
                 "cards": [_card["card"] for _card in _cards]
             }, True
 
