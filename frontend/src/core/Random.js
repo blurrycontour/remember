@@ -148,8 +148,7 @@ export function Random()
                         setStatusMessage={setStatusMessage}
                         category={randomCard.category}
                     />
-                </div>
-            }
+                </div>}
         </div>
     );
 }
