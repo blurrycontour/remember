@@ -25,7 +25,7 @@ class Accounts:
                 self.stats_collection.insert_one({
                     "user_id": _user["user_id"],
                     "category": {"add": 0, "update": 0, "delete": 0, "count": 0},
-                    "card": {"add": 0, "update": 0, "delete": 0, "count": 0}
+                    "card": {"add": 0, "update": 0, "delete": 0, "count": 0, "favorite": 0},
                 })
                 return {
                     "message": "User added!",

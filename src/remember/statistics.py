@@ -35,6 +35,12 @@ class Statistics:
         stats.pop("_id")
         stats.pop("user_id")
 
+        if "favorite" not in stats["card"]:
+            self.stats.update_one(
+                {"user_id":user_id},
+                {"$set": {"card.favorite": 0}}
+            )
+            stats["card"]["favorite"] = 0
         return stats, True
 
 
