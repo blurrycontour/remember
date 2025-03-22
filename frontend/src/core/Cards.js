@@ -225,49 +225,53 @@ export function Cards()
         <div>
             <div className='content'>
                 <div className='card2'>
-                    {!!category &&
-                        <div className="normal-icon">
-                            <h1>
-                                <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
-                            </h1>
-                        </div>
-                    }
-                    <h1> &nbsp;&nbsp; {category?.name} &nbsp;&nbsp; </h1>
-                    {!!category &&
-                        <div className="normal-icon" style={category?.id ? {opacity: 1} : {opacity: 0.3}} >
-                            <h1>
-                                <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={category.id ? () => openOverlay(1, null) : () => {}} />
-                            </h1>
-                        </div>
-                    }
+                    <h1>{category?.name}</h1>
                 </div>
 
                 {/* Sort bar */}
                 {!!category &&
-                    <div className='tool-card' style={{width: 'auto'}}>
+                    <div className='tool-card' style={{ width: 'auto' }}>
+                        &nbsp;
                         <h3><FontAwesomeIcon icon={faSliders} size="lg" /></h3>
-                        <span style={{padding: '0px 5px'}}></span>
+                        <span style={{ padding: '0px 7px' }}></span>
                         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
                             <option value="front">Front</option>
                             <option value="created">Created</option>
                             <option value="updated">Updated</option>
                         </select>
-                        <span style={{padding: '0px 5px'}}></span>
+                        &nbsp;
                         <button onClick={toggleSortOrder} className='sort-button'>
                             {sortOrder === 'asc' ? (
-                                sortType === 'front' ? (
+                                sortType === 'name' ? (
                                     <FontAwesomeIcon icon={faArrowDownAZ} size="xl" />
                                 ) : (
                                     <FontAwesomeIcon icon={faArrowDown19} size="xl" />
                                 )
                             ) : (
-                                sortType === 'front' ? (
+                                sortType === 'name' ? (
                                     <FontAwesomeIcon icon={faArrowDownZA} size="xl" />
                                 ) : (
                                     <FontAwesomeIcon icon={faArrowDown91} size="xl" />
                                 )
                             )}
                         </button>
+                        &nbsp;
+                        {!!category &&
+                            <div className="normal-icon">
+                                <h1>
+                                    <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
+                                </h1>
+                            </div>
+                        }
+                        <span style={{ padding: '0px 7px' }}></span>
+                        {!!category &&
+                            <div className="normal-icon" style={category?.id ? {opacity: 1} : {opacity: 0.3}} >
+                                <h1>
+                                    <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={category.id ? () => openOverlay(1, null) : () => {}} />
+                                </h1>
+                            </div>
+                        }
+                        &nbsp;
                     </div>
                 }
 

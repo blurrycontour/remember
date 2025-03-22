@@ -225,7 +225,7 @@ class Remember(metaclass=SingletonMeta):
         """ Show all favorites cards """
         _cards = self.cards.find({"user_id": user_id, "card.favorite": True})
         return {
-                "category": {"name":"Favorite Cards"},
+                "category": {"name":"[Favorite Cards]"},
                 "cards": [_card["card"] for _card in _cards]
             }, True
 
