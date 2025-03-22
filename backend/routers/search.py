@@ -26,7 +26,7 @@ async def search(
         user_id=user["user_id"],
         query=query,
         itype=itype,
-        category_id='' if category_id == 'all' else category_id,
+        category_id=category_id,
         start=start,
         end=end,
         page=page,
