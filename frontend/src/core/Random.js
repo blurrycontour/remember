@@ -47,9 +47,7 @@ export function Random()
         {
             setRandomCard(null);
             setStatusMessage('Loading...');
-            const response = categoryId === 'all' ?
-                await axios.get(`${API_URL}/main/random`) :
-                await axios.get(`${API_URL}/main/random/${categoryId}`);
+            const response = await axios.get(`${API_URL}/main/random/${categoryId}`);
             if (response.headers['content-type'] === 'text/html')
             {
                 setStatusMessage('Bad response from API server!');
