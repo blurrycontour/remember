@@ -5,8 +5,11 @@ import { AuthContext } from '../auth/AuthProvider';
 import axiosRetry from 'axios-retry';
 import { useSwipeable } from 'react-swipeable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faEdit, faTrashAlt, faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { MarkdownPreview } from './Editor';
 
+
+export const API_URL = process.env.REACT_APP_API_URL;
 
 export function deleteCardPrompt(removeFunction, removeItem, xFunctions=[])
 {
@@ -15,8 +18,8 @@ export function deleteCardPrompt(removeFunction, removeItem, xFunctions=[])
         for (const xFunction of xFunctions) xFunction(null);
 
         const isConfirmed = removeItem.front ?
-            window.confirm(`Are you sure you want to delete the card: '${removeItem.front}' ?`) :
-            window.confirm(`Are you sure you want to delete the category: '${removeItem.name}' ?`);
+            window.confirm(`Delete the Card: '${removeItem.front}' ?`) :
+            window.confirm(`Delete the Category: '${removeItem.name}' ?`);
         if (!isConfirmed) return;
         removeFunction(removeItem.id);
     }
@@ -107,6 +110,7 @@ export function SetAxiosRetry() {
     });
 }
 
+
 export function PreventSwipe()
 {
     const handlers = useSwipeable({
@@ -115,6 +119,7 @@ export function PreventSwipe()
     });
     return handlers;
 }
+
 
 export function UseLocalStorage() {
     const { user } = useContext(AuthContext);
@@ -140,6 +145,28 @@ export function UseLocalStorage() {
     return { setStorageItem, getStorageItem, setUserStorageItem };
 }
 
+
+export const toggleFavorite = async (card, setOptionsVisible, setStatusMessage) =>
+{
+    setOptionsVisible(null);
+    try
+    {
+        const response = await axios.patch(`${API_URL}/card/${card.id}/favorite`);
+        if (typeof (response.data) === 'string')
+        {
+            setStatusMessage('Bad response from API server!');
+            return;
+        }
+        card.favorite = response.data.favorite;
+    } catch (error)
+    {
+        HandleAxiosError(error, setStatusMessage);
+    }
+};
+
+// UI Components
+
+
 export const SearchBar = ({ setSearchString, fetchSearchResults }) => {
     const handleKeyPress = (event) => {
         if (event.key === 'Enter') {
@@ -163,3 +190,63 @@ export const SearchBar = ({ setSearchString, fetchSearchResults }) => {
         </div>
     );
 };
+
+
+export function CardTemplate({
+        card,
+        showBack,
+        onShowBack,
+        removeCard,
+        setStatusMessage,
+        setOptionsVisibleCard,
+        optionsVisibleCard,
+        optionsMenuRef,
+        openOverlay=null,
+        category=null
+    }) {
+
+    const toggleOptions = (cardId) => {
+        optionsVisibleCard === cardId ? setOptionsVisibleCard(null) : setOptionsVisibleCard(cardId);
+    };
+
+    return (
+        <div key={card.id} className="card">
+            <div className="options-icon">
+                <FontAwesomeIcon icon={faBars} size="lg" onClick={() => toggleOptions(card.id)} />
+                {optionsVisibleCard === card.id && (
+                    <div className="options-menu" ref={optionsMenuRef}>
+                        {openOverlay && (
+                            <button onClick={() => openOverlay(2, card)}>
+                                <FontAwesomeIcon icon={faEdit} size="lg" />
+                                &nbsp;&nbsp;Edit
+                            </button>
+                        )}
+                        <button onClick={() => toggleFavorite(card, setOptionsVisibleCard, setStatusMessage)}>
+                            <FontAwesomeIcon icon={faStar} size="lg" />
+                            &nbsp;&nbsp;{card.favorite ? 'Unfavorite' : 'Favorite'}
+                        </button>
+                        <button onClick={deleteCardPrompt(removeCard, card, [setOptionsVisibleCard])}>
+                            <FontAwesomeIcon icon={faTrashAlt} size="lg" />
+                            &nbsp;&nbsp;Delete
+                        </button>
+                    </div>
+                )}
+            </div>
+            <div style={{ cursor: 'pointer' }} onClick={onShowBack}>
+                <h2 className='card-hx'>{card.front}</h2>
+                {category && <hr />}
+                {showBack && (
+                    <div>
+                        {!category && <hr />}
+                        <MarkdownPreview source={card.back} />
+                    </div>
+                )}
+                {category && (
+                    <h3 className='card-hx' style={{ fontSize: '1em' }}>
+                        <Link to={`/category/${category.id}`}>Category → {category.name}</Link>
+                    </h3>
+                )}
+            </div>
+        </div>
+    );
+}
