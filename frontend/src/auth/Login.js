@@ -4,7 +4,7 @@ import axios from 'axios';
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, githubProvider } from '../config/firebase.config';
 import { AuthContext } from './AuthProvider';
-import { SetAxiosRetry, UseLocalStorage, API_URL } from '../core/Utils';
+import { SetAxiosRetry, SetAxiosAuthorization, UseLocalStorage, API_URL, SetAxiosDefaults } from '../core/Axios';
 import { GoogleLoginButton, GithubLoginButton } from "react-social-login-buttons";
 
 import logo from '../logo192.png';
@@ -19,24 +19,19 @@ export function Login()
     let location = useLocation();
     let from = location.state?.from?.pathname || "/account";
 
+    SetAxiosDefaults();
 
-    const informUserLogin = async (token) =>
+    const informUserLogin = async () =>
     {
-        await axios.post(`${API_URL}/account/user`, {}, { headers:
-            {
-                "Authorization": `Bearer ${token}`,
-                "ngrok-skip-browser-warning": true,
-                "disable-tunnel-reminder": true,
-                "localtonet-skip-warning": true
-            }
-        });
+        await SetAxiosAuthorization();
+        await axios.post(`${API_URL}/account/user`, {});
     };
 
     const handleLogin = async (provider) =>
     {
-        await signInWithPopup(auth, provider).then((result) =>
+        await signInWithPopup(auth, provider).then(() =>
         {
-            informUserLogin(result.user.accessToken);
+            informUserLogin();
             <Navigate to={from} replace />;
         }).catch((error) =>
         {

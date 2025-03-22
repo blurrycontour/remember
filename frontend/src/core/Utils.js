@@ -1,15 +1,11 @@
 import axios from 'axios';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../auth/AuthProvider';
-import axiosRetry from 'axios-retry';
 import { useSwipeable } from 'react-swipeable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar, faEdit, faTrashAlt, faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import { MarkdownPreview } from './Editor';
+import { HandleAxiosError, SetAxiosAuthorization, API_URL } from './Axios';
 
-
-export const API_URL = process.env.REACT_APP_API_URL;
 
 export function deleteCardPrompt(removeFunction, removeItem, xFunctions=[])
 {
@@ -25,24 +21,6 @@ export function deleteCardPrompt(removeFunction, removeItem, xFunctions=[])
     }
 }
 
-export function SetAxiosDefaults()
-{
-    const { user } = useContext(AuthContext);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${user?.accessToken}`;
-    axios.defaults.headers.common['ngrok-skip-browser-warning'] = true;
-    axios.defaults.headers.common['disable-tunnel-reminder'] = true;
-    axios.defaults.headers.common['localtonet-skip-warning'] = true;
-}
-
-export function GetUserButton()
-{
-    const { user } = useContext(AuthContext);
-    return (
-        <Link to="/account">
-            <img src={user?.photoURL} alt={user?.displayName} className="user-photo" />
-        </Link>
-    );
-}
 
 export const NotFound = () => (
     <div>
@@ -82,35 +60,6 @@ export function SortItems(items, type, order)
 };
 
 
-export function HandleAxiosError(error, setErrorMessage)
-{
-    console.error(error);
-    error.response ?
-    (
-        error.response.headers['content-type'] === 'text/html' ?
-        setErrorMessage(error.message) : setErrorMessage(error.response.data)
-    )
-    :
-    setErrorMessage('Failed to connect to API server!');
-}
-
-
-export function SetAxiosRetry() {
-    axiosRetry(axios, {
-        retries: 5,
-        retryCondition: (error) => {
-            return error.response?.status === 502;
-        },
-        retryDelay: (retryCount) => {
-            return 25;
-        },
-        onRetry: (retryCount, error, requestConfig) => {
-            console.log(`Retry #${retryCount} for request: ${requestConfig.url}`);
-        }
-    });
-}
-
-
 export function PreventSwipe()
 {
     const handlers = useSwipeable({
@@ -121,36 +70,12 @@ export function PreventSwipe()
 }
 
 
-export function UseLocalStorage() {
-    const { user } = useContext(AuthContext);
-    const userEmail = user?.email || 'unknown@user';
-
-    const setStorageItem = (key, value) => {
-        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
-        data[key] = value;
-        localStorage.setItem(userEmail, JSON.stringify(data));
-    };
-
-    const getStorageItem = (key, defaultValue) => {
-        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
-        return data[key] || defaultValue;
-    };
-
-    const setUserStorageItem = (userEmail, key, value) => {
-        const data = JSON.parse(localStorage.getItem(userEmail) || '{}');
-        data[key] = value;
-        localStorage.setItem(userEmail, JSON.stringify(data));
-    };
-
-    return { setStorageItem, getStorageItem, setUserStorageItem };
-}
-
-
 export const toggleFavorite = async (card, setOptionsVisible, setStatusMessage) =>
 {
     setOptionsVisible(null);
     try
     {
+        await SetAxiosAuthorization();
         const response = await axios.patch(`${API_URL}/card/${card.id}/favorite`);
         if (typeof (response.data) === 'string')
         {

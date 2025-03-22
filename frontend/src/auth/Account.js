@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
-import { SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, API_URL } from '../core/Utils';
+import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, API_URL } from '../core/Axios';
 
 
 SetAxiosRetry();
@@ -23,6 +23,7 @@ export function Account()
     {
         try
         {
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/account/stats`);
             if (typeof (response.data) === 'string')
             {

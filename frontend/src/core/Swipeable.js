@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSwipeable } from 'react-swipeable';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { UseLocalStorage } from './Utils';
+import { UseLocalStorage } from './Axios';
 
 export const SwipeableRoutes = ({ children }) =>
 {

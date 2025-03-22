@@ -4,7 +4,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faBars, faPlusSquare, faLayerGroup, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
-import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar, API_URL } from './Utils';
+import { deleteCardPrompt, SortItems, PreventSwipe, SearchBar } from './Utils';
+import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Axios';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
 
 
@@ -38,6 +39,7 @@ export function Category()
         {
             setCategories([]);
             setStatusMessage('Searching...');
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/search/`, {
                 params: {
                     query: searchString,
@@ -68,6 +70,7 @@ export function Category()
     {
         try
         {
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/category/`);
             if (typeof (response.data) === 'string')
             {
@@ -87,9 +90,10 @@ export function Category()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
             closeOverlay();
-            fetchCategories();
+            await fetchCategories();
         } catch (error)
         {
             HandleAxiosError(error, setErrorMessage);
@@ -100,9 +104,10 @@ export function Category()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.put(`${API_URL}/category/${currentCategory.id}`, { name: currentCategory.name, description: currentCategory.description });
             closeOverlay();
-            fetchCategories();
+            await fetchCategories();
         } catch (error)
         {
             HandleAxiosError(error, setErrorMessage);
@@ -113,8 +118,9 @@ export function Category()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.delete(`${API_URL}/category/${categoryId}`);
-            fetchCategories();
+            await fetchCategories();
         } catch (error)
         {
             HandleAxiosError(error, setStatusMessage);

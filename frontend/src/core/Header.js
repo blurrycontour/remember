@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { GetUserButton, UseLocalStorage } from './Utils';
+import { GetUserButton, UseLocalStorage } from './Axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHome, faLayerGroup, faNoteSticky } from '@fortawesome/free-solid-svg-icons';
 import { DarkModeSwitch } from 'react-toggle-dark-mode';

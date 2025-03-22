@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faRandom } from '@fortawesome/free-solid-svg-icons';
-import { SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL, CardTemplate } from './Utils';
+import { CardTemplate } from './Utils';
+import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Axios';
 
 
 SetAxiosRetry();
@@ -20,6 +21,7 @@ export function Random()
 
     const navigate = useNavigate();
     const optionsMenuRef = useRef(null);
+
     SetAxiosDefaults();
 
 
@@ -27,6 +29,7 @@ export function Random()
     {
         try
         {
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/category/?meta=true`);
             if (response.headers['content-type'] === 'text/html')
             {
@@ -47,6 +50,7 @@ export function Random()
         {
             setRandomCard(null);
             setStatusMessage('Loading...');
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/main/random/${categoryId}`);
             if (response.headers['content-type'] === 'text/html')
             {
@@ -65,9 +69,10 @@ export function Random()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.delete(`${API_URL}/card/${cardId}`);
             setRandomCard(null);
-            fetchRandomCard();
+            await fetchRandomCard();
         } catch (error)
         {
             HandleAxiosError(error, setStatusMessage);

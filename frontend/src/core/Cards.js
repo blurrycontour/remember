@@ -4,7 +4,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
-import { SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar, CardTemplate, API_URL } from './Utils';
+import { SortItems, PreventSwipe, SearchBar, CardTemplate } from './Utils';
+import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Axios';
 import { MarkdownEditor } from './Editor';
 
 
@@ -41,6 +42,7 @@ export function Cards()
         {
             setCards([]);
             setStatusMessage('Searching...');
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/search/`, {
                 params: {
                     query: searchString,
@@ -73,6 +75,7 @@ export function Cards()
     {
         try
         {
+            await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/category/${id}`);
             if (typeof (response.data) === 'string')
             {
@@ -94,9 +97,10 @@ export function Cards()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.post(`${API_URL}/card/`, { category_id: category.id, front: newCardFront, back: newCardBack });
             closeOverlay();
-            fetchCards();
+            await fetchCards();
         } catch (error)
         {
             HandleAxiosError(error, setErrorMessage);
@@ -107,9 +111,10 @@ export function Cards()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.put(`${API_URL}/card/${currentCard.id}`, { category_id: currentCard.id, front: currentCard.front, back: currentCard.back });
             closeOverlay();
-            fetchCards();
+            await fetchCards();
         } catch (error)
         {
             HandleAxiosError(error, setErrorMessage);
@@ -120,8 +125,9 @@ export function Cards()
     {
         try
         {
+            await SetAxiosAuthorization();
             await axios.delete(`${API_URL}/card/${cardId}`);
-            fetchCards();
+            await fetchCards();
         } catch (error)
         {
             HandleAxiosError(error, setStatusMessage);
