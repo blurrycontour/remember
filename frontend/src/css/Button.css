@@ -43,6 +43,10 @@
     cursor: pointer;
 }
 
+.normal-icon h1 {
+    margin: 10px 0px;
+}
+
 .green-button {
     background-color: hwb(123 0% 34%);
     color: white;

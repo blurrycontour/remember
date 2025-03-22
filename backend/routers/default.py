@@ -38,7 +38,7 @@ async def show(user: Annotated[dict, Depends(get_current_user)]):
 @router.get('/random')
 async def random(user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
-    out = app.random(user_id=user["user_id"])
+    out = app.random(category_id="all", user_id=user["user_id"])
     return json_response_wrapper(*out)
 
 

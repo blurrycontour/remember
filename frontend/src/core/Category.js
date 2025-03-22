@@ -180,23 +180,20 @@ export function Category()
             <div className='content'>
                 <div className='card2'>
                     <h1>Categories &nbsp; </h1>
-                    <div className="normal-icon">
-                        <h1>
-                            <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
-                        </h1>
-                    </div>
                 </div>
 
                 {/* Sort bar */}
                 <div className='tool-card' style={{ width: 'auto' }}>
+                    &nbsp;
                     <h3><FontAwesomeIcon icon={faSliders} size="lg" /></h3>
-                    <span style={{ padding: '0px 5px' }}></span>
+                    <span style={{ padding: '0px 7px' }}></span>
                     <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
                         <option value="name">Name</option>
                         <option value="created">Created</option>
                         <option value="updated">Updated</option>
                         <option value="nCards">#Cards</option>
                     </select>
+                    &nbsp;
                     <button onClick={toggleSortOrder} className='sort-button'>
                         {sortOrder === 'asc' ? (
                             sortType === 'name' ? (
@@ -212,10 +209,13 @@ export function Category()
                             )
                         )}
                     </button>
-                    <button onClick={() => navigate('/category/all')} className='blue-button'
-                        style={{ margin: '8px 2px', minWidth: '100px', padding: '10px 8px' }}>
-                            View All
-                    </button>
+                    &nbsp;
+                    <div className="normal-icon">
+                        <h1>
+                            <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={() => openOverlay(1, null)} />
+                        </h1>
+                    </div>
+                    &nbsp;
                 </div>
 
                 {/* Search bar */}

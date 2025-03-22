@@ -49,6 +49,7 @@ class Statistics:
                 "card.add": 0,
                 "card.update": 0,
                 "card.delete": 0,
+                "card.favorite": 0,
             }}
         )
         return "User statistics reset!", True

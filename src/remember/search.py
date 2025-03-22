@@ -9,6 +9,11 @@ class Search:
 
     def __call__(self, query:str, user_id:str, itype:str, category_id:str, start:str, end:str, page:int):
         """ Search for a item in the database """
+        # Use another variable to avoid changing the original value
+        input_category_id = category_id
+        if category_id in ["all", "favorites"]:
+            category_id = ""
+
         if itype in ["category", "categories"]:
             try:
                 query_int = int(query)
@@ -33,7 +38,8 @@ class Search:
                 "$or": [
                     {"card.front": {"$regex": query, "$options": "i"}},
                     {"card.back": {"$regex": query, "$options": "i"}}
-                ]
+                ],
+                "card.favorite": {"$eq":True} if input_category_id == "favorites" else {"$ne": ""},
             })
             return [item["card"] for item in items], True
 

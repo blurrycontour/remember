@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt, faEye, faEyeSlash, faRandom } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, HandleAxiosError, SetAxiosRetry, UseLocalStorage } from './Utils';
@@ -17,6 +17,8 @@ export function Random()
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
     const [statusMessage, setStatusMessage] = useState('Loading...');
+
+    const navigate = useNavigate();
     const API_URL = process.env.REACT_APP_API_URL;
     SetAxiosDefaults();
 
@@ -25,7 +27,7 @@ export function Random()
     {
         try
         {
-            const response = await axios.get(`${API_URL}/category/`);
+            const response = await axios.get(`${API_URL}/category/?meta=true`);
             if (response.headers['content-type'] === 'text/html')
             {
                 setStatusMessage('Bad response from API server!');
@@ -95,8 +97,20 @@ export function Random()
             </div>
 
             <div className="tool-card">
+                <button onClick={() => navigate('/category/all')} className='blue-button'
+                    style={{ margin: '8px 2px', minWidth: '100px', width: '100%' }}>
+                    All Cards
+                </button>
+                <span style={{ padding: '0px 8px' }}></span>
+                <button onClick={() => navigate('/category/favorites')} className='blue-button'
+                    style={{ margin: '8px 2px', minWidth: '100px', width: '100%' }}>
+                    Favorites
+                </button>
+            </div>
+
+            <div className="tool-card">
                 <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-                    <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option>
+                    {/* <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option> */}
                     {categories.map(category => (
                         <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
                     ))}

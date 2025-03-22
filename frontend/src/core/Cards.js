@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrashAlt, faBars, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faEdit, faTrashAlt, faBars, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
 import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SetAxiosDefaults, SortItems, HandleAxiosError, SetAxiosRetry, PreventSwipe, UseLocalStorage, SearchBar } from './Utils';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
@@ -177,6 +177,28 @@ export function Cards()
         }
     };
 
+    const toggleFavorite = async (card) =>
+    {
+        setOptionsVisibleCard(null);
+        try
+        {
+            const response = await axios.patch(`${API_URL}/card/${card.id}/favorite`);
+            if (typeof (response.data) === 'string')
+            {
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
+            console.log(response.data.favorite);
+            card.favorite = response.data.favorite;
+            // fetchCards();
+            // if (response.st === 0) setStatusMessage('No cards found!');
+            // else setStatusMessage('');
+        } catch (error)
+        {
+            HandleAxiosError(error, setStatusMessage);
+        }
+    };
+
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
         return () => {
@@ -203,49 +225,53 @@ export function Cards()
         <div>
             <div className='content'>
                 <div className='card2'>
-                    {!!category &&
-                        <div className="normal-icon">
-                            <h1>
-                                <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
-                            </h1>
-                        </div>
-                    }
-                    <h1> &nbsp;&nbsp; {category?.name} &nbsp;&nbsp; </h1>
-                    {!!category &&
-                        <div className="normal-icon" style={category?.id ? {opacity: 1} : {opacity: 0.3}} >
-                            <h1>
-                                <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={category.id ? () => openOverlay(1, null) : () => {}} />
-                            </h1>
-                        </div>
-                    }
+                    <h1>{category?.name}</h1>
                 </div>
 
                 {/* Sort bar */}
                 {!!category &&
-                    <div className='tool-card' style={{width: 'auto'}}>
+                    <div className='tool-card' style={{ width: 'auto' }}>
+                        &nbsp;
                         <h3><FontAwesomeIcon icon={faSliders} size="lg" /></h3>
-                        <span style={{padding: '0px 5px'}}></span>
+                        <span style={{ padding: '0px 7px' }}></span>
                         <select value={sortType} onChange={(e) => setSortType(e.target.value)}>
                             <option value="front">Front</option>
                             <option value="created">Created</option>
                             <option value="updated">Updated</option>
                         </select>
-                        <span style={{padding: '0px 5px'}}></span>
+                        &nbsp;
                         <button onClick={toggleSortOrder} className='sort-button'>
                             {sortOrder === 'asc' ? (
-                                sortType === 'front' ? (
+                                sortType === 'name' ? (
                                     <FontAwesomeIcon icon={faArrowDownAZ} size="xl" />
                                 ) : (
                                     <FontAwesomeIcon icon={faArrowDown19} size="xl" />
                                 )
                             ) : (
-                                sortType === 'front' ? (
+                                sortType === 'name' ? (
                                     <FontAwesomeIcon icon={faArrowDownZA} size="xl" />
                                 ) : (
                                     <FontAwesomeIcon icon={faArrowDown91} size="xl" />
                                 )
                             )}
                         </button>
+                        &nbsp;
+                        {!!category &&
+                            <div className="normal-icon">
+                                <h1>
+                                    <FontAwesomeIcon size="1x" icon={expandAllCards ? faEyeSlash : faEye} onClick={expandCollapseAllCards} />
+                                </h1>
+                            </div>
+                        }
+                        <span style={{ padding: '0px 7px' }}></span>
+                        {!!category &&
+                            <div className="normal-icon" style={category?.id ? {opacity: 1} : {opacity: 0.3}} >
+                                <h1>
+                                    <FontAwesomeIcon icon={faPlusSquare} size="1x" onClick={category.id ? () => openOverlay(1, null) : () => {}} />
+                                </h1>
+                            </div>
+                        }
+                        &nbsp;
                     </div>
                 }
 
@@ -267,6 +293,10 @@ export function Cards()
                                         <button onClick={() => openOverlay(2, card)}>
                                             <FontAwesomeIcon icon={faEdit} size="lg" />
                                             &nbsp;&nbsp;Edit
+                                        </button>
+                                        <button onClick={() => toggleFavorite(card)}>
+                                            <FontAwesomeIcon icon={faStar} size="lg" />
+                                            &nbsp;&nbsp;{card.favorite ? 'Unfavorite' : 'Favorite'}
                                         </button>
                                         <button onClick={deleteCardPrompt(removeCard, card, [setOptionsVisibleCard])}>
                                             <FontAwesomeIcon icon={faTrashAlt} size="lg" />

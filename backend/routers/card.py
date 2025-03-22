@@ -17,7 +17,7 @@ print('> Loading card router')
 
 
 @router.get('/{card_id}')
-async def get_card(card_id: int, user: Annotated[dict, Depends(get_current_user)]):
+async def get_card(card_id: str, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
     out = app.get_card(card_id=card_id, user_id=user["user_id"])
     return json_response_wrapper(*out)
@@ -42,4 +42,11 @@ async def update_card(card_id:str, card: CardData, user: Annotated[dict, Depends
 async def remove_card(card_id: str, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
     out = app.remove_card(card_id=card_id, user_id=user["user_id"])
+    return json_response_wrapper(*out)
+
+
+@router.patch('/{card_id}/favorite')
+async def favorite_card(card_id: str, user: Annotated[dict, Depends(get_current_user)]):
+    app = Remember()
+    out = app.favorite_card(card_id=card_id, user_id=user["user_id"])
     return json_response_wrapper(*out)

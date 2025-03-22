@@ -94,16 +94,34 @@ class Remember(metaclass=SingletonMeta):
         return f"Category ID '{category_id}' updated!", True
 
 
-    def get_categories(self, user_id:str):
+    def get_categories(self, meta:bool, user_id:str):
         """ Get all categories """
         items = self.categories.find({"user_id": user_id})
-        return [item["category"] for item in items], True
+        categories = [item["category"] for item in items]
+        meta_categories = []
+        if meta:
+            meta_categories = [
+                {
+                    "id": "all",
+                    "name": "[All Cards]",
+                    "#cards": sum([_category["#cards"] for _category in categories])
+                },
+                {
+                    "id": "favorites",
+                    "name": "[Favorites]",
+                    "#cards": sum([_category.get("#favorites", 0) for _category in categories])
+                }
+            ]
+        return meta_categories + categories, True
 
 
     def get_category(self, user_id:str, category_id:str=None, only_category:bool=False):
         """ Get a category i.e. return list of cards in the category """
         if category_id == "all":
             return self.get_all(user_id)
+
+        if category_id == "favorites":
+            return self.get_favorites(user_id)
 
         _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
         if not _category:
@@ -218,23 +236,66 @@ class Remember(metaclass=SingletonMeta):
             }, True
 
 
-    def random(self, user_id:str, category_id:str=None):
+    def get_favorites(self, user_id:str):
+        """ Show all favorites cards """
+        _cards = self.cards.find({"user_id": user_id, "card.favorite": True})
+        return {
+                "category": {"name":"[Favorite Cards]"},
+                "cards": [_card["card"] for _card in _cards]
+            }, True
+
+
+    def random(self, category_id:str, user_id:str):
         """ Show a random card from the category or all categories """
-        if category_id:
+        if category_id == "favorites":
+            all_cards = [{
+                    "category": self.get_category(category_id=_card["category_id"], user_id=user_id, only_category=True)[0],
+                    "card": _card
+                } for _card in self.get_favorites(user_id)[0]["cards"]
+            ]
+
+        elif category_id == "all":
+            all_cards = [{
+                    "category": self.get_category(category_id=_card["category_id"], user_id=user_id, only_category=True)[0],
+                    "card": _card
+                } for _card in self.get_all(user_id)[0]["cards"]
+            ]
+
+        else:
             _all_cards, _ = self.get_category(category_id=category_id, user_id=user_id)
             all_cards = [{
                     "category": _all_cards["category"],
                     "card": card
                 } for card in _all_cards["cards"]
             ]
-        else:
-            all_cards = [{
-                    "category": self.get_category(category_id=_card["card"]["category_id"], user_id=user_id, only_category=True)[0],
-                    "card": _card["card"]
-                } for _card in self.cards.find({"user_id": user_id})
-            ]
 
         if not all_cards:
             return "No cards found!", False
 
         return random.choices(all_cards, k=1)[0], True
+
+
+    def favorite_card(self, card_id:str, user_id:str):
+        """ Mark a card as favorite/unfavorite """
+        _card = self.cards.find_one({"user_id": user_id, "card.id": card_id})
+        if not _card:
+            return f"Card ID '{card_id}' not found!", False
+
+        set_favorite_status = not _card["card"].get("favorite", False)
+        _card = self.cards.find_one_and_update(
+            {"user_id": user_id, "card.id": card_id},
+            {"$set": {
+                "card.favorite": set_favorite_status,
+                "card.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                }
+            }
+        )
+
+        # Update category.#favorites count by 1
+        self.categories.update_one(
+            {"user_id": user_id, "category.id": _card["card"]["category_id"]},
+            {"$inc": {"category.#favorites": 1 if set_favorite_status else -1}}
+        )
+
+        self.statistics.update_category_operations(user_id, "card.favorite")
+        return {"favorite": set_favorite_status}, True
