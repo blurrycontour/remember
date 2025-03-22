@@ -284,11 +284,7 @@ class Remember(metaclass=SingletonMeta):
         set_favorite_status = not _card["card"].get("favorite", False)
         _card = self.cards.find_one_and_update(
             {"user_id": user_id, "card.id": card_id},
-            {"$set": {
-                "card.favorite": set_favorite_status,
-                "card.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                }
-            }
+            {"$set": {"card.favorite": set_favorite_status}}
         )
 
         # Update category.#favorites count by 1
