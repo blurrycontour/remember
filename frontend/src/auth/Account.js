@@ -10,6 +10,7 @@ export function Account()
 {
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
+    const [tokenTime, setTokenTime] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
 
     SetAxiosDefaults();
@@ -38,9 +39,30 @@ export function Account()
         }
     };
 
+    const fetchTokenTime = async () =>
+    {
+        try
+        {
+            await SetAxiosAuthorization();
+            const timezoneOffset = -(new Date()).getTimezoneOffset();
+            const response = await axios.get(`${API_URL}/account/token-info?tz_offset=${timezoneOffset}`);
+            if (typeof (response.data) === 'string')
+            {
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
+            setTokenTime(response.data);
+            setStatusMessage('');
+        } catch (error)
+        {
+            HandleAxiosError(error, setStatusMessage);
+        }
+    };
+
     useEffect(() =>
     {
         fetchStats();
+        fetchTokenTime();
         // eslint-disable-next-line
     }, []);
 
@@ -66,6 +88,12 @@ export function Account()
                     <hr />
                     <h3 style={{ margin: '0.5em' }}>Cards → {stats.card.count}</h3>
                     <h3 style={{ margin: '0.5em' }}>{stats.card.add}➕ &nbsp; {stats.card.update}🖋️ &nbsp; {stats.card.delete}🗑️ &nbsp; {stats.card.favorite}⭐</h3>
+                </div>}
+
+                {!!tokenTime && <div className='card3'>
+                    <h3 style={{ margin: '0.5em' }}>Token Info</h3>
+                    <code style={{ margin: '0.5em' }}>iat : {tokenTime.iat}</code>
+                    <code style={{ margin: '0.5em' }}>exp : {tokenTime.exp}</code>
                 </div>}
             </div>
 

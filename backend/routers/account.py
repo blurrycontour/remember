@@ -1,7 +1,7 @@
-from typing import Annotated
+from datetime import datetime, timedelta, timezone
+from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter, Depends, Query
 
 from remember import Remember
 
@@ -20,7 +20,7 @@ print('> Loading account router')
 @router.get('/')
 async def home():
     """ Home """
-    return "OK"
+    return "Are you lost?"
 
 
 @router.post('/user')
@@ -61,3 +61,30 @@ async def reset_stats(user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
     out = app.statistics.reset_stats(user_id=user["user_id"])
     return json_response_wrapper(*out)
+
+
+@router.get('/token-info')
+async def get_token_info(
+    user: Annotated[dict, Depends(get_current_user)],
+    tz_offset: Optional[int] = Query(None, description="Timezone offset in minutes")
+):
+    """
+    Get some of the user's access token info.
+    """
+    iat = user.get("iat", None)
+    exp = user.get("exp", None)
+
+    time_fmt = '%Y-%m-%d %H:%M:%S %z'
+    if tz_offset is not None:
+        tz_delta = timezone(timedelta(minutes=tz_offset))
+        iat_str = datetime.fromtimestamp(iat).astimezone(tz_delta).strftime(time_fmt) if iat else None
+        exp_str = datetime.fromtimestamp(exp).astimezone(tz_delta).strftime(time_fmt) if exp else None
+    else:
+        iat_str = datetime.fromtimestamp(iat).astimezone().strftime(time_fmt) if iat else None
+        exp_str = datetime.fromtimestamp(exp).astimezone().strftime(time_fmt) if exp else None
+
+    token_info = {
+        "iat": iat_str,
+        "exp": exp_str,
+    }
+    return json_response_wrapper(token_info, True)
