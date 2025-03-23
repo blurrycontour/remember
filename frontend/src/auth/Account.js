@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
 import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, API_URL } from '../core/Axios';
+import { fetchCurrentTime } from '../core/Utils';
 
 
 SetAxiosRetry();
@@ -12,6 +13,7 @@ export function Account()
     const [stats, setStats] = useState(null);
     const [tokenTime, setTokenTime] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
+    const [currentTime, setCurrentTime] = useState(fetchCurrentTime());
 
     SetAxiosDefaults();
 
@@ -59,10 +61,20 @@ export function Account()
         }
     };
 
+
     useEffect(() =>
     {
         fetchStats();
         fetchTokenTime();
+        // eslint-disable-next-line
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(fetchCurrentTime());
+        }, 1000); // Every 1 second
+
+        return () => clearInterval(interval); // Cleanup interval on component unmount
         // eslint-disable-next-line
     }, []);
 
@@ -94,6 +106,7 @@ export function Account()
                     <h3 style={{ margin: '0.5em' }}>Token Info</h3>
                     <code style={{ margin: '0.5em' }}>iat : {tokenTime.iat}</code>
                     <code style={{ margin: '0.5em' }}>exp : {tokenTime.exp}</code>
+                    <code style={{ margin: '0.5em' }}>now : {currentTime}</code>
                 </div>}
             </div>
 

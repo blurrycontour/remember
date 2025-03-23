@@ -19,7 +19,7 @@ const Layout = () => (
   <>
     <Header />
     <Outlet />
-    <Footer />
+    <ProtectedRoute><Footer /></ProtectedRoute>
   </>
 );
 

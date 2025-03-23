@@ -31,7 +31,10 @@ export function Header()
             } else {
                 return 'nav-button';
             }
-        } else {
+        } else if (path === '/') {
+            return ['/','/random'].includes(location.pathname) ? 'nav-button active' : 'nav-button';
+        }
+        else {
             return location.pathname === path ? 'nav-button active' : 'nav-button';
         }
     };

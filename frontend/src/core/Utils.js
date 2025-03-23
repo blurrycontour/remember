@@ -175,3 +175,16 @@ export function CardTemplate({
         </div>
     );
 }
+
+
+export const fetchCurrentTime = () =>
+{
+    const now = new Date();
+    const pad = (num) => (num < 10 ? '0' : '') + num;
+    const offset = -now.getTimezoneOffset();
+    const sign = offset >= 0 ? '+' : '-';
+    const hours = pad(Math.floor(Math.abs(offset) / 60));
+    const minutes = pad(Math.abs(offset) % 60);
+    const formattedTime = now.toISOString().replace('T', ' ').substring(0, 19);
+    return `${formattedTime} ${sign}${hours}${minutes}`;
+};

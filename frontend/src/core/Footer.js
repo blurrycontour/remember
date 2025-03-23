@@ -10,6 +10,7 @@ SetAxiosRetry();
 export function Footer() {
     const [buildInfo, setBuildInfo] = useState(null);
     const [tokenTime, setTokenTime] = useState(null);
+    const [isExpired, setIsExpired] = useState(true);
 
     SetAxiosDefaults();
 
@@ -47,11 +48,11 @@ export function Footer() {
         }
     };
 
-    const isTokenExpired = () => {
-        if (!tokenTime || !tokenTime.exp) return true;
-        const currentTime = Math.floor(Date.now() / 1000); // Current time in Unix timestamp (seconds)
-        const tokenExpiryTime = Math.floor(new Date(tokenTime.exp).getTime() / 1000); // Token expiry time in Unix timestamp (seconds)
-        return currentTime > tokenExpiryTime;
+    const checkTokenExpired = () => {
+        if (!tokenTime || !tokenTime.exp) setIsExpired(true);
+        const currentTimeUnix = Math.floor(Date.now() / 1000); // Current time in Unix timestamp (seconds)
+        const tokenExpiryTimeUnix = Math.floor(new Date(tokenTime.exp).getTime() / 1000); // Token expiry time in Unix timestamp (seconds)
+        setIsExpired(currentTimeUnix > tokenExpiryTimeUnix);
     };
 
     useEffect(() => {
@@ -60,13 +61,22 @@ export function Footer() {
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            checkTokenExpired();
+        }, 1000); // Check every 1 second
+
+        return () => clearInterval(interval); // Cleanup interval on component unmount
+        // eslint-disable-next-line
+    }, [tokenTime]);
+
     return (
         <div>
             {!!buildInfo &&
                 <div className='footer'>
                     <p>
                         <span>
-                            {isTokenExpired()  ?
+                            {isExpired  ?
                                 <span style={{ color: 'red' }}><FontAwesomeIcon icon={faCircleXmark} /></span> :
                                 <span style={{ color: 'green' }}><FontAwesomeIcon icon={faCircleCheck} /></span>
                             }
