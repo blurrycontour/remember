@@ -185,6 +185,5 @@ export const fetchCurrentTime = () =>
     const sign = offset >= 0 ? '+' : '-';
     const hours = pad(Math.floor(Math.abs(offset) / 60));
     const minutes = pad(Math.abs(offset) % 60);
-    const formattedTime = now.toISOString().replace('T', ' ').substring(0, 19);
-    return `${formattedTime} ${sign}${hours}${minutes}`;
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())} ${sign}${hours}${minutes}`;
 };
