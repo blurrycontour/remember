@@ -81,14 +81,18 @@ export function Account()
                 return;
             }
             const delta = Math.floor((new Date(tokenTime.exp) - now) / 1000);
-            if (delta <= 0) setDeltaTime('00:00');
+            if (delta <= 0)
+            {
+                setDeltaTime('00:00');
+                return;
+            }
             const pad = (num) => (num < 10 ? '0' : '') + num;
             const minutes = pad(Math.floor(delta / 60));
             const seconds = pad(Math.abs(delta) % 60);
             setDeltaTime(`${minutes}:${seconds}`);
         }, 1000); // Every 1 second
 
-        return () => clearInterval(interval); // Cleanup interval on component unmount
+        return () => clearInterval(interval);
         // eslint-disable-next-line
     }, [tokenTime]);
 
