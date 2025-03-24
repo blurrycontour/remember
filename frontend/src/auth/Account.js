@@ -81,7 +81,6 @@ export function Account()
                 return;
             }
             const delta = Math.floor((new Date(tokenTime.exp) - now) / 1000);
-            console.log('delta', delta);
             if (delta <= 0) setDeltaTime('00:00');
             const pad = (num) => (num < 10 ? '0' : '') + num;
             const minutes = pad(Math.floor(delta / 60));
