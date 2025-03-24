@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AuthContext } from './AuthProvider';
 import axios from 'axios';
 import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, API_URL } from '../core/Axios';
-import { fetchCurrentTime } from '../core/Utils';
+import { formattedTime } from '../core/Utils';
 
 
 SetAxiosRetry();
@@ -13,7 +13,8 @@ export function Account()
     const [stats, setStats] = useState(null);
     const [tokenTime, setTokenTime] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
-    const [currentTime, setCurrentTime] = useState(fetchCurrentTime());
+    const [currentTime, setCurrentTime] = useState(formattedTime());
+    const [deltaTime, setDeltaTime] = useState('xx:xx');
 
     SetAxiosDefaults();
 
@@ -71,12 +72,26 @@ export function Account()
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setCurrentTime(fetchCurrentTime());
+            const now = new Date();
+            setCurrentTime(formattedTime(now));
+
+            if (!tokenTime || !tokenTime?.exp)
+            {
+                setDeltaTime('xx:xx');
+                return;
+            }
+            const delta = Math.floor((new Date(tokenTime.exp) - now) / 1000);
+            console.log('delta', delta);
+            if (delta <= 0) setDeltaTime('00:00');
+            const pad = (num) => (num < 10 ? '0' : '') + num;
+            const minutes = pad(Math.floor(delta / 60));
+            const seconds = pad(Math.abs(delta) % 60);
+            setDeltaTime(`${minutes}:${seconds}`);
         }, 1000); // Every 1 second
 
         return () => clearInterval(interval); // Cleanup interval on component unmount
         // eslint-disable-next-line
-    }, []);
+    }, [tokenTime]);
 
     return (
         <div>
@@ -107,6 +122,7 @@ export function Account()
                     <code style={{ margin: '0.5em' }}>iat : {tokenTime.iat}</code>
                     <code style={{ margin: '0.5em' }}>exp : {tokenTime.exp}</code>
                     <code style={{ margin: '0.5em' }}>now : {currentTime}</code>
+                    <code style={{ margin: '0.5em' }}>[{deltaTime}]</code>
                 </div>}
             </div>
 
