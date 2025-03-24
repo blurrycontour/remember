@@ -85,8 +85,6 @@ export function Footer() {
 
         const unsubscribe = onIdTokenChanged(auth, async (user) => {
             if (user) {
-                const token = await user.getIdToken();
-                console.log("New Token:", token);
                 await fetchTokenTime();
             }
 
