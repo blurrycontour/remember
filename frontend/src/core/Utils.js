@@ -177,9 +177,9 @@ export function CardTemplate({
 }
 
 
-export const fetchCurrentTime = () =>
+export const formattedTime = (time=null) =>
 {
-    const now = new Date();
+    const now = time ? time : new Date();
     const pad = (num) => (num < 10 ? '0' : '') + num;
     const offset = -now.getTimezoneOffset();
     const sign = offset >= 0 ? '+' : '-';
