@@ -49,7 +49,6 @@ export function Login()
 
     if (user)
     {
-        console.log(user);
         return <Navigate to={from} replace />;
     }
 
