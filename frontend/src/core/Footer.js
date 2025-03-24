@@ -62,7 +62,11 @@ export function Footer() {
     };
 
     const checkTokenExpired = () => {
-        if (!tokenTime || !tokenTime.exp) setIsExpired(true);
+        if (!tokenTime || !tokenTime?.exp)
+        {
+            setIsExpired(true);
+            return;
+        };
         const currentTimeUnix = Math.floor(Date.now() / 1000); // Current time in Unix timestamp (seconds)
         // const tokenExpiryTimeUnix = Math.floor(new Date("2025-03-24 00:04:15 +0100").getTime() / 1000); // Token expiry time in Unix timestamp (seconds)
         const tokenExpiryTimeUnix = Math.floor(new Date(tokenTime.exp).getTime() / 1000); // Token expiry time in Unix timestamp (seconds)
@@ -95,20 +99,22 @@ export function Footer() {
 
     return (
         <div>
-            {!!buildInfo &&
-                <div className='footer'>
-                    <p>
+            <div className='footer'>
+                <p>
+                    <span>
+                        {isExpired  ?
+                            <span style={{ color: 'red' }}><FontAwesomeIcon icon={faCircleXmark} /></span> :
+                            <span style={{ color: 'green' }}><FontAwesomeIcon icon={faCircleCheck} /></span>
+                        }
+                    &nbsp;
+                    </span>
+                    {!!buildInfo &&
                         <span>
-                            {isExpired  ?
-                                <span style={{ color: 'red' }}><FontAwesomeIcon icon={faCircleXmark} /></span> :
-                                <span style={{ color: 'green' }}><FontAwesomeIcon icon={faCircleCheck} /></span>
-                            }
-                        &nbsp;
+                            Build: <a href={`https://github.com/blurrycontour/remember/tree/${buildInfo.version}`}>{buildInfo.version}</a>
                         </span>
-                        Build: <a href={`https://github.com/blurrycontour/remember/tree/${buildInfo.version}`}>{buildInfo.version}</a>
-                    </p>
-                </div>
-            }
+                    }
+                </p>
+            </div>
         </div>
     );
 }
