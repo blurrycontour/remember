@@ -7,12 +7,16 @@ services:
       - ${MONGODB_PORT}:27017
     command:
       - --auth
+      - --tlsMode=requireTLS
+      - --tlsCertificateKeyFile=/etc/ssl/mongodb/mongodb.pem
+      - --tlsCAFile=/etc/ssl/mongodb/ca.pem
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     volumes:
       - ../data/mongo/db:/data/db
       - ../data/mongo/backup:/data/backup
+      - ../certs/mongodb:/etc/ssl/mongodb:ro
     networks:
       - db-network
 

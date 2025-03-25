@@ -1,0 +1,17 @@
+name: "Repository Name "
+
+description: "Adds the repository name to the environment"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Get current repo name
+      shell: bash
+      run: |
+        repo_name=$(echo "${{ github.repository }}" | cut -d'/' -f2)
+        if [[ -z "$repo_name" ]]; then
+          echo "Failed to get repository name"
+          exit 1
+        fi
+        echo "REPO_NAME=$repo_name" >> $GITHUB_ENV
+        echo "REPO_NAME=$repo_name"

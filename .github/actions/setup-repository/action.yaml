@@ -1,0 +1,22 @@
+name: Setup Repository
+
+description: "Clones the repository on remote machines"
+
+inputs:
+  ssh_host:
+    description: "SSH Host"
+    required: false
+    default: "remote"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Clone repository
+      shell: bash
+      run: |
+        ssh ${{ inputs.ssh_host }} "
+          if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
+          cd $REPO_NAME
+          git fetch
+          git reset --hard $GITHUB_SHA
+        "
