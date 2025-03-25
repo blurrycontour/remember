@@ -3,6 +3,8 @@ data/*.pkl
 !data/sample.pkl
 .env
 data/mongo/*
+certs/*
+!certs/generate.sh
 
 #-------------------------------------
 # Byte-compiled / optimized / DLL files
