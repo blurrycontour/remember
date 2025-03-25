@@ -12,16 +12,49 @@ export function Account()
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
     const [tokenTime, setTokenTime] = useState(null);
+    const [deletePrompt, setDeletePrompt] = useState(false);
+    const [deletePromptInput, setDeletePromptInput] = useState('');
     const [statusMessage, setStatusMessage] = useState('Loading...');
+    const [deleteStatusMessage, setDeleteStatusMessage] = useState('');
     const [currentTime, setCurrentTime] = useState(formattedTime());
     const [deltaTime, setDeltaTime] = useState('xx:xx');
 
     SetAxiosDefaults();
 
+    //// Account handling methods
+
     const handleLogout = () =>
     {
         user.auth.signOut();
     }
+
+    const handleDeleteUser = async () =>
+    {
+        if (deletePromptInput !== 'DELETE-ME')
+        {
+            setDeleteStatusMessage('Invalid input!');
+            return;
+        }
+        try
+        {
+            await SetAxiosAuthorization();
+            const response = await axios.delete(`${API_URL}/account/user`);
+            if (typeof (response.data) === 'string')
+            {
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
+            handleLogout();
+            setStatusMessage('Deleted account successfully!');
+        } catch (error)
+        {
+            HandleAxiosError(error, setStatusMessage);
+            setStatusMessage((prev) => <span>{prev} <br/> (Failed to delete account!)</span>);
+        }
+    };
+
+
+    ///// Stats and token methods
 
     const fetchStats = async () =>
     {
@@ -110,6 +143,8 @@ export function Account()
                     <button onClick={handleLogout} className='login-button'>Log out</button>
                 </div>
 
+                {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
+
                 {!!stats && <div className='card3'>
                     <h2 style={{ margin: '0.5em' }}>Statistics 📊</h2>
                     <hr />
@@ -127,9 +162,25 @@ export function Account()
                     <code style={{ margin: '0.5em' }}>now : {currentTime}</code>
                     <code style={{ margin: '0.5em' }}>[{deltaTime}]</code>
                 </div>}
-            </div>
 
-            {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
+                <div className='card3' style={{ backgroundColor: 'rgba(125, 125, 125, 0.05)' }}>
+                    <button onClick={() => {setDeletePrompt(true)}} className='red-button'>Delete Account</button>
+                    {deletePrompt && <div>
+                        <p><b>Are you sure?</b></p>
+                        <p>This will permanently <span style={{color: 'red'}}>delete</span> all the data associated with your account!</p>
+                        <p>Type <b>DELETE-ME</b> to confirm</p>
+                        {!!deleteStatusMessage && <p style={{color: 'red'}}>{deleteStatusMessage}</p>}
+                        <input
+                            style={{marginTop: '0px'}}
+                            className='overlay-input'
+                            placeholder=''
+                            onChange={(e) => { setDeleteStatusMessage(''); setDeletePromptInput(e.target.value); }}
+                        />
+                        <button onClick={() => {setDeleteStatusMessage('');setDeletePromptInput('');setDeletePrompt(false)}} className='blue-button'>Cancel</button>
+                        <button onClick={handleDeleteUser} className='red-button'>Confirm</button>
+                    </div>}
+                </div>
+            </div>
         </div>
     );
 }
