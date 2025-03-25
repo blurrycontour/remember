@@ -6,6 +6,9 @@ on:
       external_ip:
         description: "Server IP Address"
         default: ""
+      fresh_deploy:
+        description: "Remove existing data"
+        default: "false"
 
 env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
@@ -17,33 +20,21 @@ env:
   GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}
   MONGO_ROOT_USERNAME: ${{secrets.MONGO_ROOT_USERNAME}}
   MONGO_ROOT_PASSWORD: ${{secrets.MONGO_ROOT_PASSWORD}}
+  MONGO_CERT_CA_PEM: ${{secrets.MONGO_CERT_CA_PEM}}
+  MONGO_CERT_SERVER_PEM: ${{secrets.MONGO_CERT_SERVER_PEM}}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Get current repo name
-        run: echo "REPO_NAME=${{ github.event.repository.name }}" >> $GITHUB_ENV
+      - uses: ./.github/actions/repository-name
       - uses: ./.github/actions/setup-ssh-keys
-        with:
-          ssh_ip: $SSH_IP
-          ssh_key: $SSH_KEY
       - uses: ./.github/actions/setup-cloud-credentials
-        with:
-          ssh_host: "remote"
-      - name: Get the docker-compose file
-        run: |
-            ssh remote "
-                if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
-                cd remember
-                git fetch
-                git reset --hard $GITHUB_SHA
-            "
+      - uses: ./.github/actions/setup-certificates
+      - uses: ./.github/actions/setup-repository
       - name: Create .env from .env.template file
         run: ssh remote "cd $REPO_NAME; cp .env.template .env"
-      - name: Add ngrok authtoken to .env
-        run: ssh remote "cd $REPO_NAME; echo 'NGROK_AUTHTOKEN=$NGROK_AUTHTOKEN' >> .env"
       - name: Add mongodb root credentials to .env
         run: |
           ssh remote "
@@ -51,6 +42,9 @@ jobs:
             echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env
             echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env
           "
+      - uses: ./.github/actions/setup-server-certificates
+
+      # docker compose stuff
       - name: Pull latest image
         run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml pull"
       - name: Stop existing containers
@@ -58,6 +52,12 @@ jobs:
       - name: Prune dangling images
         run: ssh remote "docker image prune -f"
       - name: Clean local data files
-        run: ssh remote "cd $REPO_NAME; sudo rm -rf data/mongo/db/*"
+        if: ${{ github.event.inputs.fresh_deploy == 'true' }}
+        run: |
+          ssh remote "
+            cd $REPO_NAME
+            cp -r data/mongo/db data/mongo/db.bak
+            sudo rm -rf data/mongo/db/*
+          "
       - name: Start containers again
-        run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml --env-file .env up -d"
+        run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml up -d"

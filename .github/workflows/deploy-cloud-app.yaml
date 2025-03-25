@@ -36,21 +36,12 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - uses: actions/checkout@v4
-      - name: Get current repo name
-        run: echo """REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)""" >> $GITHUB_ENV
+      - uses: ./.github/actions/repository-name
       - uses: ./.github/actions/setup-ssh-keys
       - uses: ./.github/actions/setup-cloud-credentials
         with:
-          ssh_host: "remote"
           add_firebase_credentials: true
-      - name: Get the docker-compose file
-        run: |
-            ssh remote "
-                if [ ! -d $REPO_NAME ]; then git clone https://github.com/blurrycontour/remember.git; fi
-                cd remember
-                git fetch
-                git reset --hard $GITHUB_SHA
-            "
+      - uses: ./.github/actions/setup-repository
       - name: Get the short commit sha
         run: |
           short_sha=$(git rev-parse --short $GITHUB_SHA)
@@ -87,8 +78,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     steps:
       - uses: actions/checkout@v4
-      - name: Get current repo name
-        run: echo """REPO_NAME=$(echo "${{ github.repository }}" | cut -d'/' -f2)""" >> $GITHUB_ENV
+      - uses: ./.github/actions/repository-name
       - uses: ./.github/actions/setup-ssh-keys
       - name: Set git tag as build version
         run: ssh remote "cd $REPO_NAME; echo 'BUILD_VERSION=${{ github.ref_name }}' >> .env"
