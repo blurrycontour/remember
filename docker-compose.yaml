@@ -16,6 +16,7 @@ services:
       - ./data:/data
       - ~/.aws:/root/.aws
       - ~/.gcp:/root/.gcp
+      - ./certs/mongodb:/etc/ssl/mongodb:ro
     env_file:
       - ./backend/.env
     environment:
@@ -39,7 +40,7 @@ services:
       - ./frontend/build:/repo/frontend/build
       - ./frontend/public:/repo/frontend/public
       - ./frontend/src:/repo/frontend/src
-    # command: ["npm", "start"]
+    command: ["npm", "start"]
     develop:
       watch:
         - path: ./frontend/src

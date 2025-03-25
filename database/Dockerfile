@@ -21,6 +21,6 @@ RUN echo "#!/bin/sh" > /usr/share/backup_service.sh && \
 COPY database/crontab /etc/crontabs/root
 RUN sed -i 's/\r$//' /etc/crontabs/root
 
-COPY database ${wd}/database
+COPY database/backup.py ${wd}/database/backup.py
 
 CMD ["crond", "-f"]
