@@ -31,7 +31,7 @@ jobs:
       - uses: ./.github/actions/repository-name
       - uses: ./.github/actions/setup-ssh-keys
       - uses: ./.github/actions/setup-cloud-credentials
-      - uses: ./.github/actions/setup-certificates
+      - uses: ./.github/actions/setup-server-certificates
       - uses: ./.github/actions/setup-repository
       - name: Create .env from .env.template file
         run: ssh remote "cd $REPO_NAME; cp .env.template .env"
