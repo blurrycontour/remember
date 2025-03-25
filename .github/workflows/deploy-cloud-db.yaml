@@ -30,10 +30,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/repository-name
       - uses: ./.github/actions/setup-ssh-keys
-      - uses: ./.github/actions/setup-server-certificates
       - uses: ./.github/actions/setup-repository
       - name: Create .env from .env.template file
         run: ssh remote "cd $REPO_NAME; cp .env.template .env"
+      - uses: ./.github/actions/setup-server-certificates
       - name: Add mongodb root credentials to .env
         run: |
           ssh remote "
@@ -41,9 +41,8 @@ jobs:
             echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env
             echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env
           "
-      - uses: ./.github/actions/setup-server-certificates
 
-      # docker compose stuff
+        # docker compose stuff
       - name: Pull latest image
         run: ssh remote "cd $REPO_NAME; docker compose -f database/docker-compose.yaml pull"
       - name: Stop existing containers

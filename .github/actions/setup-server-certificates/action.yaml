@@ -14,16 +14,16 @@ runs:
     - name: Create mongodb CA certificate
       shell: bash
       run: |
-        ssh ${{ inputs.ssh_host }} """
+        ssh ${{ inputs.ssh_host }} "
           cd $REPO_NAME
           mkdir -p certs/mongodb
-          echo "$MONGO_CERT_CA_PEM" > certs/mongodb/ca.pem
-        """
+          echo $MONGO_CERT_CA_PEM | base64 --decode > certs/mongodb/ca.pem
+        "
     - name: Create mongodb server certificate
       shell: bash
       run: |
-        ssh ${{ inputs.ssh_host }} """
+        ssh ${{ inputs.ssh_host }} "
           cd $REPO_NAME
           mkdir -p certs/mongodb
-          echo "$MONGO_CERT_SERVER_PEM" > certs/mongodb/mongodb.pem
-        """
+          echo $MONGO_CERT_SERVER_PEM | base64 --decode > certs/mongodb/mongodb.pem
+        "
