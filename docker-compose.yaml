@@ -40,6 +40,10 @@ services:
       - ./frontend/public:/repo/frontend/public
       - ./frontend/src:/repo/frontend/src
     # command: ["npm", "start"]
+    develop:
+      watch:
+        - path: ./frontend/src
+          action: rebuild
     ports:
       - 3000:3000
     networks:
