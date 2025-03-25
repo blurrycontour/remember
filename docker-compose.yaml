@@ -43,7 +43,7 @@ services:
     develop:
       watch:
         - path: ./frontend/src
-          action: restart
+          action: rebuild
     ports:
       - 3000:3000
     networks:
