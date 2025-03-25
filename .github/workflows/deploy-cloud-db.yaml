@@ -38,6 +38,7 @@ jobs:
         run: |
           ssh remote "
             cd $REPO_NAME
+            echo 'MONGODB_PORT=$MONGODB_PORT' >> .env
             echo 'MONGO_ROOT_USERNAME=$MONGO_ROOT_USERNAME' >> .env
             echo 'MONGO_ROOT_PASSWORD=$MONGO_ROOT_PASSWORD' >> .env
           "
