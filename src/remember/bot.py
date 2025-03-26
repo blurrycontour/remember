@@ -1,5 +1,6 @@
 import os
 from typing import Tuple
+import asyncio
 
 from telegram import Bot
 from telegram.error import TelegramError
@@ -23,6 +24,20 @@ class TelegramBot(metaclass=SingletonMeta):
         try:
             print(f"Sending message: {message}")
             await self.bot.send_message(chat_id=self.chat_id, text=message, parse_mode="markdown")
+        except TelegramError as e:
+            print(f"Exception: {e}")
+            return f"Error sending Telegram notification: {e}", False
+
+        return "Notification sent successfully", True
+
+
+    def send_notification_sync(self, message: str) -> Tuple[str, bool]:
+        """Send a notification to Telegram."""
+        try:
+            print(f"Sending message: {message}")
+            asyncio.run(
+                self.bot.send_message(chat_id=self.chat_id, text=message, parse_mode="markdown")
+            )
         except TelegramError as e:
             print(f"Exception: {e}")
             return f"Error sending Telegram notification: {e}", False

@@ -40,6 +40,6 @@ if __name__ == '__main__':
 
     # Notify status
     if all([r1,r2,r3,r4]):
-        TelegramBot().send_notification(message=f"Backup finished\n\[{size}]")
+        TelegramBot().send_notification_sync(message=f"Backup finished\n   \\[size]  {size}")
     else:
-        TelegramBot().send_notification(message="Backup failed!")
+        TelegramBot().send_notification_sync(message="Backup failed!")
