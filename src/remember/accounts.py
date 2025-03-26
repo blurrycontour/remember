@@ -17,6 +17,7 @@ class Accounts:
             if self.users_collection.find_one({"_id": _user["_id"]}):
                 return {
                     "message": "User already exists!",
+                    "info": "exists",
                     "user": user,
                 }, True
             else:
@@ -29,6 +30,7 @@ class Accounts:
                 })
                 return {
                     "message": "User added!",
+                    "info": "added",
                     "user": user,
                 }, True
 

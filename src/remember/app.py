@@ -27,7 +27,14 @@ class Remember(metaclass=SingletonMeta):
         """ Connect to database """
         db_name = os.getenv('ENVIRONMENT').lower()
         mongodb_string = os.getenv('MONGODB_STRING')
-        client = pymongo.MongoClient(mongodb_string)
+        print(f"Connecting to MongoDB: {mongodb_string}")
+        client = pymongo.MongoClient(
+            mongodb_string,
+            tls=True,
+            tlsCAFile="/etc/ssl/mongodb/ca.pem",
+            tlsCertificateKeyFile="/etc/ssl/mongodb/mongodb.pem",
+            tlsAllowInvalidCertificates=True
+        )
         self.db = client[db_name]
         self.categories = self.db["categories"]
         self.cards = self.db["cards"]

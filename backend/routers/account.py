@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, BackgroundTasks
 
-from remember import Remember
+from remember import Remember, TelegramBot
 
 from ..dependencies import get_current_user
 from ..utils import json_response_wrapper
@@ -24,22 +24,50 @@ async def home():
 
 
 @router.post('/user')
-async def set_user(user: Annotated[dict, Depends(get_current_user)]):
+async def set_user(
+        user: Annotated[dict, Depends(get_current_user)],
+        background_tasks: BackgroundTasks
+    ):
     """
     Add user if not exists already.
     """
     app = Remember()
     out = app.accounts.add_user(user)
+
+    if out[1] and out[0]["info"] == "added":
+        background_tasks.add_task(
+            TelegramBot().send_notification,
+            f"""
+    User *Added*
+    \[name]  {user["name"]}
+    \[email]  {user["email"]}
+            """
+        )
+
     return json_response_wrapper(*out)
 
 
 @router.delete('/user')
-async def delete_user(user: Annotated[dict, Depends(get_current_user)]):
+async def delete_user(
+        user: Annotated[dict, Depends(get_current_user)],
+        background_tasks: BackgroundTasks
+    ):
     """
     Delete exisiting user.
     """
     app = Remember()
     out = app.accounts.delete_user(user_id=user["user_id"])
+
+    if out[1]:
+        background_tasks.add_task(
+            TelegramBot().send_notification,
+            f"""
+    User *Deleted*
+    \[name]  {user["name"]}
+    \[email]  {user["email"]}
+            """
+        )
+
     return json_response_wrapper(*out)
 
 
