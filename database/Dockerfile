@@ -8,7 +8,7 @@ ARG wd=/repo
 WORKDIR ${wd}
 
 COPY pyproject.toml ${wd}/pyproject.toml
-RUN pip install . --no-cache-dir
+RUN pip install .[backend] --no-cache-dir
 
 COPY src ${wd}/src
 RUN pip install . --no-cache-dir

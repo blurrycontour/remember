@@ -17,7 +17,11 @@ def create_backup():
         "mongodump",
         f"--uri={MONGODB_STRING}",
         f"--archive={BACKUP_FILE}",
-        "--gzip"
+        "--gzip",
+        "--ssl",
+        "--sslCAFile=/etc/ssl/mongodb/ca.pem",
+        "--sslPEMKeyFile=/etc/ssl/mongodb/mongodb.pem",
+        "--tlsInsecure",
     ], check=True)
 
 

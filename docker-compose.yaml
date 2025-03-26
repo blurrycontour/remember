@@ -23,6 +23,8 @@ services:
       - MONGODB_STRING=${MONGODB_STRING}
       - ENVIRONMENT=${ENVIRONMENT}
       - BUILD_VERSION=${BUILD_VERSION}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
@@ -40,7 +42,7 @@ services:
       - ./frontend/build:/repo/frontend/build
       - ./frontend/public:/repo/frontend/public
       - ./frontend/src:/repo/frontend/src
-    command: ["npm", "start"]
+    # command: ["npm", "start"]
     develop:
       watch:
         - path: ./frontend/src
@@ -151,6 +153,7 @@ services:
       - ~/.aws:/root/.aws
       - ~/.gcp:/root/.gcp
       - ./data/mongo/backup:/data/backup
+      - ./certs/mongodb:/etc/ssl/mongodb:ro
 
 
 networks:
