@@ -33,6 +33,7 @@ env:
   TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
   MONGO_CERT_CA_PEM: ${{secrets.MONGO_CERT_CA_PEM}}
   MONGO_CERT_SERVER_PEM: ${{secrets.MONGO_CERT_SERVER_PEM}}
+  MONGO_CERT_CLIENT_PEM: ${{secrets.MONGO_CERT_CLIENT_PEM}}
 
 jobs:
   deploy:
@@ -47,6 +48,8 @@ jobs:
           add_firebase_credentials: true
       - uses: ./.github/actions/setup-repository
       - uses: ./.github/actions/setup-server-certificates
+        with:
+          add_client_certificate: true
       - name: Get the short commit sha
         run: |
           short_sha=$(git rev-parse --short $GITHUB_SHA)

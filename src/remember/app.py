@@ -32,8 +32,7 @@ class Remember(metaclass=SingletonMeta):
             mongodb_string,
             tls=True,
             tlsCAFile="/etc/ssl/mongodb/ca.pem",
-            tlsCertificateKeyFile="/etc/ssl/mongodb/mongodb.pem",
-            tlsAllowInvalidCertificates=True
+            tlsCertificateKeyFile="/etc/ssl/mongodb/client.pem",
         )
         self.db = client[db_name]
         self.categories = self.db["categories"]

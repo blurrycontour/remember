@@ -7,6 +7,9 @@ inputs:
     description: "SSH Host"
     default: "remote"
     required: false
+  add_client_certificate:
+    description: "Optionally add client certificate"
+    required: false
 
 runs:
   using: "composite"
@@ -26,4 +29,13 @@ runs:
           cd $REPO_NAME
           mkdir -p certs/mongodb
           echo $MONGO_CERT_SERVER_PEM | base64 --decode > certs/mongodb/mongodb.pem
+        "
+    - name: Create mongodb client certificate
+      if: ${{ inputs.add_client_certificate }}
+      shell: bash
+      run: |
+        ssh ${{ inputs.ssh_host }} "
+          cd $REPO_NAME
+          mkdir -p certs/mongodb
+          echo $MONGO_CERT_CLIENT_PEM | base64 --decode > certs/mongodb/client.pem
         "
