@@ -153,6 +153,7 @@ services:
       - ~/.aws:/root/.aws
       - ~/.gcp:/root/.gcp
       - ./data/mongo/backup:/data/backup
+      - ./certs/mongodb:/etc/ssl/mongodb:ro
 
 
 networks:
