@@ -13,14 +13,26 @@ db.createUser(
   }
 )
 
-// Add user
+// Add CI user
 db.createUser(
   {
     user: "ci-user",
     pwd: passwordPrompt(), // or cleartext password
     roles: [
-      { role: "readWrite", db: "dev" },
+      { role: "read", db: "dev" },
       { role: "readWrite", db: "prod" },
+    ]
+  }
+)
+
+// Add Local user
+db.createUser(
+  {
+    user: "local-user",
+    pwd: passwordPrompt(), // or cleartext password
+    roles: [
+      { role: "readWrite", db: "dev" },
+      { role: "read", db: "prod" },
     ]
   }
 )
