@@ -177,7 +177,7 @@ class Remember(metaclass=SingletonMeta):
         self.statistics.update_category_operations(user_id, "card.add")
 
         # Set card's category updated time
-        self.update_category(card.category_id, user_id, None, None, lightweight=True)
+        self.update_category(card.category_id, user_id, None, None, None, lightweight=True)
 
         return f"Card ID '{card.id}' added to category ID '{card.category_id}'", True
 
@@ -203,7 +203,7 @@ class Remember(metaclass=SingletonMeta):
         self.statistics.update_category_operations(user_id, "card.update")
 
         # Set card's category updated time
-        self.update_category(_card["card"]["category_id"], user_id, None, None, lightweight=True)
+        self.update_category(_card["card"]["category_id"], user_id, None, None, None, lightweight=True)
 
         return f"Card ID '{card_id}' updated!", True
 
@@ -230,7 +230,7 @@ class Remember(metaclass=SingletonMeta):
         self.statistics.update_category_operations(user_id, "card.delete")
 
         # Set card's category updated time
-        self.update_category(_card["card"]["category_id"], user_id, None, None, lightweight=True)
+        self.update_category(_card["card"]["category_id"], user_id, None, None, None, lightweight=True)
         return f"Card ID '{card_id}' removed!", True
 
 
