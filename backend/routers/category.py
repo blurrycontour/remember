@@ -33,7 +33,7 @@ async def get_category(category_id:str, user: Annotated[dict, Depends(get_curren
 @router.post('/')
 async def add_category(category: CategoryData, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
-    category = Category(category.name, category.description)
+    category = Category(category.name, category.description, category.diary)
     out = app.add_category(category=category, user_id=user["user_id"])
     return json_response_wrapper(*out)
 
@@ -41,7 +41,13 @@ async def add_category(category: CategoryData, user: Annotated[dict, Depends(get
 @router.put('/{category_id}')
 async def update_category(category_id: str, category: CategoryData, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
-    out = app.update_category(category_id=category_id, user_id=user["user_id"], name=category.name, description=category.description)
+    out = app.update_category(
+        category_id=category_id,
+        user_id=user["user_id"],
+        name=category.name,
+        description=category.description,
+        diary=category.diary
+    )
     return json_response_wrapper(*out)
 
 

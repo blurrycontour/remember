@@ -7,9 +7,10 @@ class Category:
     """
     Category class to represent a category of flashcards
     """
-    def __init__(self, name:str, description:str=None):
+    def __init__(self, name:str, description:str=None, diary:bool=False):
         self.name = name
         self.description = description
+        self.diary = diary
         self.created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.updated_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.id = self.create_id()
@@ -32,6 +33,7 @@ class Category:
             "id": self.id,
             "name": self.name,
             "description": self.description,
+            "diary": self.diary,
             "created": self.created_at,
             "updated": self.updated_at,
             "#cards": len(self.cards),

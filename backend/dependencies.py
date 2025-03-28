@@ -11,6 +11,7 @@ class CardData(BaseModel):
 class CategoryData(BaseModel):
     name: str
     description: str = ""
+    diary: bool = False
 
 
 def get_current_user(request: Request):

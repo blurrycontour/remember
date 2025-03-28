@@ -68,7 +68,7 @@ class Remember(metaclass=SingletonMeta):
         return f"Added category with ID: '{category.id}'", True
 
 
-    def update_category(self, category_id:str, user_id:str, name:str, description:str, lightweight:bool=False):
+    def update_category(self, category_id:str, user_id:str, name:str, description:str, diary:bool, lightweight:bool=False):
         """ Update a category """
         _category = self.categories.find_one({"user_id": user_id, "category.id": category_id})
         if not _category:
@@ -91,6 +91,7 @@ class Remember(metaclass=SingletonMeta):
                 {"$set": {
                     "category.name": name,
                     "category.description": description,
+                    "category.diary": diary,
                     "category.updated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                     }
                 }
