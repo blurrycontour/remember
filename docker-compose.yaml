@@ -1,6 +1,6 @@
 services:
   backend:
-    profiles: ["deploy", "stage"]
+    profiles: ["deploy", "stage", "deploy.full"]
     restart: unless-stopped
     # container_name: backend
     image: ${DOCKER_IMAGE_PREFIX}:backend
@@ -58,7 +58,7 @@ services:
 
 
   nginx:
-    profiles: ["deploy", "stage"]
+    profiles: ["deploy", "stage", "deploy.full"]
     restart: unless-stopped
     # container_name: nginx
     image: ${DOCKER_IMAGE_PREFIX}:nginx
@@ -84,7 +84,7 @@ services:
 
 
   ngrok:
-    profiles: ["deploy"]
+    profiles: ["deploy", "deploy.full"]
     restart: always
     image: ngrok/ngrok
     # container_name: ngrok
@@ -105,7 +105,7 @@ services:
 
 
   localtunnel:
-    profiles: ["deploy"]
+    profiles: ["deploy.full"]
     restart: always
     image: ${DOCKER_IMAGE_PREFIX}:localtunnel
     # container_name: localtunnel
@@ -125,7 +125,7 @@ services:
 
 
   localtonet:
-    profiles: ["deploy"]
+    profiles: ["deploy.full"]
     restart: always
     image: localtonet/localtonet
     # container_name: localtonet
