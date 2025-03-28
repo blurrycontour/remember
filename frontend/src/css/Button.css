@@ -141,3 +141,31 @@
     font-size: 1.2em;
     color: black;
 }
+
+.datePicker .normal-icon {
+    padding: 0.45rem 0.4rem;
+}
+.datePicker {
+    margin: 10px 0px 0px 0px;
+    width: 100%;
+}
+.datePicker input {
+    background-color: white;
+    border: 1px solid black;
+    width: -webkit-fill-available;
+}
+
+.dark-mode .datePicker input {
+    color: white;
+    background-color: black;
+    border: 1px solid white;
+}
+
+.overlay-checkbox {
+    margin: 10px;
+    margin-left: 0px;
+}
+.overlay-checkbox input {
+    margin-left: 0px;
+    margin-right: 10px;
+}

@@ -16,7 +16,8 @@
     "react-toggle-dark-mode": "^1.1.1",
     "react-swipeable": "^7.0.1",
     "axios-retry": "^4.4.2",
-    "@uiw/react-md-editor": "^4.0.4"
+    "@uiw/react-md-editor": "^4.0.4",
+    "react-datepicker": "^8.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

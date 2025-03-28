@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
-import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
+import { faCalendarDays, faEye, faEyeSlash, faPlusSquare, faSliders } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { SortItems, PreventSwipe, SearchBar, CardTemplate } from './Utils';
 import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Axios';
 import { MarkdownEditor } from './Editor';
-
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 SetAxiosRetry();
 
@@ -29,6 +30,8 @@ export function Cards()
     const [sortType, setSortType] = useState(getStorageItem('sortTypeCards', 'front'));
     const [sortOrder, setSortOrder] = useState(setStorageItem('sortOrderCards', 'asc'));
     const [optionsVisibleCard, setOptionsVisibleCard] = useState(null);
+    const [selected, setSelected] = useState(new Date());
+
 
     SetAxiosDefaults();
     const preventSwipeHandlers = PreventSwipe();
@@ -85,6 +88,7 @@ export function Cards()
             // setCards(response.data.cards);
             setCards(SortItems(response.data.cards, sortType, sortOrder));
             setCategory(response.data.category);
+            console.log("category", response.data.category);
             if (response.data.cards.length === 0) setStatusMessage('No cards found!');
             else setStatusMessage('');
         } catch (error)
@@ -173,6 +177,17 @@ export function Cards()
         }
     };
 
+    const onDateSelect = (date, type) =>
+    {
+        setSelected(date);
+        if (date === null) return;
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'long' });
+        const year = date.getFullYear();
+        const dateStr = `${day} ${month} ${year}`;
+        if (type === 'new') setNewCardFront(dateStr);
+        else setCurrentCard({ ...currentCard, front: dateStr });
+    };
 
     useEffect(() => {
         document.addEventListener('mousedown', handleClickOutside);
@@ -200,7 +215,10 @@ export function Cards()
         <div>
             <div className='content'>
                 <div className='card2'>
-                    <h1>{category?.name}</h1>
+                    <h1>
+                        {category?.diary && <span><FontAwesomeIcon icon={faBook} size="sm" />&nbsp;</span>}
+                        {category?.name}
+                    </h1>
                 </div>
 
                 {/* Sort bar */}
@@ -280,6 +298,19 @@ export function Cards()
                 <div className='overlay' {...preventSwipeHandlers}>
                     <h3>Edit Card 🧾</h3>
                     <p>Front
+                        { category?.diary &&
+                            <DatePicker
+                            showIcon
+                            toggleCalendarOnIconClick
+                            icon={<FontAwesomeIcon className="normal-icon" icon={faCalendarDays} size="sm" />}
+                            isClearable
+                            wrapperClassName="datePicker"
+                            dateFormat="yyyy-MM-dd"
+                            selected={selected}
+                            onChange={(date) => onDateSelect(date, 'edit')}
+                            placeholderText="No date selected!"
+                            />
+                        }
                         <textarea
                             className='overlay-textarea'
                             style={{ height: '65px' }}
@@ -300,6 +331,19 @@ export function Cards()
                 <div className='overlay' {...preventSwipeHandlers}>
                     <h3>Add a new Card 🧾</h3>
                     <p>Front
+                        { category?.diary &&
+                            <DatePicker
+                                showIcon
+                                toggleCalendarOnIconClick
+                                icon={<FontAwesomeIcon className="normal-icon" icon={faCalendarDays} size="sm" />}
+                                isClearable
+                                wrapperClassName="datePicker"
+                                dateFormat="yyyy-MM-dd"
+                                selected={selected}
+                                onChange={(date) => onDateSelect(date, 'new')}
+                                placeholderText="No date selected!"
+                            />
+                        }
                         <textarea
                             className='overlay-textarea'
                             style={{ height: '65px' }}

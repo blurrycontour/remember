@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrashAlt, faBars, faPlusSquare, faLayerGroup, faSliders } from '@fortawesome/free-solid-svg-icons';
-import { faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
+import { faBook, faArrowDownAZ, faArrowDownZA, faArrowDown19, faArrowDown91 } from '@fortawesome/free-solid-svg-icons';
 import { deleteCardPrompt, SortItems, PreventSwipe, SearchBar } from './Utils';
 import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Axios';
 import { MarkdownEditor, MarkdownPreview } from './Editor';
@@ -18,6 +18,7 @@ export function Category()
     const [categories, setCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState('');
     const [newCategoryDesc, setNewCategoryDesc] = useState('');
+    const [newCategoryIsDiary, setNewCategoryIsDiary] = useState(false);
     const [isOverlayOpen, setIsOverlayOpen] = useState(0);
     const [currentCategory, setCurrentCategory] = useState(null);
     const [statusMessage, setStatusMessage] = useState('Loading...');
@@ -91,7 +92,11 @@ export function Category()
         try
         {
             await SetAxiosAuthorization();
-            await axios.post(`${API_URL}/category/`, { name: newCategoryName, description: newCategoryDesc });
+            await axios.post(`${API_URL}/category/`, {
+                name: newCategoryName,
+                description: newCategoryDesc,
+                diary: newCategoryIsDiary
+            });
             closeOverlay();
             await fetchCategories();
         } catch (error)
@@ -105,7 +110,11 @@ export function Category()
         try
         {
             await SetAxiosAuthorization();
-            await axios.put(`${API_URL}/category/${currentCategory.id}`, { name: currentCategory.name, description: currentCategory.description });
+            await axios.put(`${API_URL}/category/${currentCategory.id}`, {
+                name: currentCategory.name,
+                description: currentCategory.description,
+                diary: currentCategory.diary || false
+            });
             closeOverlay();
             await fetchCategories();
         } catch (error)
@@ -234,7 +243,10 @@ export function Category()
 
                     {categories.length !== 0 && categories.map(category => (
                         <div key={category.id} className="card">
-                            <h2 className='card-hx'>{category.name}</h2>
+                            <h2 className='card-hx'>
+                                {category.diary && <span><FontAwesomeIcon icon={faBook} size="sm" />&nbsp;</span>}
+                                {category.name}
+                            </h2>
                             {!!category.description && <MarkdownPreview source={category.description} />}
                             <h4 className='card-hx' style={{ color: 'gray', paddingBottom: '15px' }}>Number of Cards → {category["#cards"]}</h4>
                             <button onClick={() => navigate(`/category/${category.id}`)} className='blue-button'>View</button>
@@ -271,6 +283,16 @@ export function Category()
                     </p>
                     <p style={{ marginBottom: '10px' }}>Category Description</p>
                     <MarkdownEditor value={currentCategory.description} onChange={(v) => { setCurrentCategory({ ...currentCategory, description: v }); setErrorMessage(''); }} />
+                    <div className='overlay-checkbox'>
+                        <input
+                            type="checkbox"
+                            id="isDiary"
+                            name="isDiary"
+                            checked={currentCategory.diary || false}
+                            onChange={(e) => { setCurrentCategory({ ...currentCategory, diary: e.target.checked }); }}
+                        />
+                        <label for="isDiary">Is this diary?</label>
+                    </div>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={updateCategory} className='green-button'>Save</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
@@ -290,6 +312,15 @@ export function Category()
                     </p>
                     <p style={{ marginBottom: '10px' }}>Category Description</p>
                     <MarkdownEditor value={newCategoryDesc} onChange={(v) => { setNewCategoryDesc(v); setErrorMessage(''); }} />
+                    <div className='overlay-checkbox'>
+                        <input
+                            type="checkbox"
+                            id="isDiary"
+                            name="isDiary"
+                            onChange={(e) => { setNewCategoryIsDiary(e.target.checked); }}
+                        />
+                        <label for="isDiary">Is this diary?</label>
+                    </div>
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCategory} className='green-button'>Add Category</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
