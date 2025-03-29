@@ -2,12 +2,28 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRandom } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faRandom } from '@fortawesome/free-solid-svg-icons';
 import { CardTemplate } from './Utils';
 import { SetAxiosDefaults, SetAxiosAuthorization, HandleAxiosError, SetAxiosRetry, UseLocalStorage, API_URL } from './Axios';
+import Select from 'react-select';
 
 
 SetAxiosRetry();
+
+const CustomOption = (props) => {
+    const { data, isSelected, innerRef, innerProps } = props;
+    return (
+        <div ref={innerRef} {...innerProps} style={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
+            <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => {}} // Prevent React warnings for uncontrolled input
+                style={{ marginRight: '10px' }}
+            />
+            <label>{data.label}</label>
+        </div>
+    );
+};
 
 export function Random()
 {
@@ -18,6 +34,7 @@ export function Random()
     const [showBack, setShowBack] = useState(false);
     const [statusMessage, setStatusMessage] = useState('Loading...');
     const [optionsVisibleCard, setOptionsVisibleCard] = useState(null);
+    const [isDarkMode, setIsDarkMode] = useState(document.querySelector('.dark-mode') !== null);
 
     const navigate = useNavigate();
     const optionsMenuRef = useRef(null);
@@ -36,7 +53,11 @@ export function Random()
                 setStatusMessage('Bad response from API server!');
                 return;
             }
-            setCategories(response.data);
+            setCategories(
+                response.data.map(category => {
+                    return { value: category.id, label: `${category.name} → ${category["#cards"]}` }
+               })
+            );
             setStatusMessage('');
         } catch (error)
         {
@@ -106,6 +127,18 @@ export function Random()
         // eslint-disable-next-line
     }, [categoryId]);
 
+    // Dynamically track changes to the `.dark-mode` class
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDarkMode(document.querySelector('.dark-mode') !== null);
+        });
+
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     return (
         <div>
@@ -118,24 +151,83 @@ export function Random()
                     style={{ margin: '8px 2px', minWidth: '100px', width: '100%' }}>
                     All Cards
                 </button>
-                <span style={{ padding: '0px 8px' }}></span>
+                <span style={{ padding: '0px 7px' }}></span>
                 <button onClick={() => navigate('/category/favorites')} className='blue-button'
-                    style={{ margin: '8px 2px', minWidth: '100px', width: '100%' }}>
-                    Favorites
+                    style={{ margin: '8px 2px', minWidth: '80px', width: '100%' }}>
+                    <FontAwesomeIcon size="lg" icon={faStar} />
+                </button>
+                <span style={{ padding: '0px 7px' }}></span>
+                <button onClick={fetchRandomCard} style={{ minWidth: '80px' }} className='green-button'>
+                    <FontAwesomeIcon size="lg" icon={faRandom} />
                 </button>
             </div>
 
             <div className="tool-card">
-                <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-                    {/* <option key={"all"} value={"all"}>[All] → {categories.reduce((sum, category) => sum + category["#cards"], 0)}</option> */}
+                {/* <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
                     {categories.map(category => (
                         <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
                     ))}
-                </select>
-                <span style={{ padding: '0px 8px' }}></span>
-                <button onClick={fetchRandomCard} style={{ minWidth: '100px' }} className='green-button'>
-                    <FontAwesomeIcon size="xl" icon={faRandom} />
-                </button>
+                </select> */}
+                <Select
+                    className="multi-select"
+                    defaultValue={[categories[0]]}
+                    isMulti={true}
+                    name="categories"
+                    options={categories}
+                    classNamePrefix="select"
+                    hideSelectedOptions={false}
+                    components={{ Option: CustomOption }}
+                    onChange={(selectedOptions) => {
+                        const selectedIds = selectedOptions.map(option => option.value);
+                        setCategoryId(selectedIds);
+                    }}
+                    styles={{
+                        control: (baseStyles) => ({
+                            ...baseStyles,
+                            backgroundColor: isDarkMode ? '#333' : '#fff', // Dark or light background
+                            color: isDarkMode ? '#fff' : '#000', // Light or dark text
+                            borderColor: isDarkMode ? '#555' : '#ccc', // Border color for dark/light mode
+                            // display: 'flex',
+                            // flexWrap: 'nowrap', // Prevent wrapping
+                            // overflowX: 'auto',
+                        }),
+                        singleValue: (baseStyles) => ({
+                            ...baseStyles,
+                            color: isDarkMode ? '#fff' : '#000', // Light or dark text for selected value
+                        }),
+                        menu: (baseStyles) => ({
+                            ...baseStyles,
+                            backgroundColor: isDarkMode ? '#333' : '#fff', // Dark or light background for dropdown
+                            color: isDarkMode ? '#fff' : '#000', // Light or dark text for dropdown items
+                        }),
+                        option: (baseStyles, { isFocused, isSelected }) => ({
+                            ...baseStyles,
+                            backgroundColor: isFocused
+                                ? isDarkMode
+                                    ? '#444'
+                                    : '#eee'
+                                : isSelected
+                                ? isDarkMode
+                                    ? '#555'
+                                    : '#ddd'
+                                : isDarkMode
+                                ? '#333'
+                                : '#fff', // Highlight colors for dark/light mode
+                            color: isFocused || isSelected ? isDarkMode ? '#ccc' : '#000' : isDarkMode ? '#ccc' : '#000', // Text color
+                        }),
+                        multiValue: (baseStyles) => ({
+                            ...baseStyles,
+                            backgroundColor: isDarkMode ? '#444' : '#eee', // Background color for selected items
+                            color: isDarkMode ? '#fff' : '#000', // Text color for selected items
+                        }),
+                        multiValueLabel: (baseStyles) => ({
+                            ...baseStyles,
+                            color: isDarkMode ? '#fff' : '#000', // Text color for selected items
+                        }),
+                    }}
+                />
+                {/* <span style={{ padding: '0px 8px' }}></span> */}
+
             </div>
 
             {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
