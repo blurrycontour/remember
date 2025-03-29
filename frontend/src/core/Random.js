@@ -58,7 +58,8 @@ export function Random()
                     return { value: category.id, label: `${category.name} → ${category["#cards"]}` }
                })
             );
-            setStatusMessage('');
+            if (categoryId.length === 0) setStatusMessage('Select at least one category!');
+            else setStatusMessage('');
         } catch (error)
         {
             HandleAxiosError(error, setStatusMessage);
@@ -69,6 +70,10 @@ export function Random()
     {
         try
         {
+            if (categoryId.length === 0) {
+                setStatusMessage('Select at least one category!');
+                return;
+            }
             setRandomCard(null);
             setStatusMessage('Loading...');
             await SetAxiosAuthorization();
@@ -150,12 +155,12 @@ export function Random()
                     style={{ margin: '8px 2px', minWidth: '100px', width: '100%' }}>
                     All Cards
                 </button>
-                <span style={{ padding: '0px 7px' }}></span>
+                <span style={{ padding: '0px 5px' }}></span>
                 <button onClick={() => navigate('/category/favorites')} className='blue-button'
                     style={{ margin: '8px 2px', minWidth: '80px' }}>
                     <FontAwesomeIcon size="lg" icon={faStar} />
                 </button>
-                <span style={{ padding: '0px 7px' }}></span>
+                <span style={{ padding: '0px 5px' }}></span>
                 <button onClick={fetchRandomCard} style={{ minWidth: '80px' }} className='green-button'>
                     <FontAwesomeIcon size="lg" icon={faRandom} />
                 </button>
@@ -173,11 +178,11 @@ export function Random()
                     classNamePrefix="select"
                     hideSelectedOptions={false}
                     closeMenuOnSelect={false}
-                    components={{ Option: CustomOption }}
                     onChange={(selectedOptions) => {
                         const selectedIds = selectedOptions.map(option => option.value);
                         setCategoryId(selectedIds);
                     }}
+                    components={{ Option: CustomOption }}
                     styles={{
                         control: (baseStyles) => ({
                             ...baseStyles,
