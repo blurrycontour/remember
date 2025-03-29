@@ -47,6 +47,7 @@ h1 {
     position: relative;
     word-wrap: break-word;
     display: flex;
+    align-items: center;
 }
 
 .overlay {
@@ -140,6 +141,11 @@ h1 {
 
 .overlay p, .overlay button {
     font-size: 17px;
+}
+
+.multi-select {
+    width: 100%;
+    margin: 10px 0;
 }
 
 .tool-card select {
@@ -341,12 +347,6 @@ html {
     color: white;
 }
 
-.dark-mode .tool-card select {
-    background-color: #252525;
-    color: white;
-    border: 1px solid white;
-}
-
 .dark-mode .header {
     background-color: #212121;
     color: #e0e0e0;
@@ -361,4 +361,10 @@ html {
 
 .dark-mode .sort-button {
     color: #e0e0e0;
+}
+
+.dark-mode .tool-card select {
+    background-color: #252525;
+    color: white;
+    border: 1px solid white;
 }

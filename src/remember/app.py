@@ -252,34 +252,33 @@ class Remember(metaclass=SingletonMeta):
             }, True
 
 
-    def random(self, category_id:str, user_id:str):
-        """ Show a random card from the category or all categories """
-        if category_id == "favorites":
-            all_cards = [{
-                    "category": self.get_category(category_id=_card["category_id"], user_id=user_id, only_category=True)[0],
-                    "card": _card
-                } for _card in self.get_favorites(user_id)[0]["cards"]
-            ]
+    def random(self, category_ids:str, user_id:str):
+        """Show a random card from the specified category or all categories."""
+        category_ids = category_ids.split(",")
 
-        elif category_id == "all":
-            all_cards = [{
-                    "category": self.get_category(category_id=_card["category_id"], user_id=user_id, only_category=True)[0],
-                    "card": _card
-                } for _card in self.get_all(user_id)[0]["cards"]
-            ]
+        query = {"user_id": user_id}
+        # Adjust the query based on the category_id
+        if "favorites" in category_ids:
+            query["card.favorite"] = True
+        if "all" not in category_ids and ["favorites"] != category_ids:
+            query["card.category_id"] = {"$in": [cat_id for cat_id in category_ids]}
 
-        else:
-            _all_cards, _ = self.get_category(category_id=category_id, user_id=user_id)
-            all_cards = [{
-                    "category": _all_cards["category"],
-                    "card": card
-                } for card in _all_cards["cards"]
-            ]
+        # Fetch a random card directly from the database
+        result = list(self.cards.aggregate([
+            {"$match": query},
+            {"$sample": {"size": 1}}
+        ]))
 
-        if not all_cards:
-            return "No cards found!", False
+        if not result:
+            return "No card found!", False
 
-        return random.choices(all_cards, k=1)[0], True
+        # Fetch the category details for the card
+        random_card = result[0]["card"]
+        category = self.get_category(
+            user_id=user_id, category_id=random_card["category_id"], only_category=True
+        )[0]
+
+        return {"category": category, "card": random_card}, True
 
 
     def favorite_card(self, card_id:str, user_id:str):
