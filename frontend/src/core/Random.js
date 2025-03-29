@@ -152,16 +152,16 @@ export function Random()
 
             <div className="tool-card">
                 <button onClick={() => navigate('/category/all')} className='blue-button'
-                    style={{ margin: '8px 2px', minWidth: '100px', width: '100%' }}>
+                    style={{ minWidth: '120px', width: '100%' }}>
                     All Cards
                 </button>
                 <span style={{ padding: '0px 5px' }}></span>
                 <button onClick={() => navigate('/category/favorites')} className='blue-button'
-                    style={{ margin: '8px 2px', minWidth: '80px' }}>
+                    style={{ minWidth: '80px', width: '100%' }}>
                     <FontAwesomeIcon size="lg" icon={faStar} />
                 </button>
                 <span style={{ padding: '0px 5px' }}></span>
-                <button onClick={fetchRandomCard} style={{ minWidth: '80px' }} className='green-button'>
+                <button onClick={fetchRandomCard} style={{ minWidth: '80px', width: '100%' }} className='green-button'>
                     <FontAwesomeIcon size="lg" icon={faRandom} />
                 </button>
             </div>
