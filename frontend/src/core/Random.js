@@ -17,7 +17,7 @@ const CustomOption = (props) => {
             <input
                 type="checkbox"
                 checked={isSelected}
-                onChange={() => {}} // Prevent React warnings for uncontrolled input
+                onChange={() => {}}
                 style={{ marginRight: '10px' }}
             />
             <label>{data.label}</label>
@@ -29,7 +29,7 @@ export function Random()
 {
     const { setStorageItem, getStorageItem } = UseLocalStorage();
     const [categories, setCategories] = useState([]);
-    const [categoryId, setCategoryId] = useState(getStorageItem('randomSelectedCategoryId', 'all'));
+    const [categoryId, setCategoryId] = useState(getStorageItem('randomSelectedCategoryId', ['all']));
     const [randomCard, setRandomCard] = useState(null);
     const [showBack, setShowBack] = useState(false);
     const [statusMessage, setStatusMessage] = useState('Loading...');
@@ -132,13 +132,12 @@ export function Random()
         const observer = new MutationObserver(() => {
             setIsDarkMode(document.querySelector('.dark-mode') !== null);
         });
-
         observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-
         return () => {
             observer.disconnect();
         };
     }, []);
+
 
     return (
         <div>
@@ -153,7 +152,7 @@ export function Random()
                 </button>
                 <span style={{ padding: '0px 7px' }}></span>
                 <button onClick={() => navigate('/category/favorites')} className='blue-button'
-                    style={{ margin: '8px 2px', minWidth: '80px', width: '100%' }}>
+                    style={{ margin: '8px 2px', minWidth: '80px' }}>
                     <FontAwesomeIcon size="lg" icon={faStar} />
                 </button>
                 <span style={{ padding: '0px 7px' }}></span>
@@ -163,19 +162,17 @@ export function Random()
             </div>
 
             <div className="tool-card">
-                {/* <select value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
-                    {categories.map(category => (
-                        <option key={category.id} value={category.id}>{category.name} → {category["#cards"]}</option>
-                    ))}
-                </select> */}
                 <Select
                     className="multi-select"
-                    defaultValue={[categories[0]]}
+                    value={categories.filter(category => categoryId.includes(category.value))}
+                    placeholder="Select categories..."
+                    isSearchable={true}
                     isMulti={true}
                     name="categories"
                     options={categories}
                     classNamePrefix="select"
                     hideSelectedOptions={false}
+                    closeMenuOnSelect={false}
                     components={{ Option: CustomOption }}
                     onChange={(selectedOptions) => {
                         const selectedIds = selectedOptions.map(option => option.value);
@@ -187,9 +184,6 @@ export function Random()
                             backgroundColor: isDarkMode ? '#333' : '#fff', // Dark or light background
                             color: isDarkMode ? '#fff' : '#000', // Light or dark text
                             borderColor: isDarkMode ? '#555' : '#ccc', // Border color for dark/light mode
-                            // display: 'flex',
-                            // flexWrap: 'nowrap', // Prevent wrapping
-                            // overflowX: 'auto',
                         }),
                         singleValue: (baseStyles) => ({
                             ...baseStyles,
@@ -226,8 +220,6 @@ export function Random()
                         }),
                     }}
                 />
-                {/* <span style={{ padding: '0px 8px' }}></span> */}
-
             </div>
 
             {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
