@@ -148,6 +148,16 @@ h1 {
     margin: 10px 0;
 }
 
+.tool-card select {
+    width: 100%;
+    padding: 10px 10px;
+    margin: 10px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    outline: none;
+    border: 1px solid black;
+}
+
 .card3 {
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -337,13 +347,6 @@ html {
     color: white;
 }
 
-/* .dark-mode .select__control,
-.dark-mode .select__menu,
-.dark-mode .multi-select {
-    background-color: #252525;
-    color: white;
-} */
-
 .dark-mode .header {
     background-color: #212121;
     color: #e0e0e0;
@@ -358,4 +361,10 @@ html {
 
 .dark-mode .sort-button {
     color: #e0e0e0;
+}
+
+.dark-mode .tool-card select {
+    background-color: #252525;
+    color: white;
+    border: 1px solid white;
 }
