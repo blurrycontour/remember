@@ -70,12 +70,12 @@ export function Random()
     {
         try
         {
+            setRandomCard(null);
+            setStatusMessage('Loading...');
             if (categoryId.length === 0) {
                 setStatusMessage('Select at least one category!');
                 return;
             }
-            setRandomCard(null);
-            setStatusMessage('Loading...');
             await SetAxiosAuthorization();
             const response = await axios.get(`${API_URL}/main/random/${categoryId}`);
             if (response.headers['content-type'] === 'text/html')
