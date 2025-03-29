@@ -42,8 +42,8 @@ async def random(user: Annotated[dict, Depends(get_current_user)]):
     return json_response_wrapper(*out)
 
 
-@router.get('/random/{category_id}')
-async def random_from_category(category_id:str, user: Annotated[dict, Depends(get_current_user)]):
+@router.get('/random/{category_ids}')
+async def random_from_category(category_ids:str, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
-    out =  app.random(category_id=category_id, user_id=user["user_id"])
+    out =  app.random(category_ids=category_ids, user_id=user["user_id"])
     return json_response_wrapper(*out)
