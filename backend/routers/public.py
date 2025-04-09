@@ -36,7 +36,7 @@ async def get_ip_info(request: Request, language:str="en"):
     find_ip_token = os.getenv('FIND_IP_TOKEN', None)
 
     # Get the client IP address
-    client_ip = request.headers.get('X-Forwarded-For')
+    client_ip = request.headers.get('X-Forwarded-For').split(",")[0].strip()
     print(f"Client IP: {client_ip}")
 
     if find_ip_token:
