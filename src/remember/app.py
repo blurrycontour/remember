@@ -27,7 +27,7 @@ class Remember(metaclass=SingletonMeta):
         """ Connect to database """
         db_name = os.getenv('ENVIRONMENT').lower()
         mongodb_string = os.getenv('MONGODB_STRING')
-        print(f"Connecting to MongoDB: {mongodb_string}")
+        print("Connecting to MongoDB")
         client = pymongo.MongoClient(
             mongodb_string,
             tls=True,

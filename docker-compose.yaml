@@ -25,6 +25,7 @@ services:
       - BUILD_VERSION=${BUILD_VERSION}
       - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
       - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
+      - FIND_IP_TOKEN=${FIND_IP_TOKEN}
     extra_hosts:
       - 'host.docker.internal:host-gateway'
 
