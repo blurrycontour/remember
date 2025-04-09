@@ -86,12 +86,6 @@ export function Account()
                     setStatusMessage('Bad response from API server!');
                     return;
                 }
-                if (response.data.success === false)
-                {
-                    setStatusMessage('Failed to fetch IP info!');
-                    return;
-                }
-                console.log(response.data);
                 setIpInfo(response.data);
                 setStatusMessage('');
             } catch (error)
@@ -167,14 +161,13 @@ export function Account()
                     {user?.photoURL && <img src={user?.photoURL} alt='User' style={{ width: '100px', height: '100px', borderRadius: '50%' }} />}
                     <h3>{user?.email}</h3>
                     <button onClick={handleLogout} className='login-button'>Log out</button>
+                    {!!ipInfo && <div style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+                        <code style={{ margin: '0.5em' }}>[{ipInfo.ip}]</code>
+                        <code style={{ margin: '0.5em' }}>{ipInfo.isp}</code>
+                        <code style={{ margin: '0.5em' }}>{ipInfo.city}, {ipInfo.country}</code>
+                        <br/>
+                    </div>}
                 </div>
-
-                {!!ipInfo && <div className='card3'>
-                    <code style={{ margin: '0.5em' }}>IP : {ipInfo.ip}</code>
-                    <code style={{ margin: '0.5em' }}>City : {ipInfo.city}</code>
-                    <code style={{ margin: '0.5em' }}>Country : {ipInfo.country}</code>
-                    <code style={{ margin: '0.5em' }}>ISP : {ipInfo.isp}</code>
-                </div>}
 
                 {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
 
