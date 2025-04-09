@@ -34,6 +34,7 @@ env:
   MONGO_CERT_CA_PEM: ${{secrets.MONGO_CERT_CA_PEM}}
   MONGO_CERT_SERVER_PEM: ${{secrets.MONGO_CERT_SERVER_PEM}}
   MONGO_CERT_CLIENT_PEM: ${{secrets.MONGO_CERT_CLIENT_PEM}}
+  FIND_IP_TOKEN: ${{secrets.FIND_IP_TOKEN}}
 
 jobs:
   deploy:
@@ -76,6 +77,8 @@ jobs:
             echo 'TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN' >> .env
             echo 'TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID' >> .env
           "
+      - name: Add findip token to .env
+        run: ssh remote "cd $REPO_NAME; echo 'FIND_IP_TOKEN=$FIND_IP_TOKEN' >> .env"
       - name: Add bucket name to .env
         run: ssh remote "cd $REPO_NAME; echo 'BUCKET_NAME=$BUCKET_NAME' >> .env"
       - name: Pull latest images
