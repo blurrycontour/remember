@@ -11,6 +11,7 @@ export function Account()
 {
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
+    const [ipInfo, setIpInfo] = useState(null);
     const [tokenTime, setTokenTime] = useState(null);
     const [deletePrompt, setDeletePrompt] = useState(false);
     const [deletePromptInput, setDeletePromptInput] = useState('');
@@ -75,6 +76,30 @@ export function Account()
         }
     };
 
+    const fetchIpInfo = async () =>
+        {
+            try
+            {
+                const response = await axios.get(`${API_URL}/public/ip-info`);
+                if (typeof (response.data) === 'string')
+                {
+                    setStatusMessage('Bad response from API server!');
+                    return;
+                }
+                if (response.data.success === false)
+                {
+                    setStatusMessage('Failed to fetch IP info!');
+                    return;
+                }
+                console.log(response.data);
+                setIpInfo(response.data);
+                setStatusMessage('');
+            } catch (error)
+            {
+                HandleAxiosError(error, setStatusMessage);
+            }
+        };
+
     const fetchTokenTime = async () =>
     {
         try
@@ -100,6 +125,7 @@ export function Account()
     {
         fetchStats();
         fetchTokenTime();
+        fetchIpInfo();
         // eslint-disable-next-line
     }, []);
 
@@ -142,6 +168,13 @@ export function Account()
                     <h3>{user?.email}</h3>
                     <button onClick={handleLogout} className='login-button'>Log out</button>
                 </div>
+
+                {!!ipInfo && <div className='card3'>
+                    <code style={{ margin: '0.5em' }}>IP : {ipInfo.ip}</code>
+                    <code style={{ margin: '0.5em' }}>City : {ipInfo.city}</code>
+                    <code style={{ margin: '0.5em' }}>Country : {ipInfo.country}</code>
+                    <code style={{ margin: '0.5em' }}>ISP : {ipInfo.isp}</code>
+                </div>}
 
                 {!!statusMessage && <h3 style={{ textAlign: 'center' }}>{statusMessage}</h3>}
 
