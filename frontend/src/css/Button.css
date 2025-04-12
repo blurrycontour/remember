@@ -68,6 +68,13 @@
     border: 2px solid hwb(123 0% 34%);
 }
 
+.green-button:disabled {
+    background-color: #ccc;
+    color: #666;
+    border: 2px solid #ccc;
+    cursor: not-allowed;
+}
+
 .blue-button {
     background-color: #007BFF;
     color: white;

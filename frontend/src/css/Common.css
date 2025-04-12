@@ -148,7 +148,8 @@ h1 {
     margin: 10px 0;
 }
 
-.tool-card select {
+.tool-card select,
+.overlay select {
     width: 100%;
     padding: 10px 10px;
     margin: 10px 0;
@@ -269,6 +270,7 @@ html {
     transition: box-shadow 0.2s ease-in-out;
     position: absolute;
     z-index: 500;
+    white-space: nowrap;
 }
 
 .options-menu button {
@@ -363,7 +365,8 @@ html {
     color: #e0e0e0;
 }
 
-.dark-mode .tool-card select {
+.dark-mode .tool-card select,
+.dark-mode .overlay select {
     background-color: #252525;
     color: white;
     border: 1px solid white;

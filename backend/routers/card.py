@@ -34,7 +34,7 @@ async def add_card(card: CardData, user: Annotated[dict, Depends(get_current_use
 @router.put('/{card_id}')
 async def update_card(card_id:str, card: CardData, user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
-    out = app.update_card(card_id=card_id, user_id=user["user_id"], front=card.front, back=card.back)
+    out = app.update_card(card_id=card_id, user_id=user["user_id"], front=card.front, back=card.back, category_id=card.category_id)
     return json_response_wrapper(*out)
 
 

@@ -19,6 +19,7 @@ export function Cards()
     const [searchString, setSearchString] = useState('');
     const [cards, setCards] = useState([]);
     const [category, setCategory] = useState(null);
+    const [newCategories, setNewCategories] = useState([]);
     const [newCardFront, setNewCardFront] = useState('');
     const [newCardBack, setNewCardBack] = useState('');
     const [isOverlayOpen, setIsOverlayOpen] = useState(0);
@@ -116,7 +117,7 @@ export function Cards()
         try
         {
             await SetAxiosAuthorization();
-            await axios.put(`${API_URL}/card/${currentCard.id}`, { category_id: currentCard.id, front: currentCard.front, back: currentCard.back });
+            await axios.put(`${API_URL}/card/${currentCard.id}`, { category_id: currentCard.category_id, front: currentCard.front, back: currentCard.back });
             closeOverlay();
             await fetchCards();
         } catch (error)
@@ -138,11 +139,37 @@ export function Cards()
         }
     };
 
+
+    // =========== Category functions ===========
+    const fetchCategories = async () =>
+    {
+        try
+        {
+            await SetAxiosAuthorization();
+            const response = await axios.get(`${API_URL}/category/`);
+            if (typeof (response.data) === 'string')
+            {
+                setStatusMessage('Bad response from API server!');
+                return;
+            }
+            setNewCategories(response.data);
+            if (response.data.length === 0) setStatusMessage('No categories found!');
+            else setStatusMessage('');
+        } catch (error)
+        {
+            HandleAxiosError(error, setStatusMessage);
+        }
+    };
+
     // =========== Overlay functions ===========
     const openOverlay = (type, card) =>
     {
         setCurrentCard(card);
         setIsOverlayOpen(type);
+        if (type === 3) {
+            fetchCategories();
+            setCurrentCard({ ...card, old_category_id: card.category_id });
+        }
         setErrorMessage('');
         document.querySelector('.content').classList.add('blur-background');
         document.body.classList.add('dark-background');
@@ -355,6 +382,26 @@ export function Cards()
                     <MarkdownEditor value={newCardBack} onChange={(v) => { setNewCardBack(v); setErrorMessage(''); }} height={200} />
                     {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                     <button onClick={addCard} className='green-button'>Add Card</button>
+                    <button onClick={closeOverlay} className='red-button'>Cancel</button>
+                </div>
+            )}
+
+            {/* Change cateogry overlay window */}
+            {isOverlayOpen === 3 && (
+                <div className='overlay' {...preventSwipeHandlers}>
+                    <h3>Change Category 🧾</h3>
+                    <select
+                        value={currentCard.category_id}
+                        onChange={(e) => { setCurrentCard({ ...currentCard, category_id: e.target.value }); setErrorMessage(''); }}
+                    >
+                        {newCategories.map(category => (
+                            <option key={category.id} value={category.id} disabled={category.id === currentCard.old_category_id} style={ category.id === currentCard.old_category_id ? {color:'gray'} : {} }>
+                                {category.name} → {category["#cards"]} { category.id === currentCard.old_category_id ? "(Current)" : "" }
+                            </option>
+                        ))}
+                    </select>
+                    {!!errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+                    <button onClick={updateCard} className='green-button' disabled={currentCard.category_id === currentCard.old_category_id}>Save</button>
                     <button onClick={closeOverlay} className='red-button'>Cancel</button>
                 </div>
             )}

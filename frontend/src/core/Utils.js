@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faEdit, faTrashAlt, faBars, faMagnifyingGlass, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faEdit, faTrashAlt, faBars, faMagnifyingGlass, faLayerGroup, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import { MarkdownPreview } from './Editor';
 import { HandleAxiosError, SetAxiosAuthorization, API_URL } from './Axios';
 
@@ -145,7 +145,13 @@ export function CardTemplate({
                         {openOverlay && (
                             <button onClick={() => openOverlay(2, card)}>
                                 <FontAwesomeIcon icon={faEdit} size="lg" />
-                                &nbsp;&nbsp;Edit
+                                &nbsp;&nbsp;Edit Card
+                            </button>
+                        )}
+                        {openOverlay && (
+                            <button onClick={() => openOverlay(3, card)}>
+                                <FontAwesomeIcon icon={faRightLeft} size="lg" />
+                                &nbsp;&nbsp;Change Category
                             </button>
                         )}
                         <button onClick={() => toggleFavorite(card, setOptionsVisibleCard, setStatusMessage)}>
