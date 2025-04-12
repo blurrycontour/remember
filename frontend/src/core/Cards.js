@@ -200,7 +200,7 @@ export function Cards()
     {
         fetchCards();
         // eslint-disable-next-line
-    }, []);
+    }, [id]);
 
     useEffect(() =>
     {

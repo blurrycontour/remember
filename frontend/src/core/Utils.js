@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSwipeable } from 'react-swipeable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar, faEdit, faTrashAlt, faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
+import { faStar, faEdit, faTrashAlt, faBars, faMagnifyingGlass, faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { MarkdownPreview } from './Editor';
 import { HandleAxiosError, SetAxiosAuthorization, API_URL } from './Axios';
 
@@ -130,6 +130,8 @@ export function CardTemplate({
         category=null
     }) {
 
+    const navigate = useNavigate();
+
     const toggleOptions = (cardId) => {
         optionsVisibleCard === cardId ? setOptionsVisibleCard(null) : setOptionsVisibleCard(cardId);
     };
@@ -149,6 +151,10 @@ export function CardTemplate({
                         <button onClick={() => toggleFavorite(card, setOptionsVisibleCard, setStatusMessage)}>
                             <FontAwesomeIcon icon={faStar} size="lg" />
                             &nbsp;&nbsp;{card.favorite ? 'Unfavorite' : 'Favorite'}
+                        </button>
+                        <button onClick={() => {toggleOptions(card.id); navigate(`/category/${card.category_id}`)}} style={{ whiteSpace: 'nowrap' }}>
+                            <FontAwesomeIcon icon={faLayerGroup} size="lg" />
+                            &nbsp;&nbsp;Visit Category
                         </button>
                         <button onClick={deleteCardPrompt(removeCard, card, [setOptionsVisibleCard])}>
                             <FontAwesomeIcon icon={faTrashAlt} size="lg" />
