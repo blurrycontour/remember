@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from typing import Annotated, Optional
+import base64
 
 from fastapi import APIRouter, Depends, Query, BackgroundTasks
 
@@ -79,6 +80,26 @@ async def get_stats(user: Annotated[dict, Depends(get_current_user)]):
     app = Remember()
     out = app.statistics.get_stats(user_id=user["user_id"])
     return json_response_wrapper(*out)
+
+
+@router.get('/analytics')
+async def get_analytics(user: Annotated[dict, Depends(get_current_user)], theme:str='light', width:int=10, height:int=6):
+    """
+    Get user analytics.
+    """
+    app = Remember()
+    bar_chart = app.statistics.get_bar_chart(user_id=user["user_id"], theme=theme, width=width, height=height)
+    histogram = app.statistics.get_histogram(user_id=user["user_id"], theme=theme, width=width, height=height)
+
+    # Encode the SVG images as Base64 strings
+    bar_chart_base64 = base64.b64encode(bar_chart).decode('utf-8')
+    histogram_base64 = base64.b64encode(histogram).decode('utf-8')
+
+    # Return both images in a JSON response
+    return json_response_wrapper({
+        "bar_chart": f"data:image/svg+xml;base64,{bar_chart_base64}",
+        "histogram": f"data:image/svg+xml;base64,{histogram_base64}"
+    }, True)
 
 
 @router.delete('/stats')

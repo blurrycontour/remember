@@ -288,6 +288,16 @@ html {
     background-color: #ddd;
 }
 
+.chart {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.chart img {
+    width: 100%;
+    height: auto;
+}
+
 /* =========== Dark mode styles =========== */
 .dark-mode {
     background-color: #121212;

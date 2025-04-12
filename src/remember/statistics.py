@@ -1,3 +1,7 @@
+import io
+import matplotlib.pyplot as plt
+
+
 class Statistics:
     """ Class to handle user statistics """
 
@@ -5,9 +9,24 @@ class Statistics:
         self.stats = db["stats"]
         self.categories = db["categories"]
         self.cards = db["cards"]
+        self.theme_config = {
+            "dark": {
+                "background": "#333333",
+                "text": "#FFFFFF",
+                "grid": "#FFFFFF",
+                "green": "darkgreen",
+                "blue": "darkblue",
+            },
+            "light": {
+                "background": "#FFFFFF",
+                "text": "#000000",
+                "grid": "#000000",
+                "green": "lightgreen",
+                "blue": "skyblue",
+            }
+        }
 
-
-    def update_category_operations(self, user_id:str, key:str):
+    def update_operations(self, user_id:str, key:str):
         """
         Update the operations of categories and cards
         key: str e.g. "category.add" or "card.update"
@@ -59,3 +78,92 @@ class Statistics:
             }}
         )
         return "User statistics reset!", True
+
+
+    def get_bar_chart(self, user_id: str, theme: str, width: int = 10, height: int = 6):
+        """ Generate bar chart of category sizes with theme-specific colors """
+        tc = self.theme_config.get(theme, self.theme_config["light"])
+
+        # Get category sizes
+        category_sizes = self.cards.aggregate([
+            {"$match": {"user_id": user_id}},
+            {"$group": {
+                "_id": "$card.category_id",
+                "size_b": {"$sum": {"$bsonSize": "$$ROOT"}}
+            }},
+            {"$addFields": {
+                "category_id": "$_id",
+                "size_kb": {"$divide": ["$size_b", 1024]},
+                "size_mb": {"$divide": ["$size_b", 1024 * 1024]}
+            }}
+        ])
+
+        # Get all categories
+        _categories = self.categories.find({"user_id": user_id})
+        categories = [item["category"] for item in _categories]
+
+        # Prepare data for category sizes bar chart
+        category_names = []
+        category_sizes_kb = []
+        for item in category_sizes:
+            for c in categories:
+                if c["id"] == item["category_id"]:
+                    category_names.append(c["name"])
+                    category_sizes_kb.append(item["size_kb"])
+                    break
+
+        # Generate category sizes bar chart as SVG
+        plt.figure(figsize=(width, height))
+        plt.barh(category_names, category_sizes_kb, color=tc["blue"], edgecolor=tc["grid"])
+        plt.xlabel('Size (KB)', color=tc["text"])
+        plt.ylabel('Categories', color=tc["text"])
+        # plt.title('Category Sizes (KB)', color=tc["text"])
+        plt.gca().tick_params(colors=tc["text"])
+        for spine in plt.gca().spines.values():
+            spine.set_edgecolor(tc["text"])
+        plt.tight_layout()
+        bar_chart_buffer = io.BytesIO()
+        plt.savefig(bar_chart_buffer, format='svg', transparent=True)
+        bar_chart_buffer.seek(0)
+        plt.close()
+
+        # Return raw SVG data
+        return bar_chart_buffer.getvalue()
+
+
+    def get_histogram(self, user_id: str, theme: str, width: int = 10, height: int = 6):
+        """ Generate histogram of card sizes with theme-specific colors """
+        tc = self.theme_config.get(theme, self.theme_config["light"])
+
+        # Get card sizes histogram
+        card_sizes = self.cards.aggregate([
+            {"$match": {"user_id": user_id}},
+            {"$project": {
+                "size_b": {"$sum": {"$bsonSize": "$$ROOT"}}
+            }},
+            {"$addFields": {
+                "size_kb": {"$divide": ["$size_b", 1024]},
+                "size_mb": {"$divide": ["$size_b", 1024 * 1024]}
+            }}
+        ])
+
+         # Prepare data for card sizes histogram
+        card_sizes_kb = [item["size_kb"] for item in card_sizes]
+
+        # Generate card sizes histogram as SVG
+        plt.figure(figsize=(width, height))
+        plt.hist(card_sizes_kb, color=tc["green"], edgecolor=tc["grid"])
+        plt.xlabel('Card Size (KB)', color=tc["text"])
+        plt.ylabel('Frequency', color=tc["text"])
+        # plt.title('Card Sizes Histogram', color=tc["text"])
+        plt.gca().tick_params(colors=tc["text"])
+        for spine in plt.gca().spines.values():
+            spine.set_edgecolor(tc["text"])
+        plt.tight_layout()
+        histogram_buffer = io.BytesIO()
+        plt.savefig(histogram_buffer, format='svg', transparent=True)
+        histogram_buffer.seek(0)
+        plt.close()
+
+        # Return raw SVG data
+        return histogram_buffer.getvalue()

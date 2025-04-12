@@ -20,7 +20,7 @@ license = {file = "LICENSE"}
 [project.optional-dependencies]
 all = ["remember[backend]"]
 notebook = ["ipykernel"]
-backend = ["fastapi[all]", "firebase-admin", "python-telegram-bot"]
+backend = ["fastapi[all]", "firebase-admin", "python-telegram-bot", "matplotlib" ]
 
 [project.urls]
 Homepage = "http://localhost:8000"

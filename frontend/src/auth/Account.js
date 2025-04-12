@@ -11,6 +11,8 @@ export function Account()
 {
     const { user } = useContext(AuthContext);
     const [stats, setStats] = useState(null);
+    const [barChart, setBarChart] = useState(null);
+    const [histogram, setHistogram] = useState(null);
     const [ipInfo, setIpInfo] = useState(null);
     const [tokenTime, setTokenTime] = useState(null);
     const [deletePrompt, setDeletePrompt] = useState(false);
@@ -19,6 +21,7 @@ export function Account()
     const [deleteStatusMessage, setDeleteStatusMessage] = useState('');
     const [currentTime, setCurrentTime] = useState(formattedTime());
     const [deltaTime, setDeltaTime] = useState('xx:xx');
+    const [isDarkMode, setIsDarkMode] = useState(document.querySelector('.dark-mode') !== null);
 
     SetAxiosDefaults();
 
@@ -76,6 +79,29 @@ export function Account()
         }
     };
 
+    const fetchAnalytics = async () =>
+        {
+            try
+            {
+                setBarChart(null);
+                setHistogram(null);
+                await SetAxiosAuthorization();
+                const theme = isDarkMode ? 'dark' : 'light';
+                const response = await axios.get(`${API_URL}/account/analytics?theme=${theme}`);
+                if (typeof (response.data) === 'string')
+                {
+                    setStatusMessage('Bad response from API server!');
+                    return;
+                }
+                setBarChart(response.data.bar_chart);
+                setHistogram(response.data.histogram);
+                setStatusMessage('');
+            } catch (error)
+            {
+                HandleAxiosError(error, setStatusMessage);
+            }
+        };
+
     const fetchIpInfo = async () =>
         {
             try
@@ -123,6 +149,12 @@ export function Account()
         // eslint-disable-next-line
     }, []);
 
+    useEffect(() =>
+        {
+            fetchAnalytics();
+            // eslint-disable-next-line
+        }, [isDarkMode]);
+
     useEffect(() => {
         const interval = setInterval(() => {
             const now = new Date();
@@ -148,6 +180,17 @@ export function Account()
         return () => clearInterval(interval);
         // eslint-disable-next-line
     }, [tokenTime]);
+
+    // Dynamically track changes to the `.dark-mode` class
+    useEffect(() => {
+        const observer = new MutationObserver(() => {
+            setIsDarkMode(document.querySelector('.dark-mode') !== null);
+        });
+        observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        return () => {
+            observer.disconnect();
+        };
+    }, []);
 
     return (
         <div>
@@ -180,6 +223,26 @@ export function Account()
                     <h3 style={{ margin: '0.5em' }}>Cards → {stats.card.count}</h3>
                     <h3 style={{ margin: '0.5em' }}>{stats.card.add}➕ &nbsp; {stats.card.update}🖋️ &nbsp; {stats.card.delete}🗑️ &nbsp; {stats.card.favorite}⭐</h3>
                 </div>}
+
+                <div className='card3'>
+                    <h2 style={{ margin: '0.5em' }}>Analytics 📈</h2>
+                    {barChart ? (
+                        <div className='chart'>
+                            <h3>→ Category Sizes ←</h3>
+                            <img src={barChart} alt="Category Sizes Bar Chart" />
+                        </div>
+                    ) : (
+                        <h3 style={{ margin: '0.5em' }}>Loading...</h3>
+                    )}
+                    {histogram ? (
+                        <div className='chart'>
+                            <h3>→ Card Sizes Histogram ←</h3>
+                            <img src={histogram} alt="Card Sizes Histogram" />
+                        </div>
+                    ) : (
+                        <h3 style={{ margin: '0.5em' }}>Loading...</h3>
+                    )}
+                </div>
 
                 {!!tokenTime && <div className='card3'>
                     <h3 style={{ margin: '0.5em' }}>Token Info</h3>

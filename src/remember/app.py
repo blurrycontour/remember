@@ -64,7 +64,7 @@ class Remember(metaclass=SingletonMeta):
             "user_id": user_id,
             "category": category.to_dict()
         })
-        self.statistics.update_category_operations(user_id, "category.add")
+        self.statistics.update_operations(user_id, "category.add")
         return f"Added category with ID: '{category.id}'", True
 
 
@@ -96,7 +96,7 @@ class Remember(metaclass=SingletonMeta):
                     }
                 }
             )
-            self.statistics.update_category_operations(user_id, "category.update")
+            self.statistics.update_operations(user_id, "category.update")
 
         return f"Category ID '{category_id}' updated!", True
 
@@ -152,7 +152,7 @@ class Remember(metaclass=SingletonMeta):
 
         self.categories.delete_one({"user_id": user_id, "category.id": category_id})
         self.cards.delete_many({"user_id": user_id, "card.category_id": category_id})
-        self.statistics.update_category_operations(user_id, "category.delete")
+        self.statistics.update_operations(user_id, "category.delete")
         return f"Category ID '{category_id}' removed!", True
 
 
@@ -174,7 +174,7 @@ class Remember(metaclass=SingletonMeta):
             {"user_id": user_id, "category.id": card.category_id},
             {"$inc": {"category.#cards": 1}}
         )
-        self.statistics.update_category_operations(user_id, "card.add")
+        self.statistics.update_operations(user_id, "card.add")
 
         # Set card's category updated time
         self.update_category(card.category_id, user_id, None, None, None, lightweight=True)
@@ -214,7 +214,7 @@ class Remember(metaclass=SingletonMeta):
                 {"$inc": {"category.#cards": -1}}
             )
 
-        self.statistics.update_category_operations(user_id, "card.update")
+        self.statistics.update_operations(user_id, "card.update")
 
         # Set card's category updated time
         self.update_category(category_id, user_id, None, None, None, lightweight=True)
@@ -241,7 +241,7 @@ class Remember(metaclass=SingletonMeta):
             {"user_id": user_id, "category.id": _card["card"]["category_id"]},
             {"$inc": {"category.#cards": -1}}
         )
-        self.statistics.update_category_operations(user_id, "card.delete")
+        self.statistics.update_operations(user_id, "card.delete")
 
         # Set card's category updated time
         self.update_category(_card["card"]["category_id"], user_id, None, None, None, lightweight=True)
@@ -313,5 +313,5 @@ class Remember(metaclass=SingletonMeta):
             {"$inc": {"category.#favorites": 1 if set_favorite_status else -1}}
         )
 
-        self.statistics.update_category_operations(user_id, "card.favorite")
+        self.statistics.update_operations(user_id, "card.favorite")
         return {"favorite": set_favorite_status}, True
