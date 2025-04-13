@@ -4,7 +4,8 @@ ARG wd=/repo
 WORKDIR ${wd}
 
 RUN apt-get update && \
-    apt-get install -y ca-certificates
+    apt-get install -y ca-certificates && \
+    apt-get install -y fonts-noto-core
 
 COPY pyproject.toml ${wd}/pyproject.toml
 RUN pip install .[all] --no-cache-dir

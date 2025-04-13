@@ -114,11 +114,11 @@ class Statistics:
 
         # Generate category sizes bar chart as SVG
         plt.figure(figsize=(width, height))
+        plt.rcParams['font.family'] = ['Noto Sans Devanagari', 'Noto Sans', 'DejaVu Sans']
         plt.barh(category_names, category_sizes_kb, color=tc["blue"], edgecolor=tc["grid"])
-        plt.xlabel('Size (KB)', color=tc["text"])
-        plt.ylabel('Categories', color=tc["text"])
-        # plt.title('Category Sizes (KB)', color=tc["text"])
-        plt.gca().tick_params(colors=tc["text"])
+        plt.xlabel('Size (KB)', color=tc["text"], fontsize=15)
+        plt.ylabel('Categories', color=tc["text"], fontsize=15)
+        plt.gca().tick_params(colors=tc["text"], labelsize=15)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
         plt.tight_layout()
@@ -152,11 +152,11 @@ class Statistics:
 
         # Generate card sizes histogram as SVG
         plt.figure(figsize=(width, height))
+        plt.rcParams['font.family'] = ['Noto Sans Devanagari', 'Noto Sans', 'DejaVu Sans']
         plt.hist(card_sizes_kb, color=tc["green"], edgecolor=tc["grid"])
-        plt.xlabel('Card Size (KB)', color=tc["text"])
-        plt.ylabel('Frequency', color=tc["text"])
-        # plt.title('Card Sizes Histogram', color=tc["text"])
-        plt.gca().tick_params(colors=tc["text"])
+        plt.xlabel('Card Size (KB)', color=tc["text"], fontsize=15)
+        plt.ylabel('Frequency', color=tc["text"], fontsize=15)
+        plt.gca().tick_params(colors=tc["text"], labelsize=15)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
         plt.tight_layout()
