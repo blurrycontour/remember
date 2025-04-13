@@ -105,11 +105,13 @@ class Statistics:
         # Prepare data for category sizes bar chart
         category_names = []
         category_sizes_kb = []
+        category_counts = []
         for item in category_sizes:
             for c in categories:
                 if c["id"] == item["category_id"]:
                     category_names.append(c["name"])
                     category_sizes_kb.append(item["size_kb"])
+                    category_counts.append(c["#cards"])
                     break
 
         # Sort categories by size
@@ -120,9 +122,10 @@ class Statistics:
         plt.figure(figsize=(width, height))
         plt.rcParams['font.family'] = ['Noto Sans Devanagari', 'Noto Sans', 'DejaVu Sans']
         plt.barh(category_names, category_sizes_kb, color=tc["blue"], edgecolor=tc["grid"])
-        plt.xlabel('Size (KB)', color=tc["text"], fontsize=17)
-        # plt.ylabel('Categories', color=tc["text"], fontsize=17)
-        plt.gca().tick_params(colors=tc["text"], labelsize=17)
+        plt.xlabel('Size (KB)', color=tc["text"], fontsize=20)
+        # plt.ylabel('Categories', color=tc["text"], fontsize=20)
+        plt.gca().tick_params(colors=tc["text"], labelsize=20)
+        plt.gca().bar_label(plt.gca().containers[0], labels=category_counts, fontsize=20, color=tc["text"], padding=10)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
         plt.tight_layout()
@@ -158,9 +161,11 @@ class Statistics:
         plt.figure(figsize=(width, height))
         plt.rcParams['font.family'] = ['Noto Sans', 'DejaVu Sans']
         plt.hist(card_sizes_kb, color=tc["green"], edgecolor=tc["grid"])
-        plt.xlabel('Card Size (KB)', color=tc["text"], fontsize=17)
-        plt.ylabel('Frequency', color=tc["text"], fontsize=17)
-        plt.gca().tick_params(colors=tc["text"], labelsize=17)
+        plt.xlabel('Size (KB)', color=tc["text"], fontsize=20)
+        # plt.ylabel('Frequency', color=tc["text"], fontsize=20)
+        plt.gca().tick_params(colors=tc["text"], labelsize=20)
+        plt.ylim(0, plt.gca().get_ylim()[1]+1)
+        plt.gca().bar_label(plt.gca().containers[0], fontsize=20, color=tc["text"], padding=10)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
         plt.tight_layout()
