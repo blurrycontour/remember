@@ -112,6 +112,10 @@ class Statistics:
                     category_sizes_kb.append(item["size_kb"])
                     break
 
+        # Sort categories by size
+        sorted_data = sorted(zip(category_sizes_kb, category_names), reverse=True)
+        category_sizes_kb, category_names = zip(*sorted_data)
+
         # Generate category sizes bar chart as SVG
         plt.figure(figsize=(width, height))
         plt.rcParams['font.family'] = ['Noto Sans Devanagari', 'Noto Sans', 'DejaVu Sans']
@@ -152,7 +156,7 @@ class Statistics:
 
         # Generate card sizes histogram as SVG
         plt.figure(figsize=(width, height))
-        plt.rcParams['font.family'] = ['Noto Sans Devanagari', 'Noto Sans', 'DejaVu Sans']
+        plt.rcParams['font.family'] = ['Noto Sans', 'DejaVu Sans']
         plt.hist(card_sizes_kb, color=tc["green"], edgecolor=tc["grid"])
         plt.xlabel('Card Size (KB)', color=tc["text"], fontsize=15)
         plt.ylabel('Frequency', color=tc["text"], fontsize=15)

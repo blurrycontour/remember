@@ -5,7 +5,7 @@ WORKDIR ${wd}
 
 RUN apt-get update && \
     apt-get install -y ca-certificates && \
-    apt-get install -y fonts-noto-core
+    apt-get install -y fonts-noto-core fonts-noto-unhinted
 
 COPY pyproject.toml ${wd}/pyproject.toml
 RUN pip install .[all] --no-cache-dir
