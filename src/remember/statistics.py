@@ -115,8 +115,8 @@ class Statistics:
                     break
 
         # Sort categories by size
-        sorted_data = sorted(zip(category_sizes_kb, category_names), reverse=True)
-        category_sizes_kb, category_names = zip(*sorted_data)
+        sorted_data = sorted(zip(category_sizes_kb, category_names, category_counts), reverse=True)
+        category_sizes_kb, category_names, category_counts = zip(*sorted_data)
 
         # Generate category sizes bar chart as SVG
         plt.figure(figsize=(width, height))
@@ -125,6 +125,7 @@ class Statistics:
         plt.xlabel('Size (KB)', color=tc["text"], fontsize=20)
         # plt.ylabel('Categories', color=tc["text"], fontsize=20)
         plt.gca().tick_params(colors=tc["text"], labelsize=20)
+        plt.xlim(0, plt.gca().get_xlim()[1]*1.05)
         plt.gca().bar_label(plt.gca().containers[0], labels=category_counts, fontsize=20, color=tc["text"], padding=10)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
@@ -157,14 +158,15 @@ class Statistics:
          # Prepare data for card sizes histogram
         card_sizes_kb = [item["size_kb"] for item in card_sizes]
 
+        bins = max(10, min(20, len(card_sizes_kb)))  # Number of bins for histogram
         # Generate card sizes histogram as SVG
         plt.figure(figsize=(width, height))
         plt.rcParams['font.family'] = ['Noto Sans', 'DejaVu Sans']
-        plt.hist(card_sizes_kb, color=tc["green"], edgecolor=tc["grid"])
+        plt.hist(card_sizes_kb, bins=bins, color=tc["green"], edgecolor=tc["grid"])
         plt.xlabel('Size (KB)', color=tc["text"], fontsize=20)
         # plt.ylabel('Frequency', color=tc["text"], fontsize=20)
         plt.gca().tick_params(colors=tc["text"], labelsize=20)
-        plt.ylim(0, plt.gca().get_ylim()[1]+1)
+        plt.ylim(0, plt.gca().get_ylim()[1]*1.1)
         plt.gca().bar_label(plt.gca().containers[0], fontsize=20, color=tc["text"], padding=10)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
