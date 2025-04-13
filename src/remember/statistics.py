@@ -120,9 +120,9 @@ class Statistics:
         plt.figure(figsize=(width, height))
         plt.rcParams['font.family'] = ['Noto Sans Devanagari', 'Noto Sans', 'DejaVu Sans']
         plt.barh(category_names, category_sizes_kb, color=tc["blue"], edgecolor=tc["grid"])
-        plt.xlabel('Size (KB)', color=tc["text"], fontsize=15)
-        plt.ylabel('Categories', color=tc["text"], fontsize=15)
-        plt.gca().tick_params(colors=tc["text"], labelsize=15)
+        plt.xlabel('Size (KB)', color=tc["text"], fontsize=17)
+        # plt.ylabel('Categories', color=tc["text"], fontsize=17)
+        plt.gca().tick_params(colors=tc["text"], labelsize=17)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
         plt.tight_layout()
@@ -158,9 +158,9 @@ class Statistics:
         plt.figure(figsize=(width, height))
         plt.rcParams['font.family'] = ['Noto Sans', 'DejaVu Sans']
         plt.hist(card_sizes_kb, color=tc["green"], edgecolor=tc["grid"])
-        plt.xlabel('Card Size (KB)', color=tc["text"], fontsize=15)
-        plt.ylabel('Frequency', color=tc["text"], fontsize=15)
-        plt.gca().tick_params(colors=tc["text"], labelsize=15)
+        plt.xlabel('Card Size (KB)', color=tc["text"], fontsize=17)
+        plt.ylabel('Frequency', color=tc["text"], fontsize=17)
+        plt.gca().tick_params(colors=tc["text"], labelsize=17)
         for spine in plt.gca().spines.values():
             spine.set_edgecolor(tc["text"])
         plt.tight_layout()
