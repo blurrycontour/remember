@@ -12,7 +12,9 @@ runs:
     - name: Add IP to ~/.ssh/known_hosts
       shell: bash
       run: |
-        mkdir -p ~/.ssh
+        echo $SSH_IP
+        ping -c 1 $SSH_IP
+        ssh-keyscan $SSH_IP
         ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
     - name: Add ssh private key
       shell: bash
