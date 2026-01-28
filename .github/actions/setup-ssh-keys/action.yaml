@@ -5,16 +5,10 @@ description: "Setup SSH configuration on runners"
 runs:
   using: "composite"
   steps:
-    - name: Make SSH directory
-      shell: bash
-      run: |
-        mkdir -p ~/.ssh
     - name: Add IP to ~/.ssh/known_hosts
       shell: bash
       run: |
-        echo $SSH_IP
-        ping -c 1 $SSH_IP
-        ssh-keyscan $SSH_IP
+        mkdir -p ~/.ssh
         ssh-keyscan $SSH_IP >> ~/.ssh/known_hosts
     - name: Add ssh private key
       shell: bash
