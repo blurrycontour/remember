@@ -5,6 +5,10 @@ description: "Setup SSH configuration on runners"
 runs:
   using: "composite"
   steps:
+    - name: Make SSH directory
+      shell: bash
+      run: |
+        mkdir -p ~/.ssh
     - name: Add IP to ~/.ssh/known_hosts
       shell: bash
       run: |
