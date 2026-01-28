@@ -43,7 +43,7 @@ services:
       - ./frontend/build:/repo/frontend/build
       - ./frontend/public:/repo/frontend/public
       - ./frontend/src:/repo/frontend/src
-    # command: ["npm", "start"]
+    # command: ["npm", "start"] # uncomment for local testing
     develop:
       watch:
         - path: ./frontend/src
@@ -58,8 +58,28 @@ services:
       - 'host.docker.internal:host-gateway'
 
 
-  nginx:
+  caddy:
     profiles: ["deploy", "stage", "deploy.full"]
+    restart: unless-stopped
+    # container_name: caddy
+    image: blurrycontour/caddy:latest
+    build:
+      context: ./caddy
+      dockerfile: Dockerfile
+    volumes:
+      - ./caddy/${CADDYFILE:-Caddyfile}:/etc/caddy/Caddyfile
+      - ./caddy/data:/data
+      - ./caddy/config:/config
+      - ./caddy/static:/var/www/static
+      - ./caddy/logs:/var/log/caddy
+    env_file: ./.env
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    network_mode: host
+
+
+  nginx:
+    profiles: ["stage", "deploy.full"]
     restart: unless-stopped
     # container_name: nginx
     image: ${DOCKER_IMAGE_PREFIX}:nginx
@@ -85,7 +105,7 @@ services:
 
 
   ngrok:
-    profiles: ["deploy", "deploy.full"]
+    profiles: ["deploy.full"]
     restart: always
     image: ngrok/ngrok
     # container_name: ngrok

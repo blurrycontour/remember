@@ -1,0 +1,29 @@
+{
+    log main {
+        include http.log.access.main http.log.access
+        output file /var/log/caddy/access.log {
+            roll_size 50mb
+            roll_keep 20
+            roll_keep_for 30d
+        }
+        format json
+        level INFO
+    }
+
+    log none {
+        include http.log.access.none
+        output discard
+        format console
+	}
+}
+
+remember-api.{env.DOMAIN} {
+    log main
+    tls {
+        dns desec {
+            token {env.DESEC_TOKEN}
+        }
+        propagation_delay 2m
+    }
+    reverse_proxy backend:5000
+}
