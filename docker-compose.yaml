@@ -66,6 +66,9 @@ services:
     build:
       context: ./caddy
       dockerfile: Dockerfile
+    ports:
+      - 443:443
+      - 443:443/udp
     volumes:
       - ./caddy/${CADDYFILE:-Caddyfile}:/etc/caddy/Caddyfile
       - ./caddy/data:/data
@@ -73,9 +76,8 @@ services:
       - ./caddy/static:/var/www/static
       - ./caddy/logs:/var/log/caddy
     env_file: ./.env
-    extra_hosts:
-      - host.docker.internal:host-gateway
-    network_mode: host
+    networks:
+      - remember-network
 
 
   nginx:
