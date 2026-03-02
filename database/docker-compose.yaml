@@ -14,9 +14,9 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
     volumes:
-      - ../data/mongo/db:/data/db
-      - ../data/mongo/backup:/data/backup
-      - ../certs/mongodb:/etc/ssl/mongodb:ro
+      - ${DATA_ROOT_PATH:-..}/data/mongo/db:/data/db
+      - ${DATA_ROOT_PATH:-..}/data/mongo/backup:/data/backup
+      - ${DATA_ROOT_PATH:-..}/certs/mongodb:/etc/ssl/mongodb:ro
     networks:
       - db-network
 
