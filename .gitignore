@@ -2,7 +2,7 @@
 data/*.pkl
 !data/sample.pkl
 .env
-data/mongo/*
+.mongo/*
 certs/*
 !certs/generate.sh
 

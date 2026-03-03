@@ -32,7 +32,7 @@ services:
 
   frontend:
     profiles: ["build"]
-    restart: on-failure
+    restart: unless-stopped
     # container_name: frontend
     image: ${DOCKER_IMAGE_PREFIX}:frontend
     build:
@@ -108,7 +108,7 @@ services:
 
   ngrok:
     profiles: ["deploy.full"]
-    restart: always
+    restart: unless-stopped
     image: ngrok/ngrok
     # container_name: ngrok
     ports:
@@ -129,7 +129,7 @@ services:
 
   localtunnel:
     profiles: ["deploy.full"]
-    restart: always
+    restart: unless-stopped
     image: ${DOCKER_IMAGE_PREFIX}:localtunnel
     # container_name: localtunnel
     build:
@@ -149,7 +149,7 @@ services:
 
   localtonet:
     profiles: ["deploy.full"]
-    restart: always
+    restart: unless-stopped
     image: localtonet/localtonet
     # container_name: localtonet
     command:
@@ -160,7 +160,7 @@ services:
 
   db-backup:
     profiles: ["deploy"]
-    restart: always
+    restart: unless-stopped
     image: ${DOCKER_IMAGE_PREFIX}:db-backup
     # container_name: db-backup
     build:
@@ -177,6 +177,31 @@ services:
       - ~/.gcp:/root/.gcp
       - ./data/mongo/backup:/data/backup
       - ./certs/mongodb:/etc/ssl/mongodb:ro
+    networks:
+      - remember-network
+
+
+  mongodb:
+    restart: unless-stopped
+    image: mongo:7
+    profiles: ["deploy", "stage", "deploy.full"]
+    # container_name: mongodb
+    # ports:
+    #   - ${MONGODB_PORT}:27017
+    command:
+      - --auth
+      # - --tlsMode=requireTLS
+      # - --tlsCertificateKeyFile=/etc/ssl/mongodb/mongodb.pem
+      # - --tlsCAFile=/etc/ssl/mongodb/ca.pem
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - ./.mongo/db:/data/db
+      - ./.mongo/backup:/data/backup
+      # - ${DATA_ROOT_PATH:-.}/certs/mongodb:/etc/ssl/mongodb:ro
+    networks:
+      - remember-network
 
 
 networks:

@@ -30,9 +30,9 @@ class Remember(metaclass=SingletonMeta):
         print("Connecting to MongoDB")
         client = pymongo.MongoClient(
             mongodb_string,
-            tls=True,
-            tlsCAFile="/etc/ssl/mongodb/ca.pem",
-            tlsCertificateKeyFile="/etc/ssl/mongodb/client.pem",
+            # tls=True,
+            # tlsCAFile="/etc/ssl/mongodb/ca.pem",
+            # tlsCertificateKeyFile="/etc/ssl/mongodb/client.pem",
         )
         self.db = client[db_name]
         self.categories = self.db["categories"]
