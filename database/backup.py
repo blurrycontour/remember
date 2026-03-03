@@ -21,10 +21,10 @@ def create_backup():
         f"--uri={MONGODB_STRING}",
         f"--archive={BACKUP_FILE}",
         "--gzip",
-        "--ssl",
-        "--sslCAFile=/etc/ssl/mongodb/ca.pem",
-        "--sslPEMKeyFile=/etc/ssl/mongodb/mongodb.pem",
-        "--tlsInsecure",
+        # "--ssl",
+        # "--sslCAFile=/etc/ssl/mongodb/ca.pem",
+        # "--sslPEMKeyFile=/etc/ssl/mongodb/mongodb.pem",
+        # "--tlsInsecure",
     ], check=True)
 
     return True
@@ -40,6 +40,6 @@ if __name__ == '__main__':
 
     # Notify status
     if all([r1,r2,r3,r4]):
-        TelegramBot().send_notification_sync(message=f"Backup finished\n   \\[size]  {size}")
+        TelegramBot().send_notification_sync(message=f"[INFO] Remember\nBackup successful! - {size}")
     else:
-        TelegramBot().send_notification_sync(message="Backup failed!")
+        TelegramBot().send_notification_sync(message="[ERROR] Remember\nBackup failed!")
