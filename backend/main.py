@@ -69,11 +69,13 @@ if __name__ == '__main__':
     parser = ap.ArgumentParser()
     args = parser.parse_args()
 
+    hot_reload = os.getenv('ENVIRONMENT', 'prod') != 'prod'
     uvicorn.run(
         'backend.main:app',
         host='0.0.0.0',
         port=5000,
-        reload=True,
+        reload=hot_reload,
         reload_includes=['*.py', '*.reload'],
         proxy_headers=True,
+        workers=1,
     )
