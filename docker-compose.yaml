@@ -32,7 +32,7 @@ services:
 
   frontend:
     profiles: ["build"]
-    restart: unless-stopped
+    restart: no
     # container_name: frontend
     image: ${DOCKER_IMAGE_PREFIX}:frontend
     build:
