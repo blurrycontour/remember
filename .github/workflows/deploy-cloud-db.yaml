@@ -3,9 +3,12 @@ name: Deploy Database to Cloud
 on:
   workflow_dispatch:
     inputs:
-      external_ip:
+      external_ssh_ip:
         description: "Server IP Address"
         default: ""
+      external_ssh_port:
+        description: "SSH Port"
+        default: "22"
       fresh_deploy:
         description: "Remove existing data"
         default: "false"
@@ -14,7 +17,8 @@ env:
   DOCKER_USER: ${{secrets.DOCKER_USER}}
   SSH_USER: ${{secrets.SSH_USER}}
   SSH_KEY: ${{secrets.SSH_KEY}}
-  SSH_IP: ${{ github.event.inputs.external_ip }}
+  SSH_IP: ${{ github.event.inputs.external_ssh_ip }}
+  SSH_PORT: ${{ github.event.inputs.external_ssh_port }}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}
   GCS_CREDENTIALS: ${{secrets.GCS_CREDENTIALS}}

@@ -21,6 +21,7 @@ env:
   SSH_USER: ${{secrets.SSH_USER}}
   SSH_KEY: ${{secrets.SSH_KEY}}
   SSH_IP: ${{secrets.SSH_IP}}
+  SSH_PORT: ${{secrets.SSH_PORT}}
   NGROK_AUTHTOKEN: ${{secrets.NGROK_AUTHTOKEN}}
   LOCALTONET_AUTHTOKEN: ${{secrets.LOCALTONET_AUTHTOKEN}}
   AWS_CREDENTIALS: ${{secrets.AWS_CREDENTIALS}}

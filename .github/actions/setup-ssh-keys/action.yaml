@@ -24,5 +24,6 @@ runs:
         Host remote
           HostName $SSH_IP
           User $SSH_USER
+          Port $SSH_PORT
           IdentityFile ~/.ssh/id_cloud
         " > ~/.ssh/config
