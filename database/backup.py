@@ -2,7 +2,7 @@ import os
 import subprocess
 
 from remember.backup import CloudBackup
-from remember import TelegramBot
+from remember import TelegramBot, Ntfy
 from remember.utils import try_except_decorator
 
 
@@ -41,5 +41,7 @@ if __name__ == '__main__':
     # Notify status
     if all([r1,r2,r3,r4]):
         TelegramBot().send_notification_sync(message=f"*\[INFO\] Remember*\nBackup successful - {size}")
+        Ntfy().send_notification(message=f"Backup successful - {size}", success=True)
     else:
         TelegramBot().send_notification_sync(message="*\[ERROR\] Remember*\nBackup failed!")
+        Ntfy().send_notification(message="Backup failed!", success=False)
