@@ -23,7 +23,7 @@ class TelegramBot(metaclass=SingletonMeta):
     async def send_notification(self, message: str) -> Tuple[str, bool]:
         """Send a notification to Telegram."""
         try:
-            print(f"Sending message: {message}")
+            print(f"Sending telegram message: {message}")
             await self.bot.send_message(chat_id=self.chat_id, text=message, parse_mode="markdown")
         except TelegramError as e:
             print(f"Exception: {e}")
@@ -35,7 +35,7 @@ class TelegramBot(metaclass=SingletonMeta):
     def send_notification_sync(self, message: str) -> Tuple[str, bool]:
         """Send a notification to Telegram."""
         try:
-            print(f"Sending message: {message}")
+            print(f"Sending telegram message: {message}")
             asyncio.run(
                 self.bot.send_message(chat_id=self.chat_id, text=message, parse_mode="markdown")
             )
@@ -66,7 +66,7 @@ class Ntfy:
         }
 
         try:
-            print(f"Sending {status} message: {message}")
+            print(f"Sending ntfy {status} message: {message}")
             response = requests.post(
                 self.ntfy_topic_url,
                 data=message.encode("utf-8"),
