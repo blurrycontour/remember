@@ -32,6 +32,8 @@ env:
   BUCKET_NAME: ${{secrets.BUCKET_NAME}}
   TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
   TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
+  NTFY_TOPIC_URL: ${{secrets.NTFY_TOPIC_URL}}
+  NTFY_TOKEN: ${{secrets.NTFY_TOKEN}}
   MONGO_CERT_CA_PEM: ${{secrets.MONGO_CERT_CA_PEM}}
   MONGO_CERT_SERVER_PEM: ${{secrets.MONGO_CERT_SERVER_PEM}}
   MONGO_CERT_CLIENT_PEM: ${{secrets.MONGO_CERT_CLIENT_PEM}}
@@ -73,12 +75,14 @@ jobs:
             echo 'ENVIRONMENT=$ENVIRONMENT' >> .env
             echo 'BUILD_VERSION=${{ env.COMMIT_SHORT_SHA }}' >> .env
           "
-      - name: Add telegram bot credentials to .env
+      - name: Add telegram bot and ntfy credentials to .env
         run: |
           ssh remote "
             cd $REPO_NAME
             echo 'TELEGRAM_BOT_TOKEN=$TELEGRAM_BOT_TOKEN' >> .env
             echo 'TELEGRAM_CHAT_ID=$TELEGRAM_CHAT_ID' >> .env
+            echo 'NTFY_TOPIC_URL=$NTFY_TOPIC_URL' >> .env
+            echo 'NTFY_TOKEN=$NTFY_TOKEN' >> .env
           "
       - name: Add findip token to .env
         run: ssh remote "cd $REPO_NAME; echo 'FIND_IP_TOKEN=$FIND_IP_TOKEN' >> .env"
